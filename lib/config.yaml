@@ -1,0 +1,7 @@
+core:
+    port: 3000
+    name: 'ness V1.0'
+    prefix: '/api/v1'
+    ignorePath:
+        - '**/node_modules/**'
+        - '**/bin/**'
