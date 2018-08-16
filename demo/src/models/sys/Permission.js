@@ -35,6 +35,11 @@ const defineSchema = Object.assign({}, CommonFields, {
   }
 })
 
+/**
+ * Permission 模型
+ * @param {Object} mongoose
+ * @param {Object} router
+ */
 module.exports = function ({ mongoose }) {
   const Schema = mongoose.Schema
   const schema = new Schema(defineSchema)
