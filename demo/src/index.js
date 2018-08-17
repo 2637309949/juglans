@@ -12,6 +12,8 @@ new Juglans({
       }
     })
   })
+  .inject({test: 'test'})
+  .middle()
   .run(function (err) {
     if (err) {
       console.error(err)

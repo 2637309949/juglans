@@ -1,7 +1,7 @@
 /**
  * @param {Object} router
  */
-module.exports = function ({ router, authRouter, utils }) {
+module.exports = function ({ router, authRouter, utils, test }) {
   router.get('/hello', (ctx, next) => {
     const cond = ctx.query.sort || '-_created'
     const ret = utils.parseSortStr({ str: cond })
@@ -9,6 +9,6 @@ module.exports = function ({ router, authRouter, utils }) {
   })
 
   authRouter.get('/hello2', (ctx, next) => {
-    ctx.body = 'hello2'
+    ctx.body = 'hello2' + test
   })
 }
