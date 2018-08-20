@@ -1,3 +1,4 @@
+const logger = require('koa-logger')
 const config = require('./config')
 const Juglans = require('../..')
 
@@ -13,7 +14,9 @@ new Juglans({
     })
   })
   .inject({test: 'test'})
-  .middle()
+  .middle([
+    logger()
+  ])
   .run(function (err) {
     if (err) {
       console.error(err)
