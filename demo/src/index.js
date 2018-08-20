@@ -35,6 +35,15 @@ new Juglans({
       return null
     }
   })
+  .store(({config, mongoose}) => {
+    return {
+      token: {
+        save: null,
+        find: null,
+        delete: null
+      }
+    }
+  })
   .run(function (err) {
     if (err) {
       console.error(err)
