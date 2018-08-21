@@ -11,5 +11,5 @@ module.exports = {
     }
   },
   injectPath: [path.join(__dirname, '../../**/*.js')],
-  ignorePath: ['**/node_modules/**']
+  ignorePath: ['**/node_modules/**', path.join(__dirname, '../utils/**')]
 }
