@@ -7,3 +7,5 @@ core:
     ignorePath:
         - '**/node_modules/**'
         - '**/bin/**'
+    fakeTokens:
+        - 'DEBUG'
