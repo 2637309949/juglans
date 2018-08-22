@@ -3,8 +3,11 @@ const auth = require('./utils/auth')
 const model = require('./utils/model')
 const config = require('./config')
 const middle = require('./utils/middle')
-const Juglans = require('../..')
+const Juglans = require('../../..')
 
+/**
+ * 提前export app作为可引用对象
+ */
 const app = new Juglans({ name: 'ness V1.0' })
 module.exports = app
 app

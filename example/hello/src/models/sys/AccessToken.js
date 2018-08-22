@@ -29,7 +29,7 @@ const defineSchema = Schema => Object.assign({}, CommonFields, {
  * @param {Object} router
  */
 module.exports = function ({ mongoose, router }) {
-  const name = 'Token'
+  const name = 'AccessToken'
   const Schema = mongoose.Schema
   const schema = new Schema(defineSchema(Schema))
   schema.set('autoIndex', false)

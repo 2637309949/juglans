@@ -14,6 +14,7 @@ module.exports = async function auth ({ctx, config, mongoose}) {
   if (userData) {
     return {
       id: userData._id,
+      email: userData.email,
       username: userData.username
     }
   } else {

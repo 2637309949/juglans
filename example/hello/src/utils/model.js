@@ -4,16 +4,16 @@
  * @param {Object} mongoose
  */
 const tokenMoel = (config, mongoose) => {
-  const Token = mongoose.model('Token')
+  const AccessToken = mongoose.model('AccessToken')
   return {
     save: async function (item) {
-      return Token.create([item])
+      return AccessToken.create([item])
     },
     find: async function (accessToken) {
-      return Token.findOne({ accessToken, _dr: false })
+      return AccessToken.findOne({ accessToken, _dr: false })
     },
     delete: async function (accessToken) {
-      return Token.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
+      return AccessToken.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
     }
   }
 }
