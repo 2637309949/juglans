@@ -12,5 +12,6 @@ module.exports = {
   },
   redis: 'redis://:F7B73743E7AEDD58E58900F4782550BF@www.wosoft.me:6412',
   injectPath: [path.join(__dirname, '../../**/*.js')],
+  jwtSecret: 'ef6d85d2a46311e8aa557555c34ad35a',
   ignorePath: ['**/node_modules/**', path.join(__dirname, '../utils/**')]
 }
