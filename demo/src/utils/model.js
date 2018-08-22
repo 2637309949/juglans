@@ -9,8 +9,12 @@ const tokenMoel = (config, mongoose) => {
     save: async function (item) {
       return Token.create([item])
     },
-    find: null,
-    delete: null
+    find: async function (accessToken) {
+      return Token.findOne({ accessToken, _dr: false })
+    },
+    delete: async function (accessToken) {
+      return Token.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
+    }
   }
 }
 
