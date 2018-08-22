@@ -125,5 +125,19 @@ module.exports = function ({ mongoose }) {
   const Schema = mongoose.Schema
   const schema = new Schema(defineSchema)
   schema.set('autoIndex', false)
+  schema.statics.isManager = async (username) => {
+    if (!username) return false
+    const User = mongoose.model('User')
+    const entity = await User.findOne({ username }, { roles: 1 }).populate('roles', 'roles.type')
+    if (entity && Array.isArray(entity.roles) && entity.roles.length > 0) {
+      for (const role of entity.roles) {
+        if (role && role.type === '管理角色') {
+          return true
+        }
+      }
+      return false
+    }
+    return false
+  }
   mongoose.model(name, schema)
 }

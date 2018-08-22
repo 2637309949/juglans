@@ -5,8 +5,13 @@ const config = require('./config')
 const middle = require('./utils/middle')
 const Juglans = require('../..')
 
-new Juglans({ name: 'ness V1.0' })
+const app = new Juglans({ name: 'ness V1.0' })
+module.exports = app
+app
   .setConfig(config)
+  .redis(function ({Redis, config}) {
+    return new Redis(config.redis)
+  })
   .mongo(function ({mongoose, config}) {
     mongoose.connect(config.mongo.uri, config.mongo.opts, function (err) {
       if (err) {

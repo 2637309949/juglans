@@ -3,4 +3,4 @@
  */
 const { nodeEnv = 'local' } = process.env
 module.exports = require(`./${nodeEnv}`)
-module.exports.env = nodeEnv
+module.exports.nodeEnv = nodeEnv
