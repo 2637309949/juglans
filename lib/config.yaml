@@ -4,6 +4,7 @@ core:
     prefix: '/api/v1'
     jwtSecret: 'ef6d85d2a46311e8aa557555c34ad35a'
     tokenExp: '24h'
+    debug: false
     ignorePath:
         - '**/node_modules/**'
         - '**/bin/**'
