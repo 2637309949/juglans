@@ -3,28 +3,18 @@
  */
 const userServices = require('../services/user')
 
-module.exports = function ({ mongoose, router, authRouter, utils, test }) {
-  /**
-   * 测试
-   */
+module.exports = function ({ mongoose, router, authRouter, test }) {
   router.get('/test', (ctx, next) => {
     ctx.body = 'test:' + test
   })
-
-  /**
-   * 测试
-   */
   authRouter.get('/hello', (ctx, next) => {
     ctx.body = 'hello:' + test
   })
-
-  /**
-   * check user role
-   */
   authRouter.get('/user/aux/manager', async (ctx) => {
     try {
       const username = ctx.query.username || ctx.request.body.username
-      const isManager = await userServices.isManager(username)
+      console.log('userServices:', userServices)
+      const isManager = await userServices.isManager({mongoose}, username)
       ctx.body = {data: isManager}
     } catch (error) {
       console.error(error.stack)
