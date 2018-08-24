@@ -7,6 +7,13 @@ module.exports = function ({ mongoose, router, authRouter, utils, test }) {
   /**
    * 测试
    */
+  router.get('/test', (ctx, next) => {
+    ctx.body = 'test:' + test
+  })
+
+  /**
+   * 测试
+   */
   authRouter.get('/hello', (ctx, next) => {
     ctx.body = 'hello:' + test
   })
