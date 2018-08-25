@@ -15,7 +15,7 @@ module.exports = {
   jwtSecret: 'ef6d85d2a46311e8aa557555c34ad35a',
   ignorePath: ['**/node_modules/**'],
   injectPath: [path.join(__dirname, '../models/**/*.js'), path.join(__dirname, '../routes/**/*.js')],
-  koaBody: {
+  koaBodyOpts: {
     strict: false,
     jsonLimit: '5mb',
     formLimit: '1mb',
