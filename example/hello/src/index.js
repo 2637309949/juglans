@@ -1,9 +1,9 @@
-const inject = require('./utils/inject')
-const auth = require('./utils/auth')
-const model = require('./utils/model')
-const config = require('./config')
 const middle = require('./utils/middle')
+const inject = require('./utils/inject')
+const model = require('./utils/model')
+const auth = require('./utils/auth')
 const Juglans = require('../../..')
+const config = require('./config')
 
 /**
  * 提前export app作为可引用对象
