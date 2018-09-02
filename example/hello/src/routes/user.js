@@ -20,7 +20,7 @@ module.exports = function ({ mongoose, router, test }) {
       ctx.body = {data: isManager}
     } catch (error) {
       console.error(error.stack)
-      ctx.body = { errcode: 500, errmsg: error.message, data: null }
+      ctx.body = { errcode: 500, errmsg: error.message }
     }
   })
 }

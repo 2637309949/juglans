@@ -1,10 +1,6 @@
 const CommonFields = require('../CommonFields')
 
 const defineSchema = Object.assign({}, CommonFields, {
-  _id: {
-    type: String,
-    required: true
-  },
   name: {
     type: String,
     displayName: '角色名称',
@@ -36,4 +32,5 @@ module.exports = function ({ mongoose, router }) {
   schema.set('autoIndex', false)
   mongoose.model(name, schema)
   router.get('/Role', mongoose.hooks.list(name))
+  router.post('/Role', mongoose.hooks.create(name))
 }
