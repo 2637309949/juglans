@@ -1,0 +1,14 @@
+version: "2"
+services:
+  hello:
+    ports:
+      - "3000:${PORT}"
+    hostname: "hello"
+    build: "."
+    command: "npm run ${CMD}"
+    working_dir: "/code/rocket"
+    dns:
+      - "${BAIDUDNS}"
+      - "${GOOGLEDNS}"
+    volumes:
+      - "./:/code/rocket"
