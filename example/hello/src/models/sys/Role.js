@@ -33,4 +33,5 @@ module.exports = function ({ mongoose, router }) {
   mongoose.model(name, schema)
   router.get('/Role', mongoose.hooks.list(name))
   router.post('/Role', mongoose.hooks.create(name))
+  router.delete('/Role', mongoose.hooks.softDelMany(name))
 }
