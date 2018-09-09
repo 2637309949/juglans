@@ -12,11 +12,15 @@ module.exports = {
   },
   debug: true,
   redis: 'redis://:F7B73743E7AEDD58E58900F4782550BF@www.wosoft.me:6412',
-  jwtSecret: 'ef6d85d2a46311e8aa557555c34ad35a',
   ignorePath: ['**/node_modules/**'],
   injectPath: [path.join(__dirname, '../models/**/*.js'), path.join(__dirname, '../routes/**/*.js')],
-  fakeTokens: ['DEBUG'],
-  fakeUrls: [/\/test$/],
+  authConfig: {
+    secret: 'ef6d85d2a46311e8aa557555c34ad35a',
+    login: '/login',
+    logout: '/logout',
+    fakeTokens: ['DEBUG'],
+    fakeUrls: [/\/test$/]
+  },
   koaBodyOpts: {
     strict: false,
     jsonLimit: '5mb',
