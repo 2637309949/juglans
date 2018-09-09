@@ -8,8 +8,7 @@ const config = require('./config')
 /**
  * 提前export app作为可引用对象
  */
-const app = new Juglans({ name: 'ness V1.0' })
-module.exports = app
+const app = new Juglans({ name: 'Juglans V1.0' })
 app
   .setConfig(config)
   .redis(function ({Redis, config}) {
@@ -26,8 +25,10 @@ app
   .middle(middle)
   .auth(auth)
   .store(model)
-  .run(function (err) {
+  .run(function (err, config) {
     if (err) {
       console.error(err)
+    } else {
+      console.log(`\t\nApp:${config.name} run on Port:${config.port}\t\n`)
     }
   })
