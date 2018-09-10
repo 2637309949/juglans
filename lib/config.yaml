@@ -11,7 +11,7 @@ ignorePath:
 
 ## 认证配置
 authConfig:
-    tokenExp: '24h'
+    expiresIn: '24h'
     secret: 'ef6d85d2a46311e8aa557555c34ad35a'
     login: '/login'
     logout: '/logout'
