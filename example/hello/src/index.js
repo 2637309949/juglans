@@ -8,6 +8,8 @@ const config = require('./config')
 const app = new Juglans({ name: 'Juglans V1.0' })
 app
   .setConfig(config)
+  .inject(inject)
+  .middle(middle)
   .redis(function ({Redis, config}) {
     return new Redis(config.redis)
   })
@@ -18,8 +20,6 @@ app
       }
     })
   })
-  .inject(inject)
-  .middle(middle)
   .auth(auth)
   .store(model)
   .run(function (err, config) {

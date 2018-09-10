@@ -4,7 +4,6 @@
 const userServices = require('../services/user')
 
 module.exports = function ({ mongoose, router, test }) {
-
   router.get('/test', (ctx, next) => {
     ctx.body = ctx.state.user || 'debug'
   })
