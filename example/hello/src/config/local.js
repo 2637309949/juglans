@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  port: 3000,
+  port: 3001,
   mongo: {
     uri: 'mongodb://localhost:27017/test?authSource=admin',
     opts: {
@@ -12,8 +12,13 @@ module.exports = {
   },
   debug: true,
   redis: 'redis://:F7B73743E7AEDD58E58900F4782550BF@www.wosoft.me:6412',
-  ignorePath: ['**/node_modules/**'],
-  injectPath: [path.join(__dirname, '../models/**/*.js'), path.join(__dirname, '../routes/**/*.js')],
+  ignorePath: [
+    '**/node_modules/**'
+  ],
+  injectPath: [
+    path.join(__dirname, '../models/**/*.js'),
+    path.join(__dirname, '../routes/**/*.js')
+  ],
   authConfig: {
     secret: 'ef6d85d2a46311e8aa557555c34ad35a',
     login: '/login',

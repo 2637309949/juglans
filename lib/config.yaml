@@ -1,6 +1,6 @@
 ## 基本配置
 port: 3000
-name: 'ness V1.0'
+name: 'Juglans V1.0'
 prefix: '/api/v1'
 debug: false
 
@@ -8,9 +8,6 @@ debug: false
 ignorePath:
     - '**/node_modules/**'
     - '**/bin/**'
-
-## 认证配置
-
 
 ## 认证配置
 authConfig:
