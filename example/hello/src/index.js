@@ -27,8 +27,9 @@ app
       console.error(err)
     } else {
       console.log('==================================================')
-      console.log(`\tApp nodeEnv:${config.nodeEnv}`)
-      console.log(`\tApp:${config.name} run on Port:${config.port}`)
+      console.log(`\tApp:${config.name}`)
+      console.log(`\tApp:${config.nodeEnv}`)
+      console.log(`\tApp:runing on Port:${config.port}`)
       console.log('==================================================')
     }
   })
