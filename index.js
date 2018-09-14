@@ -5,5 +5,5 @@
  * @modify date 2018-09-02 12:51:45
  * @desc [导出根对象]
 */
-const core = require('./lib/Juglans')
-module.exports = core
+module.exports = require('./lib/Juglans')
+module.exports.utils = require('./lib/utils')
