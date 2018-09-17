@@ -6,6 +6,8 @@
  * @desc [导出根对象]
 */
 module.exports = require('./lib/Juglans')
+
+// 其他对象导出
 module.exports.mongoose = require('./lib/mongoose')
 module.exports.Redis = require('./lib/Redis')
 module.exports.utils = require('./lib/utils')

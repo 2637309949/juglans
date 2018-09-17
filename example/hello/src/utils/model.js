@@ -15,7 +15,9 @@ module.exports = () => {
         return AccessToken.create([item])
       },
       async find (accessToken) {
-        return AccessToken.findOne({ accessToken, _dr: false })
+        let result = await AccessToken.findOne({ accessToken, _dr: false })
+        result = (result.toJSON && result.toJSON()) || result
+        return result
       },
       async delete (accessToken) {
         return AccessToken.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
