@@ -1,6 +1,9 @@
+const Juglans = require('../../../../..')
 const CommonFields = require('../CommonFields')
+const mongoose = Juglans.mongoose
+const Schema = mongoose.Schema
 
-const defineSchema = Schema => Object.assign({}, CommonFields, {
+const defineSchema = new Schema(Object.assign({}, CommonFields, {
   _expired: {
     type: Number,
     displayName: '失效时间',
@@ -21,17 +24,7 @@ const defineSchema = Schema => Object.assign({}, CommonFields, {
     type: Schema.Types.Mixed,
     displayName: '额外数据'
   }
-})
+}))
 
-/**
- * Role 模型
- * @param {Object} mongoose
- * @param {Object} router
- */
-module.exports = function ({ mongoose, router }) {
-  const name = 'AccessToken'
-  const Schema = mongoose.Schema
-  const schema = new Schema(defineSchema(Schema))
-  schema.set('autoIndex', false)
-  mongoose.model(name, schema)
-}
+defineSchema.set('autoIndex', false)
+mongoose.model('AccessToken', defineSchema)

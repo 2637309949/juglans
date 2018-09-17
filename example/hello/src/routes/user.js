@@ -3,7 +3,7 @@
  */
 const userServices = require('../services/user')
 
-module.exports = function ({ mongoose, router, test }) {
+module.exports = function ({ router, test }) {
   router.get('/test', (ctx, next) => {
     ctx.body = ctx.state.user || 'debug'
   })
@@ -16,7 +16,7 @@ module.exports = function ({ mongoose, router, test }) {
     try {
       let username = ctx.query.username
       username = username || ctx.request.body.username
-      const isManager = await userServices.isManager({mongoose}, username)
+      const isManager = await userServices.isManager(username)
       ctx.body = {data: isManager}
     } catch (error) {
       console.error(error.stack)

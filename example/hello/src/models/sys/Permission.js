@@ -1,6 +1,9 @@
+const Juglans = require('../../../../..')
 const CommonFields = require('../CommonFields')
+const mongoose = Juglans.mongoose
+const Schema = mongoose.Schema
 
-const defineSchema = Object.assign({}, CommonFields, {
+const defineSchema = new Schema(Object.assign({}, CommonFields, {
   _id: {
     type: String,
     required: true
@@ -33,16 +36,7 @@ const defineSchema = Object.assign({}, CommonFields, {
     enum: ['系统', '用户'],
     default: '用户'
   }
-})
+}))
 
-/**
- * Permission 模型
- * @param {Object} mongoose
- * @param {Object} router
- */
-module.exports = function ({ mongoose }) {
-  const Schema = mongoose.Schema
-  const schema = new Schema(defineSchema)
-  schema.set('autoIndex', false)
-  mongoose.model('Permission', schema)
-}
+defineSchema.set('autoIndex', false)
+mongoose.model('Permission', defineSchema)

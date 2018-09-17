@@ -1,6 +1,10 @@
-const CommonFields = require('../CommonFields')
 
-const defineSchema = Object.assign({}, CommonFields, {
+const Juglans = require('../../../../..')
+const CommonFields = require('../CommonFields')
+const mongoose = Juglans.mongoose
+const Schema = mongoose.Schema
+
+const defineSchema = new Schema(Object.assign({}, CommonFields, {
   _id: {
     type: String,
     required: true
@@ -113,9 +117,9 @@ const defineSchema = Object.assign({}, CommonFields, {
     displayName: 'signin错误的次数',
     remark: 'signin错误的次数，比如输错密码'
   }
-})
+}))
 
-const isManager = mongoose => async (username) => {
+defineSchema.statics.isManager = async (username) => {
   if (!username) return false
   const User = mongoose.model('User')
   const entity = await User.findOne({ username }, { roles: 1 }).populate('roles', 'roles.type')
@@ -130,16 +134,5 @@ const isManager = mongoose => async (username) => {
   return false
 }
 
-/**
- * Permission 模型
- * @param {Object} mongoose
- * @param {Object} router
- */
-module.exports = function ({ mongoose }) {
-  const name = 'User'
-  const Schema = mongoose.Schema
-  const schema = new Schema(defineSchema)
-  schema.set('autoIndex', false)
-  schema.statics.isManager = isManager(mongoose)
-  mongoose.model(name, schema)
-}
+defineSchema.set('autoIndex', false)
+mongoose.model('User', defineSchema)

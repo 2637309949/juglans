@@ -1,6 +1,9 @@
 
+const Juglans = require('../../../..')
+const mongoose = Juglans.mongoose
+
 const repo = exports
-repo.isManager = async function ({ mongoose }, username) {
+repo.isManager = async function (username) {
   try {
     const User = mongoose.model('User')
     const isManager = await User.isManager(username)
