@@ -16,7 +16,7 @@ module.exports = () => {
       },
       async find (accessToken) {
         let result = await AccessToken.findOne({ accessToken, _dr: false })
-        result = (result.toJSON && result.toJSON()) || result
+        result = (result && result.toJSON && result.toJSON()) || result
         return result
       },
       async delete (accessToken) {
