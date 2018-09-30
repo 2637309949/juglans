@@ -4,6 +4,12 @@ const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
+  _countdown: {
+    type: Date,
+    displayName: '倒计时',
+    remark: '定期清除',
+    default: Date.now
+  },
   _expired: {
     type: Number,
     displayName: '失效时间',
@@ -26,5 +32,5 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   }
 }))
 
-defineSchema.set('autoIndex', false)
+defineSchema.index({ _countdown: 1 }, { expireAfterSeconds: 20 })
 mongoose.model('AccessToken', defineSchema)

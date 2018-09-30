@@ -23,8 +23,6 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   }]
 }))
 
-defineSchema.set('autoIndex', false)
-
 /**
  * Role 模型
  * @param {Object} mongoose
@@ -32,8 +30,9 @@ defineSchema.set('autoIndex', false)
  */
 module.exports = function ({ router }) {
   const name = 'Role'
-  mongoose.model('Role', defineSchema)
-  router.get('/Role', mongoose.hooks.list(name))
-  router.post('/Role', mongoose.hooks.create(name))
-  router.delete('/Role', mongoose.hooks.softDelMany(name))
+  const rPath = '/Role'
+  mongoose.model(name, defineSchema)
+  router.get(rPath, mongoose.hooks.list(name))
+  router.post(rPath, mongoose.hooks.create(name))
+  router.delete(rPath, mongoose.hooks.softDelMany(name))
 }

@@ -134,5 +134,4 @@ defineSchema.statics.isManager = async (username) => {
   return false
 }
 
-defineSchema.set('autoIndex', false)
 mongoose.model('User', defineSchema)

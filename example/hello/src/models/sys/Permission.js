@@ -38,5 +38,4 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   }
 }))
 
-defineSchema.set('autoIndex', false)
 mongoose.model('Permission', defineSchema)
