@@ -4,13 +4,10 @@
     web:
       hostname: "web"
       build: "."
+      ports:
+        - "${OUT}:${IN}"
       volumes:
         - "/d/K11/repo/Juglans/example/hello:/code/web/hello/"
         - "/d/K11/repo/Juglans:/code"
       working_dir: "/code/web/hello/"
-      ports:
-        - "3001:${PORT}"
-      dns:
-        - "${BAIDUDNS}"
-        - "${GOOGLEDNS}"
       command: "npm run ${CMD}"

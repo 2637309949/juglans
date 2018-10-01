@@ -3,7 +3,7 @@ const path = require('path')
 module.exports = {
   port: 3001,
   mongo: {
-    uri: 'mongodb://10.11.84.185:27017/test?authSource=admin',
+    uri: 'mongodb://127.0.0.1:27017/test?authSource=admin',
     opts: {
       useNewUrlParser: true,
       poolSize: 1000,

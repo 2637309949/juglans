@@ -11,12 +11,24 @@ app
   .inject(inject)
   .middle(middle)
   .redis(function ({Redis, config}) {
-    return new Redis(config.redis)
+    const redis = new Redis(config.redis, { lazyConnect: true })
+    redis.connect(function (err) {
+      if (err) {
+        console.log(`Redis:${config.redis} connect failed!`)
+        console.error(err)
+      } else {
+        console.log(`Redis:${config.redis} connect successfully!`)
+      }
+    })
+    return redis
   })
   .mongo(function ({mongoose, config}) {
     mongoose.connect(config.mongo.uri, config.mongo.opts, function (err) {
       if (err) {
+        console.log(`Mongodb:${config.mongo.uri} connect failed!`)
         console.error(err)
+      } else {
+        console.log(`Mongodb:${config.mongo.uri} connect successfully!`)
       }
     })
   })
@@ -26,10 +38,8 @@ app
     if (err) {
       console.error(err)
     } else {
-      console.log('==================================================')
-      console.log(`\tApp:${config.name}`)
-      console.log(`\tApp:${config.nodeEnv}`)
-      console.log(`\tApp:runing on Port:${config.port}`)
-      console.log('==================================================')
+      console.log(`App:${config.name}`)
+      console.log(`App:${config.nodeEnv}`)
+      console.log(`App:runing on Port:${config.port}`)
     }
   })
