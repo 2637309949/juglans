@@ -24,7 +24,7 @@ module.exports = {
     login: '/login',
     logout: '/logout',
     fakeTokens: ['DEBUG'],
-    fakeUrls: [/\/test$/]
+    fakeUrls: [/\/test$/, /\/favicon\.ico$/]
   },
   koaBodyOpts: {
     strict: false,
