@@ -43,3 +43,9 @@ app
       console.log(`App:runing on Port:${config.port}`)
     }
   })
+  .on(Juglans.event.INSTANCE_UP_SUCCESSFUL, function (data) {
+    console.log('data1 = ', data)
+  })
+  .on(Juglans.event.INSTANCE_UP_FAILING, function (data) {
+    console.log('data2 = ', data)
+  })

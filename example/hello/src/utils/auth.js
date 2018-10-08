@@ -4,18 +4,18 @@
 const _ = require('lodash')
 
 module.exports = async function auth ({ctx, config, mongoose}) {
-  const obj = _.pick(ctx.request.body, 'username', 'password')
+  const form = _.pick(ctx.request.body, 'username', 'password')
   const User = mongoose.model('User')
-  let userData = await User.findOne({
+  const one = await User.findOne({
     _dr: { $ne: true },
-    username: obj.username,
-    password: obj.password
+    username: form.username,
+    password: form.password
   })
-  if (userData) {
+  if (one) {
     return {
-      id: userData._id,
-      email: userData.email,
-      username: userData.username
+      id: one._id,
+      email: one.email,
+      username: one.username
     }
   } else {
     return null
