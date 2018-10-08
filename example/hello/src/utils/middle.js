@@ -40,6 +40,10 @@ async function logs (ctx, next) {
         await SystemLog.create([object])
         logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log: ${user.username} ${user.id}, ${object.requestMethod} ${object.requestUrl} ${object.requestDesc}`
       }
+    } else if (ctx.state.token && ctx.state.token.fakeToken) {
+      logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log (fake token): ${ctx.req.method.toUpperCase()} ${ctx.request.url}`
+    } else if (ctx.state.token && ctx.state.token.fakeUrl) {
+      logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log (fake url): ${ctx.req.method.toUpperCase()} ${ctx.request.url}`
     } else {
       logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log (unauthorized): ${ctx.req.method.toUpperCase()} ${ctx.request.url}`
     }
