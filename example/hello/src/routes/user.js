@@ -25,7 +25,7 @@ module.exports = function ({ router, test }) {
   })
 
   /**
-     * @api {get} /hello 测试接口
+     * @api {get} /hello 验证接口
      * @apiGroup Test
      * @apiDescription 有Token验证机制
      * @apiSuccessExample {json}
@@ -41,7 +41,7 @@ module.exports = function ({ router, test }) {
   })
 
   /**
-     * @api {get} /user/aux/manager 测试接口
+     * @api {get} /user/aux/manager 用户角色
      * @apiGroup Test
      * @apiDescription 有Token验证机制
      * @apiParam {String} username 用户名

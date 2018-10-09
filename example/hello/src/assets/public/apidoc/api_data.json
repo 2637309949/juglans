@@ -2,7 +2,7 @@
   {
     "type": "get",
     "url": "/hello",
-    "title": "测试接口",
+    "title": "验证接口",
     "group": "Test",
     "description": "<p>有Token验证机制</p>",
     "success": {
@@ -42,7 +42,7 @@
   {
     "type": "get",
     "url": "/user/aux/manager",
-    "title": "测试接口",
+    "title": "用户角色",
     "group": "Test",
     "description": "<p>有Token验证机制</p>",
     "parameter": {
