@@ -4,12 +4,6 @@ const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
-  _countdown: {
-    type: Date,
-    displayName: '倒计时',
-    remark: '定期清除',
-    default: Date.now
-  },
   _expired: {
     type: Number,
     displayName: '失效时间',
@@ -32,5 +26,18 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   }
 }))
 
-defineSchema.index({ _countdown: 1 }, { expireAfterSeconds: 20 })
-mongoose.model('AccessToken', defineSchema)
+/**
+ * AccessToken 模型
+ * @param {Object} mongoose
+ * @param {Object} router
+ */
+module.exports = function ({ mongoose, schedule }) {
+  const name = 'AccessToken'
+  mongoose.model(name, defineSchema)
+  schedule.scheduleJob('5 * * * * *', async function () {
+    // 从数据库中去判断是否能运行该TASK
+    const cond = false
+    if (!cond) return
+    console.log('The answer to life, the universe, and everything!')
+  })
+}

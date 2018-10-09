@@ -1,5 +1,5 @@
 
-const Juglans = require('../../../..')
+const Juglans = require('juglans')
 const mongoose = Juglans.mongoose
 
 const repo = exports
