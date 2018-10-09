@@ -1,10 +1,14 @@
 /**
- * 注入插件
- */
+ * @author [Double]
+ * @email [2637309949@qq.com]
+ * @create date 2018-10-09 14:31:35
+ * @modify date 2018-10-09 14:31:35
+ * @desc [注入插件]
+*/
 const serve = require('koa-static')
 const moment = require('moment')
 const path = require('path')
-const Juglans = require('../../../..')
+const Juglans = require('juglans')
 const mongoose = Juglans.mongoose
 const apiDesc = {}
 

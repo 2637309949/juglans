@@ -1,9 +1,16 @@
+/**
+ * @author [Double]
+ * @email [2637309949@qq.com]
+ * @create date 2018-10-09 14:31:35
+ * @modify date 2018-10-09 14:31:35
+ * @desc [Juglans例子]
+*/
+const Juglans = require('juglans')
+const config = require('./config')
 const middle = require('./utils/middle')
 const inject = require('./utils/inject')
 const model = require('./utils/model')
 const auth = require('./utils/auth')
-const Juglans = require('juglans')
-const config = require('./config')
 
 const app = new Juglans({ name: 'Juglans V1.0' })
 app

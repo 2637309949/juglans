@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon --inspect ./src/index.js",
-    "apidoc": "apidoc -i ./src/ -o ./src/assets/apidoc/ "
+    "apidoc": "apidoc -i ./src/ -o ./src/assets/public/apidoc"
   },
   "keywords": [],
   "author": "",

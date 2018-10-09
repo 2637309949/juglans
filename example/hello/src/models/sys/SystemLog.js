@@ -1,4 +1,4 @@
-const Juglans = require('../../../../..')
+const Juglans = require('juglans')
 const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
