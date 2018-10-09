@@ -11,19 +11,18 @@ app
   .inject(inject)
   .middle(middle)
   .redis(function ({Redis, config}) {
-    const redis = new Redis(config.redis, { lazyConnect: true })
-    redis.connect(function (err) {
+    const redis = Redis.retryConnect(config.redis.uri, config.redis.opts, config.redis.retryCount, function (err) {
       if (err) {
-        console.log(`Redis:${config.redis} connect failed!`)
+        console.log(`Redis:${config.redis.uri} connect failed!`)
         console.error(err)
       } else {
-        console.log(`Redis:${config.redis} connect successfully!`)
+        console.log(`Redis:${config.redis.uri} connect successfully!`)
       }
     })
     return redis
   })
   .mongo(function ({mongoose, config}) {
-    mongoose.connect(config.mongo.uri, config.mongo.opts, function (err) {
+    mongoose.retryConnect(config.mongo.uri, config.mongo.opts, config.mongo.retryCount, function (err) {
       if (err) {
         console.log(`Mongodb:${config.mongo.uri} connect failed!`)
         console.error(err)
@@ -44,8 +43,8 @@ app
     }
   })
   .on(Juglans.event.INSTANCE_UP_SUCCESSFUL, function (data) {
-    console.log('data1 = ', data)
+    console.log('INSTANCE_UP_SUCCESSFUL')
   })
   .on(Juglans.event.INSTANCE_UP_FAILING, function (data) {
-    console.log('data2 = ', data)
+    console.log('INSTANCE_UP_FAILING')
   })

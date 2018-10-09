@@ -6,6 +6,20 @@ const moment = require('moment')
 const path = require('path')
 const Juglans = require('../../../..')
 const mongoose = Juglans.mongoose
+const apiDesc = {}
+
+/**
+ * 测量时间差
+ * @param {Number} start
+ * @param {Number} end
+ * @param {Object} ctx
+ */
+function measure (start, end, ctx) {
+  const delta = end - start
+  const status = ctx.status || 404
+  const timeDelta = delta < 10000 ? delta + 'ms' : Math.round(delta / 1000) + 's'
+  return { status, timeDelta, delta }
+}
 
 /**
  * 日志中间件
@@ -20,7 +34,7 @@ async function logs (ctx, next) {
   try {
     if (ctx.state.user) {
       const user = ctx.state.user
-      const object = {
+      const form = {
         _created: moment().unix(),
         userid: user._id,
         name: user.username,
@@ -32,13 +46,10 @@ async function logs (ctx, next) {
         queryStringParams: ctx.query,
         requestBody: ctx.request.body
       }
-      const desc = {}
-      if (desc[`${object.requestMethod} ${object.requestUrl}`]) {
-        object.requestDesc = desc[`${object.requestMethod} ${object.requestUrl}`]
-      }
-      if (object.requestUrl.startsWith('/api')) {
-        await SystemLog.create([object])
-        logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log: ${user.username} ${user.id}, ${object.requestMethod} ${object.requestUrl} ${object.requestDesc}`
+      form.requestDesc = apiDesc[`${form.requestMethod} ${form.requestUrl}`]
+      if (form.requestUrl.startsWith('/api')) {
+        logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log: ${user.username} ${user.id}, ${form.requestMethod} ${form.requestUrl} ${form.requestDesc}`
+        await SystemLog.create([form])
       }
     } else if (ctx.state.token && ctx.state.token.fakeToken) {
       logInfo = `${moment().format('YYYY-MM-DD HH:mm:ss')} Log (fake token): ${ctx.req.method.toUpperCase()} ${ctx.request.url}`
@@ -49,10 +60,7 @@ async function logs (ctx, next) {
     }
     console.log(`<-- ${logInfo}`)
     await next()
-    const end = Date.now()
-    const delta = end - start
-    const status = ctx.status || 404
-    const timeDelta = delta < 10000 ? delta + 'ms' : Math.round(delta / 1000) + 's'
+    const { timeDelta, status } = measure(start, Date.now(), ctx)
     console.log(`--> ${logInfo} ${status} ${timeDelta}`)
   } catch (err) {
     throw err

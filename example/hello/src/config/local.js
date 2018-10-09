@@ -2,16 +2,26 @@ const path = require('path')
 
 module.exports = {
   port: 3001,
+  debug: true,
   mongo: {
     uri: 'mongodb://127.0.0.1:27017/test?authSource=admin',
+    retryCount: 5,
     opts: {
       useNewUrlParser: true,
       poolSize: 1000,
       reconnectTries: Number.MAX_VALUE
     }
   },
-  debug: true,
-  redis: 'redis://:F7B73743E7AEDD58E58900F4782550BF@www.wosoft.me:6412',
+  redis: {
+    uri: 'redis://:F7B73743E7AEDD58E58900F4782550BF@www.wosoft.me:6412',
+    retryCount: 5,
+    opts: {
+      maxRetriesPerRequest: 3,
+      retryStrategy: function (times) {
+        return null
+      }
+    }
+  },
   ignorePath: [
     '**/node_modules/**'
   ],
