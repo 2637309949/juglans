@@ -2,7 +2,7 @@ const middle = require('./utils/middle')
 const inject = require('./utils/inject')
 const model = require('./utils/model')
 const auth = require('./utils/auth')
-const Juglans = require('../../..')
+const Juglans = require('juglans')
 const config = require('./config')
 
 const app = new Juglans({ name: 'Juglans V1.0' })

@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon --inspect ./src/index.js"
+    "dev": "nodemon --inspect ./src/index.js",
+    "apidoc": "apidoc -i ./src/ -o ./src/assets/apidoc/ "
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
     "nodemon": "^1.18.3"
   },
   "dependencies": {
+    "juglans": "git+https://github.com/2637309949/juglans.git",
     "koa-logger": "^3.2.0",
     "koa-static": "^5.0.0",
     "moment": "^2.22.2"
