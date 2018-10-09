@@ -7,11 +7,9 @@ module.exports = function ({ router, test }) {
   router.get('/test', (ctx, next) => {
     ctx.body = ctx.state.user || 'debug'
   })
-
   router.get('/hello', (ctx, next) => {
     ctx.body = 'hello:' + test
   })
-
   router.get('/user/aux/manager', async (ctx) => {
     try {
       let username = ctx.query.username

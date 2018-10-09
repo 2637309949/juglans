@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  name: 'Juglans V1.0',
   port: 3001,
   debug: true,
   mongo: {
