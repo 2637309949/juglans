@@ -27,17 +27,18 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
 }))
 
 /**
- * AccessToken 模型
+ * AuthToken 模型
  * @param {Object} mongoose
  * @param {Object} router
  */
 module.exports = function ({ mongoose, schedule }) {
-  const name = 'AccessToken'
+  const name = 'AuthToken'
   mongoose.model(name, defineSchema)
-  schedule.scheduleJob('5 * * * * *', async function () {
-    // 从数据库中去判断是否能运行该TASK
-    const cond = false
-    if (!cond) return
-    console.log('The answer to life, the universe, and everything!')
+  schedule.scheduleJob({
+    name: 'revokeToken',
+    spec: '*/1 * * * *',
+    callback: async function () {
+      console.log('The answer to life, the universe, and everything!')
+    }
   })
 }

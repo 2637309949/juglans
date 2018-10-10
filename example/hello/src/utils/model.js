@@ -13,17 +13,17 @@ const mongoose = Juglans.mongoose
  */
 const TOKEN = {
   async save (item) {
-    const AccessToken = mongoose.model('AccessToken')
-    return AccessToken.create([item])
+    const AuthToken = mongoose.model('AuthToken')
+    return AuthToken.create([item])
   },
   async find (accessToken) {
-    const AccessToken = mongoose.model('AccessToken')
-    const result = await AccessToken.findOne({ accessToken, _dr: false })
+    const AuthToken = mongoose.model('AuthToken')
+    const result = await AuthToken.findOne({ accessToken, _dr: false })
     return result && result._doc
   },
   async delete (accessToken) {
-    const AccessToken = mongoose.model('AccessToken')
-    return AccessToken.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
+    const AuthToken = mongoose.model('AuthToken')
+    return AuthToken.updateOne({ accessToken, _dr: false }, { $set: { _dr: true } })
   }
 }
 

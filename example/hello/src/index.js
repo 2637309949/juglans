@@ -29,6 +29,7 @@ app
     return redis
   })
   .mongo(function ({mongoose, config}) {
+    mongoose.set('useCreateIndex', true)
     mongoose.retryConnect(config.mongo.uri, config.mongo.opts, config.mongo.retryCount, function (err) {
       if (err) {
         console.log(`Mongodb:${config.mongo.uri} connect failed!`)
@@ -45,7 +46,7 @@ app
       console.error(err)
     } else {
       console.log(`App:${config.name}`)
-      console.log(`App:${config.nodeEnv}`)
+      console.log(`App:${config.NODE_ENV}`)
       console.log(`App:runing on Port:${config.port}`)
     }
   })
