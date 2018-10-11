@@ -16,6 +16,7 @@
     "scripts": [
       "./src/models/**/*.js",
       "./src/routes/**/*.js",
+      "./src/services/**/*.js",
       "./src/tasks/**/*.js"
     ],
     "assets": "./src/assets/public/**/*"
