@@ -11,6 +11,7 @@ const middle = require('./utils/middle')
 const inject = require('./utils/inject')
 const model = require('./utils/model')
 const auth = require('./utils/auth')
+const event = require('./utils/event')
 
 const app = new Juglans({ name: 'Juglans V1.0' })
 app
@@ -50,9 +51,7 @@ app
       console.log(`App:runing on Port:${config.port}`)
     }
   })
-  .on(Juglans.event.INSTANCE_UP_SUCCESSFUL, function (data) {
-    console.log('INSTANCE_UP_SUCCESSFUL')
-  })
+  .on(Juglans.event.INSTANCE_UP_SUCCESSFUL, event.INSTANCE_UP_SUCCESSFUL)
   .on(Juglans.event.INSTANCE_UP_FAILING, function (data) {
     console.log('INSTANCE_UP_FAILING')
   })

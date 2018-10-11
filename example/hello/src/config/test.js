@@ -28,7 +28,8 @@ module.exports = {
   ],
   injectPath: [
     path.join(__dirname, '../models/**/*.js'),
-    path.join(__dirname, '../routes/**/*.js')
+    path.join(__dirname, '../routes/**/*.js'),
+    path.join(__dirname, '../tasks/**/*.js')
   ],
   authConfig: {
     secret: 'ef6d85d2a46311e8aa557555c34ad35a',

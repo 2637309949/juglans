@@ -36,3 +36,9 @@ module.exports = function ({ router }) {
   router.post(rPath, mongoose.hooks.create(name))
   router.delete(rPath, mongoose.hooks.softDelMany(name))
 }
+
+/**
+ * Schema 模型
+ * 方便后期寻址
+ */
+module.exports.defineSchema = defineSchema

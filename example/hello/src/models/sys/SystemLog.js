@@ -52,3 +52,9 @@ const defineSchema = new Schema({
 })
 
 mongoose.model('SystemLog', defineSchema)
+
+/**
+ * Schema 模型
+ * 方便后期寻址
+ */
+module.exports.defineSchema = defineSchema

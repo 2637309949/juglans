@@ -26,19 +26,10 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   }
 }))
 
+mongoose.model('AuthToken', defineSchema)
+
 /**
- * AuthToken 模型
- * @param {Object} mongoose
- * @param {Object} router
+ * Schema 模型
+ * 方便后期寻址
  */
-module.exports = function ({ mongoose, schedule }) {
-  const name = 'AuthToken'
-  mongoose.model(name, defineSchema)
-  schedule.scheduleJob({
-    name: 'revokeToken',
-    spec: '*/1 * * * *',
-    callback: async function () {
-      console.log('The answer to life, the universe, and everything!')
-    }
-  })
-}
+module.exports.defineSchema = defineSchema

@@ -135,3 +135,9 @@ defineSchema.statics.isManager = async (username) => {
 }
 
 mongoose.model('User', defineSchema)
+
+/**
+ * Schema 模型
+ * 方便后期寻址
+ */
+module.exports.defineSchema = defineSchema

@@ -31,11 +31,6 @@ module.exports = {
     displayName: '删除标记',
     default: false
   },
-  _ts: {
-    type: Number,
-    displayName: '时间戳',
-    remark: 'UNIX时间戳'
-  },
   _remark: {
     type: String,
     displayName: '备注'
