@@ -4,10 +4,6 @@ const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
-  _id: {
-    type: String,
-    required: true
-  },
   code: {
     type: String,
     unique: true,

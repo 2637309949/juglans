@@ -5,27 +5,18 @@
  * @modify date 2018-10-11 21:08:05
  * @desc [只保留6个月内的Token, 分析Token]
 */
-const moment = require('moment')
-const Juglans = require('juglans')
-const mongoose = Juglans.mongoose
 
 const defineSchedule = {
   path: __filename,
-  name: 'revokeToken',
-  spec: '9 * * *',
+  name: 'Test',
+  spec: '*/5 * * * * *',
   callback: async function () {
-    const AuthToken = mongoose.model('AuthToken')
-    const threshold = moment().subtract(6, 'month').startOf('day').unix()
-    await AuthToken.deleteMany({
-      _created: {
-        $lte: threshold
-      }
-    })
+    console.log('test job!')
   }
 }
 
 /**
- * AuthToken 模型
+ * Test 模型
  * @param {Object} mongoose
  * @param {Object} router
  */

@@ -1,14 +1,10 @@
 const Juglans = require('juglans')
+const CommonFields = require('../CommonFields')
 const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 // 定义模型结构
-const defineSchema = new Schema({
-  _created: {
-    type: Number,
-    displayName: '创建时间',
-    remark: 'UNIX时间戳'
-  },
+const defineSchema = new Schema(Object.assign({}, CommonFields, {
   userid: {
     type: String,
     displayName: '用户ID'
@@ -44,12 +40,8 @@ const defineSchema = new Schema({
   requestBody: {
     type: Schema.Types.Mixed,
     displayName: '请求体'
-  },
-  _remark: {
-    type: String,
-    displayName: '备注'
   }
-})
+}))
 
 mongoose.model('SystemLog', defineSchema)
 

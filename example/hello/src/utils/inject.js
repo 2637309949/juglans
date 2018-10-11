@@ -19,7 +19,7 @@ const scheduleJob = schedule.scheduleJob
  */
 schedule.scheduleJob = async function ({ path, name, spec, callback }) {
   const Task = mongoose.model('Task')
-  await Task.remove({ name })
+  await Task.deleteMany({ name })
 
   schedule.tasks = schedule.tasks || []
   const tIndex = schedule.tasks.findIndex(tName => tName === name)
