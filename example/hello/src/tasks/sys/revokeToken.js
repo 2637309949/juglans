@@ -1,9 +1,26 @@
+/**
+ * @author [Double]
+ * @email [example@mail.com]
+ * @create date 2018-10-11 21:08:05
+ * @modify date 2018-10-11 21:08:05
+ * @desc [只保留6个月内的Token, 分析Token]
+*/
+const moment = require('moment')
+const Juglans = require('juglans')
+const mongoose = Juglans.mongoose
+
 const defineSchedule = {
   path: __filename,
   name: 'revokeToken',
-  spec: '*/3 * * * * *',
+  spec: '9 * * *',
   callback: async function () {
-    console.log('The answer to life, the universe, and everything!')
+    const AuthToken = mongoose.model('AuthToken')
+    const threshold = moment().subtract(6, 'month').startOf('day').unix()
+    await AuthToken.remove({
+      _created: {
+        $lte: threshold
+      }
+    })
   }
 }
 

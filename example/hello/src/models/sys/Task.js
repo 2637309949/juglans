@@ -6,7 +6,14 @@ const Schema = mongoose.Schema
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
   path: {
     type: String,
-    displayName: '任务路径'
+    displayName: '任务路径',
+    required: '任务路径({PATH})不能为空'
+  },
+  spec: {
+    type: String,
+    displayName: '任务周期',
+    unique: true,
+    required: '任务名称({PATH})不能为空'
   },
   name: {
     type: String,

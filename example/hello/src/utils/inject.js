@@ -28,6 +28,7 @@ schedule.scheduleJob = async function ({ path, name, spec, callback }) {
   } else if (tIndex === -1 && taskEnv === NODE_ENV) {
     await Task.create([{
       path,
+      spec,
       name,
       enable: true,
       _creator: 'super',

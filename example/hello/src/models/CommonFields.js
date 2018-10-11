@@ -1,9 +1,12 @@
+/**
+ * @author [Double]
+ * @email [example@mail.com]
+ * @create date 2018-10-11 21:13:32
+ * @modify date 2018-10-11 21:13:32
+ * @desc [模型共同属性]
+*/
+
 module.exports = {
-  site: {
-    type: String,
-    ref: 'BdSite',
-    displayName: '所属项目'
-  },
   _creator: {
     type: String,
     displayName: '创建人',
@@ -29,10 +32,7 @@ module.exports = {
   _dr: {
     type: Boolean,
     displayName: '删除标记',
-    default: false
-  },
-  _remark: {
-    type: String,
-    displayName: '备注'
+    default: false,
+    require: true
   }
 }
