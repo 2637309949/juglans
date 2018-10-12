@@ -52,6 +52,4 @@ app
     }
   })
   .on(Juglans.event.INSTANCE_UP_SUCCESSFUL, event.INSTANCE_UP_SUCCESSFUL)
-  .on(Juglans.event.INSTANCE_UP_FAILING, function (data) {
-    console.log('INSTANCE_UP_FAILING')
-  })
+  .on(Juglans.event.INSTANCE_UP_FAILING, event.INSTANCE_UP_FAILING)

@@ -1,13 +1,14 @@
 {
-  "name": "demo",
+  "name": "hello",
   "version": "1.0.0",
-  "description": "",
+  "description": "Juglans Example",
   "main": "src/index.js",
   "bin": "src/index.js",
   "scripts": {
     "dev": "set taskEnv=local&&nodemon --inspect ./src/index.js",
     "apidoc": "apidoc -i ./src/ -o ./src/assets/public/apidoc",
-    "bin": "pkg package.json --target node10-win-x64"
+    "binWn": "pkg package.json --target node10-win-x64 --out-path ./build/",
+    "binLx": "pkg package.json --target node10-linux-armv7 --out-path ./build"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,9 @@
       "./src/services/**/*.js",
       "./src/tasks/**/*.js"
     ],
-    "assets": "./src/assets/public/**/*"
+    "assets": [
+      "./src/assets/public/**/*"
+    ]
   },
   "devDependencies": {
     "nodemon": "^1.18.3"

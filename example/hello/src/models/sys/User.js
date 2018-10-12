@@ -5,10 +5,6 @@ const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
-  _id: {
-    type: String,
-    required: true
-  },
   username: {
     type: String,
     displayName: '账号',
