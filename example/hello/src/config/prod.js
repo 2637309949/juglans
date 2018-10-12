@@ -1,5 +1,7 @@
 const path = require('path')
 
+// 避开PKG虚拟文件系统
+const __actDirName = __dirname.replace('snapshot', '')
 module.exports = {
   name: 'Juglans V1.0',
   port: 3001,
@@ -36,7 +38,7 @@ module.exports = {
     login: '/login',
     logout: '/logout',
     fakeTokens: ['DEBUG'],
-    fakeUrls: [/\/test$/, /\/favicon\.ico$/]
+    fakeUrls: [/\/apidoc\/.*$/, /\/upload\/.*$/, /\/test$/, /\/favicon\.ico$/]
   },
   koaBodyOpts: {
     strict: false,
@@ -46,7 +48,7 @@ module.exports = {
     multipart: true,
     formidable: {
       keepExtensions: true,
-      uploadDir: path.join(__dirname, '../assets/public/upload')
+      uploadDir: path.join(__actDirName, '../assets/public/upload')
     }
   }
 }
