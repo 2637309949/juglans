@@ -10,7 +10,9 @@ module.exports = {
   _creator: {
     type: String,
     displayName: '创建人',
-    ref: 'User'
+    ref: 'User',
+    index: true,
+    require: true
   },
   _modifier: {
     type: String,
@@ -21,7 +23,8 @@ module.exports = {
     type: Number,
     displayName: '创建时间',
     remark: 'UNIX时间戳',
-    index: true
+    index: true,
+    require: true
   },
   _modified: {
     type: Number,

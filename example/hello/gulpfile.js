@@ -6,8 +6,7 @@ const sequence = require('gulp-sequence')
 const dest = 'build'
 const env = process.env.NODE_ENV || 'local'
 
-console.log(`///////////////////// ${env} /////////////////////\n`)
-
+console.log(`============= ${env} =============\n`)
 // 清空输出目录
 gulp.task('clean', function () {
   fsx.emptyDirSync(dest)
@@ -35,7 +34,6 @@ gulp.task('build:server', function (cb) {
 // 复制其余文件
 gulp.task('copy:others', function () {
   return gulp.src([
-    // 'package.json',
     'Dockerfile'
   ]).pipe(gulp.dest(dest))
 })
