@@ -15,7 +15,7 @@ const defineSchedule = {
   spec: '9 * * *',
   callback: async function () {
     const AuthToken = mongoose.model('AuthToken')
-    const threshold = moment().subtract(6, 'month').startOf('day').unix()
+    const threshold = moment().add(-6, 'month').startOf('day').unix()
     await AuthToken.deleteMany({
       _created: {
         $lte: threshold

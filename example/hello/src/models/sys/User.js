@@ -36,28 +36,6 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
     displayName: '用户类型',
     enum: [null, '企业号', '自建']
   },
-  name: {
-    type: String,
-    displayName: '姓名',
-    required: '姓名({PATH})不能为空'
-  },
-  domain_account: {
-    type: String,
-    displayName: '主域账号'
-  },
-  subdomain_account: {
-    type: String,
-    displayName: '子域账号'
-  },
-  active_domain_account: {
-    type: String,
-    displayName: '域账号启用标记',
-    remark: '1:主账号、2:子域账号'
-  },
-  domain_email: {
-    type: String,
-    displayName: '域邮箱'
-  },
   english_name: {
     type: String,
     displayName: '英文名'
@@ -76,23 +54,6 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
     ref: 'Role',
     displayName: '关联角色'
   }],
-  // 微信的site + 自定义的site
-  sites: [{
-    type: String,
-    ref: 'BdSite',
-    displayName: '关联项目'
-  }],
-  // 微信过来的site
-  wechat_sites: [{
-    type: String,
-    ref: 'BdSite',
-    displayName: '关联项目'
-  }],
-  employee: {
-    type: String,
-    ref: 'BdEmployee',
-    displayName: '关联员工'
-  },
   department: [{
     displayName: '所属部门',
     type: String,
