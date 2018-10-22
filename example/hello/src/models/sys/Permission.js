@@ -10,10 +10,18 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
     displayName: '权限编码',
     required: '权限编码({PATH})不能为空'
   },
-  name: {
+  name_sc: {
     type: String,
     displayName: '权限名称',
     required: '权限名称({PATH})不能为空'
+  },
+  name_tc: {
+    type: String,
+    displayName: '繁体名称'
+  },
+  name_en: {
+    type: String,
+    displayName: '英文名称'
   },
   pid: {
     type: String,

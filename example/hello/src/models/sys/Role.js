@@ -4,11 +4,19 @@ const mongoose = Juglans.mongoose
 const Schema = mongoose.Schema
 
 const defineSchema = new Schema(Object.assign({}, CommonFields, {
-  name: {
+  name_sc: {
     type: String,
     displayName: '角色名称',
     unique: true,
     required: '预警名称({PATH})不能为空'
+  },
+  name_tc: {
+    type: String,
+    displayName: '繁体名称'
+  },
+  name_en: {
+    type: String,
+    displayName: '英文名称'
   },
   type: {
     type: String,
