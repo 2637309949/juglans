@@ -6,8 +6,8 @@
  * @desc [注入对象]
 */
 const schedule = require('node-schedule')
-const moment = require('moment')
 const Juglans = require('juglans')
+const consts = Juglans.consts
 const mongoose = Juglans.mongoose
 const { taskEnv, NODE_ENV = 'local' } = process.env
 const scheduleJob = schedule.scheduleJob
@@ -32,8 +32,8 @@ schedule.scheduleJob = async function ({ path, name, spec, callback }) {
           spec,
           name,
           enable: true,
-          _creator: 'super',
-          _created: moment().unix()
+          _creator: consts.doc._creator,
+          _created: consts.doc._created
         }
       },
       { upsert: true })
