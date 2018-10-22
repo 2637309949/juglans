@@ -25,7 +25,7 @@ schedule.scheduleJob = async function ({ path, name, spec, callback }) {
     throw new Error(`${name} already existed`)
   } else if (tIndex === -1 && taskEnv === NODE_ENV) {
     // 新增或更新
-    await Task.update({ name },
+    await Task.updateOne({ name },
       {
         $set: {
           path,

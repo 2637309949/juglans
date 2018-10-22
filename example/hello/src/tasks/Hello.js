@@ -8,10 +8,10 @@
 
 const defineSchedule = {
   path: __filename,
-  name: 'Test',
+  name: 'Hello',
   spec: '*/5 * * * * *',
   callback: async function () {
-    console.log('test job!')
+    console.log('Hello job!')
   }
 }
 

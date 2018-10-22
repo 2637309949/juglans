@@ -12,7 +12,6 @@ const defineSchema = new Schema(Object.assign({}, CommonFields, {
   spec: {
     type: String,
     displayName: '任务周期',
-    unique: true,
     required: '任务名称({PATH})不能为空'
   },
   name: {
