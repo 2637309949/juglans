@@ -8,7 +8,7 @@
     "dev": "set taskEnv=local&&nodemon --inspect ./src/index.js",
     "apidoc": "apidoc -i ./src/ -o ./src/assets/public/apidoc",
     "binWn": "pkg package.json --target node10-win-x64 --out-path ./build/",
-    "binLx": "pkg package.json --target node10-linux-armv7 --out-path ./build",
+    "binLx": "pkg package.json --target node10-alpine-x64 --out-path ./build",
     "build": "gulp"
   },
   "keywords": [],
@@ -29,8 +29,7 @@
     "gulp": "3.9.1",
     "gulp-babel": "7.0.0",
     "gulp-sequence": "0.4.6",
-    "gulp-uglify": "3.0.0",
-    "nodemon": "^1.18.4"
+    "gulp-uglify": "3.0.0"
   },
   "dependencies": {
     "fs-extra": "^7.0.0",
