@@ -24,7 +24,7 @@ gulp.task('build:apidoc', function (cb) {
 
 // 编译服务端
 gulp.task('build:server', function (cb) {
-  return exec('npm run binWn', function (err, stdout, stderr) {
+  return exec('npm run binLx', function (err, stdout, stderr) {
     console.log(stdout)
     console.log(stderr)
     cb(err)

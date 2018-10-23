@@ -1,8 +1,19 @@
 # build a nodejs image for docker
 FROM node:8.1.4-alpine
+
 # set localtime
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-# Install pm2
+RUN apk update && apk add python make tzdata \
+    && rm -f /etc/localtime \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# set taobao registry
 RUN npm config -g set registry https://registry.npm.taobao.org
-# RUN npm i -g pm2
+
+# copt project
+RUN mkdir -p /opt/app
+WORKDIR /opt/app
+COPY . .
+
+# run 
+EXPOSE 3001
+CMD [ "web" ]

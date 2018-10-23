@@ -30,7 +30,7 @@
     "gulp-babel": "7.0.0",
     "gulp-sequence": "0.4.6",
     "gulp-uglify": "3.0.0",
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.4"
   },
   "dependencies": {
     "fs-extra": "^7.0.0",
