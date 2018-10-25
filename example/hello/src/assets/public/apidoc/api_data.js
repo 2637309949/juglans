@@ -96,8 +96,8 @@ define({ "api": [
     "url": "",
     "version": "0.0.0",
     "filename": "src/assets/public/apidoc/main.js",
-    "group": "_mnt_d_K11_repo_Juglans_example_hello_src_assets_public_apidoc_main_js",
-    "groupTitle": "_mnt_d_K11_repo_Juglans_example_hello_src_assets_public_apidoc_main_js",
+    "group": "_home_haskell_Applications_repo_juglans_example_hello_src_assets_public_apidoc_main_js",
+    "groupTitle": "_home_haskell_Applications_repo_juglans_example_hello_src_assets_public_apidoc_main_js",
     "name": ""
   }
 ] });
