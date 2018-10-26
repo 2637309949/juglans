@@ -1,0 +1,42 @@
+# gitlab, drone, ci/di
+version: '2'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:11.3.0-ce.0
+    ports:
+      - "8080:80"
+      - "8022:22"
+    volumes:
+      - /srv/gitlab/config:/etc/gitlab
+      - /srv/gitlab/logs:/var/log/gitlab
+      - /srv/gitlab/data:/var/opt/gitlab
+    restart: always
+  drone-server:
+    image: drone/drone:0.8
+    ports:
+      - "8081:8000"
+      - "9000"
+    volumes:
+      - /srv/drone:/var/lib/drone/
+    restart: always
+    environment:
+     - DRONE_OPEN=true
+     - DRONE_GITLAB=true
+     ## DRONE_HOST should use public ip or public host, or would be actived repo failed!, also gitlab application should to this one!
+     - DRONE_HOST=http://7b6cd212.ngrok.io
+     - DRONE_GITLAB_CLIENT=db7421fc5f5a703dac9efa575c6f407e37326715e9fd20246d26233e41b2183f
+     - DRONE_GITLAB_SECRET=94fb104c1cc84b357327da2669e7178575b5052bc612e39bb495099d20974420
+     - DRONE_GITLAB_URL=http://192.168.199.128:8080
+     - DRONE_GITLAB_SKIP_VERIFY=true
+     - DRONE_SECRET=e4b29ecaddf0ee480a2be62670034dad3c8e3a591e52b16174a2fa540ac7c976
+  drone-agent:
+    image: drone/agent:0.8
+    restart: always
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DRONE_SERVER=drone-server:9000
+      - DRONE_SECRET=e4b29ecaddf0ee480a2be62670034dad3c8e3a591e52b16174a2fa540ac7c976
