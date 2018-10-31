@@ -15,7 +15,7 @@ const event = require('./utils/event')
 
 const app = new Juglans({ name: 'Juglans V1.0' })
 app
-  .setConfig(config)
+  .config(config)
   .inject(inject)
   .middle(middle)
   .redis(function ({Redis, config}) {

@@ -1,15 +1,17 @@
-# base
-port: 3000
+# app port
+port: 3001
+# app name(for log or other)
 name: 'Juglans V1.0'
+# api prefix
 prefix: '/api/v1'
+# debug for dev
 debug: false
-
 # depend inject
 depInject:
+    path: []
     ignore:
         - '**/node_modules/**'
         - '**/bin/**'
-
 # api auth
 security:
     expiresIn: '24h'
