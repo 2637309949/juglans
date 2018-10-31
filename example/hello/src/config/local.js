@@ -35,14 +35,14 @@ module.exports = {
       '**/node_modules/**'
     ]
   },
-  authConfig: {
+  security: {
     secret: 'ef6d85d2a46311e8aa557555c34ad35a',
     login: '/login',
     logout: '/logout',
     fakeTokens: ['DEBUG'],
     fakeUrls: [/\/apidoc\/.*$/, /\/upload\/.*$/, /\/test$/, /\/favicon\.ico$/]
   },
-  koaBodyOpts: {
+  bodyParser: {
     strict: false,
     jsonLimit: '5mb',
     formLimit: '1mb',
