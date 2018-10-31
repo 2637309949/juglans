@@ -1,13 +1,16 @@
-## 基本配置
+# base
 port: 3000
 name: 'Juglans V1.0'
 prefix: '/api/v1'
 debug: false
-## 组件配置
-ignorePath:
-    - '**/node_modules/**'
-    - '**/bin/**'
-## 认证配置
+
+# depend inject
+depInject:
+    ignore:
+        - '**/node_modules/**'
+        - '**/bin/**'
+
+# api auth
 authConfig:
     expiresIn: '24h'
     secret: 'ef6d85d2a46311e8aa557555c34ad35a'

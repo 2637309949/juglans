@@ -25,14 +25,16 @@ module.exports = {
       }
     }
   },
-  ignorePath: [
-    '**/node_modules/**'
-  ],
-  injectPath: [
-    path.join(__dirname, '../models/**/*.js'),
-    path.join(__dirname, '../routes/**/*.js'),
-    path.join(__dirname, '../tasks/**/*.js')
-  ],
+  depInject: {
+    path: [
+      path.join(__dirname, '../models/**/*.js'),
+      path.join(__dirname, '../routes/**/*.js'),
+      path.join(__dirname, '../tasks/**/*.js')
+    ],
+    ignore: [
+      '**/node_modules/**'
+    ]
+  },
   authConfig: {
     secret: 'ef6d85d2a46311e8aa557555c34ad35a',
     login: '/login',
