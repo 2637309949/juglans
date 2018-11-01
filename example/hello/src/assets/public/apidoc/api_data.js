@@ -1,5 +1,33 @@
 define({ "api": [
   {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "src/assets/public/apidoc/main.js",
+    "group": "D__K11_repo_Juglans_example_hello_src_assets_public_apidoc_main_js",
+    "groupTitle": "D__K11_repo_Juglans_example_hello_src_assets_public_apidoc_main_js",
+    "name": ""
+  },
+  {
     "type": "get",
     "url": "/hello",
     "title": "验证接口",
@@ -71,33 +99,5 @@ define({ "api": [
     "filename": "src/routes/test.js",
     "groupTitle": "Test",
     "name": "GetUserAuxManager"
-  },
-  {
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "optional": false,
-            "field": "varname1",
-            "description": "<p>No type.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "varname2",
-            "description": "<p>With type.</p>"
-          }
-        ]
-      }
-    },
-    "type": "",
-    "url": "",
-    "version": "0.0.0",
-    "filename": "src/assets/public/apidoc/main.js",
-    "group": "_home_haskell_Applications_repo_juglans_example_hello_src_assets_public_apidoc_main_js",
-    "groupTitle": "_home_haskell_Applications_repo_juglans_example_hello_src_assets_public_apidoc_main_js",
-    "name": ""
   }
 ] });
