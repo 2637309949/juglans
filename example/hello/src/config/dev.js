@@ -36,7 +36,7 @@ module.exports = {
     ]
   },
   security: {
-    secret: 'ef6d85d2a46311e8aa557555c34ad35a',
+    secret: 'EF6D85D2A46311E8AA557555C34AD35A',
     login: '/login',
     logout: '/logout',
     fakeTokens: ['DEBUG'],
