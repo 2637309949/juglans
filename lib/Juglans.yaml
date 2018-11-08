@@ -12,6 +12,9 @@ depInject:
     ignore:
         - '**/node_modules/**'
         - '**/bin/**'
+        - '**/log/**'
+        - '**/statics/**'
+        - '**/html/**'
 # api auth
 security:
     fakeTokens: []
