@@ -10,6 +10,5 @@ module.exports = require('./lib/Juglans')
 // 其他对象导出
 module.exports.mongoose = require('./lib/mongoose')
 module.exports.Plugins = require('./lib/plugins')
-module.exports.Redis = require('./lib/Redis')
 module.exports.utils = require('./lib/utils')
 module.exports.consts = require('./lib/consts')
