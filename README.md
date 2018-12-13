@@ -2,6 +2,29 @@
 
 ![Juglans flash](./asserts/flash.jpeg)
 
+## Instruction
+1. Install Juglans
+```shell
+$ npm install Juglans
+```
+2. Init a Juglans Instance
+```shell
+const app = new Juglans({ name: 'Juglans V1.0' })
+app
+.config(config)
+.inject(inject)
+.middle(...middle)
+.run(function (err, config) {
+    if (err) {
+        console.error(err)
+    } else {
+        console.log(`App:${config.name}`)
+        console.log(`App:${config.NODE_ENV}`)
+        console.log(`App:runing on Port:${config.port}`)
+    }
+})
+```
+3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 ## MIT License
 
 Copyright (c) 2016 Freax
