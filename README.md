@@ -13,7 +13,7 @@ const app = new Juglans({ name: 'Juglans V1.0' })
 app
 .config(config)
 .inject(inject)
-.middle(...middle)
+.use(...middle)
 .run(function (err, config) {
     if (err) {
         console.error(err)
