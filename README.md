@@ -11,10 +11,10 @@ $ npm install Juglans
 ```shell
 const app = new Juglans({ name: 'Juglans V1.0' })
 app
-.config(config)
-.inject(inject)
-.use(...middle)
-.run(function (err, config) {
+.Config(config)
+.Inject(inject)
+.Use(...middle)
+.Run(function (err, config) {
     if (err) {
         console.error(err)
     } else {
