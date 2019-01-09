@@ -25,6 +25,16 @@ app
 })
 ```
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
+
+## API
+1.set app config
+
+2.inject your custom injects
+
+3.import your plugins
+
+4.run app
+
 ## MIT License
 
 Copyright (c) 2016 Freax
