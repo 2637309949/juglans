@@ -3,18 +3,34 @@
 ![Juglans flash](./asserts/flash.jpeg)
 
 ## Instruction
-1. Install Juglans
+#### 1. Install Juglans
 ```shell
 $ npm install Juglans
 ```
-2. Init a Juglans Instance
-```shell
+#### 2. Init a Juglans Instance
+```javascript
 const app = new Juglans({ name: 'Juglans V1.0' })
-app
-.Config(config)
-.Inject(inject)
-.Use(...middle)
-.Run(function (err, config) {
+// set config
+app.Config(config)
+// inject init objectd
+app.Inject(inject)
+// import plugins
+app.Use(
+  // logs plugin
+  Logs({
+    record: async () => {}
+  }),
+  // static assets serve
+  Delivery(),
+  // example plugin
+  function({ router }) {
+    router.get('/hello', ctx => {
+      ctx.body = 'juglans'
+    })
+  }
+)
+// run app and listen callback
+app.Run(function (err, config) {
     if (err) {
         console.error(err)
     } else {
@@ -27,14 +43,55 @@ app
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 
 ## API
-1.set app config
+#### 1.set app config
 
-2.inject your custom injects
+#### 2.inject your custom injects
 
-3.import your plugins
+#### 3.import your plugins
 
-4.run app
+#### 4.run app
 
+## Design Philosophy
+
+## Plugins
+### Built-in Plugins
+#### 1. delivery
+#### 2. i18n
+#### 3. logs
+#### 4. identity
+#### 5. roles
+#### 6. cache
+### Custom your plugins
+#### 1. general plugins
+```javascript
+// 1. defined your plugins
+const MyPlugin = ({ A, B }) => async ({ router, config }) => {
+    // your code
+}
+// 2. use your plugins
+app.Use(MyPlugin({ A: 12, B: 11 }))
+```
+#### 2. advanced plugins
+```javascript
+// 1. defined your plugins
+function MyPlugin({ A, B }) {
+}
+MyPlugin.prototype.plugin = ({ router, config }) => {
+    // your code
+}
+// or
+MyPlugin.prototype.plugin = function() {
+    // your code
+    return ({ router, config }) => {
+    }
+}
+// 2. use your plugins
+app.Use(new MyPlugin({ A: 12, B: 11 }))
+// or
+app.Use((new MyPlugin({ A: 12, B: 11 })).plugin)
+// or
+app.Use((new MyPlugin({ A: 12, B: 11 })).plugin())
+```
 ## MIT License
 
 Copyright (c) 2016 Freax
