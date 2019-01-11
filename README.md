@@ -61,6 +61,7 @@ app.Run(function (err, config) {
 #### 4. identity
 #### 5. roles
 #### 6. cache
+#### 7. upload
 ### Custom your plugins
 #### 1. general plugins
 ```javascript
