@@ -5,7 +5,7 @@
  * @modify date 2018-09-02 12:51:45
  * @desc [export root object]
 */
-module.exports = require('./lib/Juglans')
-module.exports.Plugins = require('./lib/plugins')
-module.exports.utils = require('./lib/utils')
-module.exports = Object.assign(module.exports, require('./lib/addition'))
+module.exports = require('./Juglans')
+module.exports.Plugins = require('./plugins')
+module.exports.utils = require('./utils')
+module.exports = Object.assign(module.exports, require('./addition'))

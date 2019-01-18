@@ -153,129 +153,109 @@ module.exports.prototype.authToken = async function (accessToken) {
   }
 }
 
-module.exports.prototype.plugin = function () {
+module.exports.prototype.plugin = function ({ router }) {
   const { auth, expiresIn, fakeUrls, fakeTokens, route, saveToken, revokeToken, findToken } = this.options
   const obtainToken = this.obtainToken.bind(this)
   const authToken = this.authToken.bind(this)
-  return async function ({ router, config }) {
-    /**
-     * parse token from user request
-     */
-    router.use(async function (ctx, next) {
-      const body = ctx.request.body
-      const accessToken = ctx.query['accessToken'] ||
+
+  router.use(async function (ctx, next) {
+    const body = ctx.request.body
+    const accessToken = ctx.query['accessToken'] ||
           body['accessToken'] ||
           ctx.cookies.get('accessToken') ||
           ctx.get('Authorization') ||
           ctx.get('accessToken')
-      await setAccessToken(ctx, accessToken)
-      await next()
-    })
-
-    /**
-     * obtain token
-     */
-    router.post(route.obtainToken, async function (ctx) {
-      try {
-        const ret = await auth(ctx)
-        if (ret) {
-          const data = await obtainToken(ret)
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data
-          }
-        } else {
-          ctx.body = { errcode: 500, errmsg: 'user authentication failed!' }
-        }
-      } catch (error) {
-        console.error(error)
-        ctx.body = { errcode: 500, errmsg: error.message }
-      }
-    })
-
-    /**
-     * revoke token
-     */
-    router.post(route.revokeToken, async function (ctx) {
-      try {
-        const accessToken = await module.exports.getAccessToken(ctx)
-        await revokeToken(accessToken)
+    await setAccessToken(ctx, accessToken)
+    await next()
+  })
+  router.post(route.obtainToken, async function (ctx) {
+    try {
+      const ret = await auth(ctx)
+      if (ret) {
+        const data = await obtainToken(ret)
         ctx.body = {
           errcode: null,
           errmsg: null,
-          data: 'ok'
+          data
         }
-      } catch (error) {
-        console.error(error)
+      } else {
+        ctx.body = { errcode: 500, errmsg: 'user authentication failed!' }
+      }
+    } catch (error) {
+      console.error(error)
+      ctx.body = { errcode: 500, errmsg: error.message }
+    }
+  })
+  router.post(route.revokeToken, async function (ctx) {
+    try {
+      const accessToken = await module.exports.getAccessToken(ctx)
+      await revokeToken(accessToken)
+      ctx.body = {
+        errcode: null,
+        errmsg: null,
+        data: 'ok'
+      }
+    } catch (error) {
+      console.error(error)
+      ctx.body = {
+        errcode: 500,
+        errmsg: error.message
+      }
+    }
+  })
+  router.post(route.refleshToken, async function (ctx) {
+    try {
+      const accessToken = await module.exports.getAccessToken(ctx)
+      const data = await findToken(accessToken)
+      if (!data) {
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          errcode: null,
+          errmsg: null,
+          data: 'refleshToken invalid'
         }
-      }
-    })
-
-    /**
-     * reflesh token
-     */
-    router.post(route.refleshToken, async function (ctx) {
-      try {
-        const accessToken = await module.exports.getAccessToken(ctx)
-        const data = await findToken(accessToken)
-        if (!data) {
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data: 'refleshToken invalid'
-          }
-        } else {
-          // 重建token
-          await revokeToken(accessToken)
-          data.accessToken = utils.randomStr(32)
-          data.updated = moment().unix()
-          data.expired = moment().add(expiresIn, 'hour').unix()
-          await saveToken(data)
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data
-          }
-        }
-      } catch (error) {
-        console.error(error)
+      } else {
+        // 重建token
+        await revokeToken(accessToken)
+        data.accessToken = utils.randomStr(32)
+        data.updated = moment().unix()
+        data.expired = moment().add(expiresIn, 'hour').unix()
+        await saveToken(data)
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          errcode: null,
+          errmsg: null,
+          data
         }
       }
-    })
-
-    /**
-     * auth token
-     */
-    router.use(async function (ctx, next) {
-      try {
-        const accessToken = await module.exports.getAccessToken(ctx)
-        const { isFakeTokens, isFakeUrls } = await fakeVerify(ctx.path, { fakeTokens, fakeUrls, accessToken })
-        if (isFakeUrls) {
-          ctx.state.fakeUrl = true
-          await next()
-        } else if (isFakeTokens) {
-          ctx.state.fakeToken = true
-          await next()
+    } catch (error) {
+      console.error(error)
+      ctx.body = {
+        errcode: 500,
+        errmsg: error.message
+      }
+    }
+  })
+  router.use(async function (ctx, next) {
+    try {
+      const accessToken = await module.exports.getAccessToken(ctx)
+      const { isFakeTokens, isFakeUrls } = await fakeVerify(ctx.path, { fakeTokens, fakeUrls, accessToken })
+      if (isFakeUrls) {
+        ctx.state.fakeUrl = true
+        await next()
+      } else if (isFakeTokens) {
+        ctx.state.fakeToken = true
+        await next()
+      } else {
+        const ret = await authToken(accessToken)
+        if (!ret) {
+          ctx.body = { errcode: 500, errmsg: 'invalid token' }
         } else {
-          const ret = await authToken(accessToken)
-          if (!ret) {
-            ctx.body = { errcode: 500, errmsg: 'invalid token' }
-          } else {
-            const token = await findToken(accessToken)
-            await setAccessData(ctx, token.extra)
-            await next()
-          }
+          const token = await findToken(accessToken)
+          await setAccessData(ctx, token.extra)
+          await next()
         }
-      } catch (error) {
-        ctx.body = { errcode: 500, errmsg: error.message }
       }
-    })
-  }
+    } catch (error) {
+      ctx.body = { errcode: 500, errmsg: error.message }
+    }
+  })
 }

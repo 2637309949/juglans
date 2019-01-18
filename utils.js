@@ -20,11 +20,7 @@ repo.scanPlugins = function (options) {
           return x
         }
         if (is.object(x) && is.function(x.plugin)) {
-          const plugin = x.plugin()
-          if (is.function(plugin)) {
-            return plugin
-          }
-          return x.plugin
+          return x.plugin.bind(x)
         }
       })
       .filter(x => is.function(x))

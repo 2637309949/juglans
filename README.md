@@ -240,18 +240,10 @@ function MyPlugin({ A, B }) {
 MyPlugin.prototype.plugin = ({ router, config }) => {
     // your code
 }
-// or
-MyPlugin.prototype.plugin = function() {
-    // your code
-    return ({ router, config }) => {
-    }
-}
 // 2. use your plugins
 app.Use(new MyPlugin({ A: 12, B: 11 }))
 // or
 app.Use((new MyPlugin({ A: 12, B: 11 })).plugin)
-// or
-app.Use((new MyPlugin({ A: 12, B: 11 })).plugin())
 ```
 ## MIT License
 

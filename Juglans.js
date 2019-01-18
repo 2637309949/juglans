@@ -9,7 +9,7 @@ const EventEmitter = require('events').EventEmitter
 const assert = require('assert')
 const is = require('is')
 
-const plugins = require('../lib/plugins')
+const plugins = require('./plugins')
 const {
   scanPlugins,
   qPromise,
@@ -111,11 +111,7 @@ Juglans.prototype.Use = function (...params) {
           return x
         }
         if (is.object(x) && is.function(x.plugin)) {
-          const plugin = x.plugin()
-          if (is.function(plugin)) {
-            return plugin
-          }
-          return x.plugin
+          return x.plugin.bind(x)
         }
       })
       .filter(x => is.function(x))
