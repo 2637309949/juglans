@@ -12,18 +12,7 @@ module.exports = ({ getLocales, getLocale, translate }) => async function ({ rou
   assert.ok(is.function(getLocales), 'getLocales can not be empty!')
   assert.ok(is.function(getLocale), 'getLocale can not be empty!')
   assert.ok(is.function(translate), 'translate can not be empty!')
-  /**
-     * @api {get} /system/i18n get i18n asserts
-     * @apiGroup System
-     * @apiDescription get i18n asserts
-     * @apiSuccessExample {json}
-     *   HTTP/1.1 200 OK
-     *    {
-     *        "errcode": null,
-     *        "errmsg": null,
-     *        "data": {}
-     *    }
-     */
+
   router.get('/system/i18n', async ctx => {
     try {
       const data = await getLocales()
@@ -41,18 +30,6 @@ module.exports = ({ getLocales, getLocale, translate }) => async function ({ rou
     }
   })
 
-  /**
-     * @api {get} /system/i18n/:key get i18n assert by key
-     * @apiGroup System
-     * @apiDescription get i18n assert by key
-     * @apiSuccessExample {json}
-     *   HTTP/1.1 200 OK
-     *    {
-     *        "errcode": null,
-     *        "errmsg": null,
-     *        "data": {}
-     *    }
-     */
   router.get('/system/i18n/:locale', async ctx => {
     try {
       const locale = ctx.params.locale
@@ -71,18 +48,6 @@ module.exports = ({ getLocales, getLocale, translate }) => async function ({ rou
     }
   })
 
-  /**
-     * @api {get} /system/translate tran i18n
-     * @apiGroup System
-     * @apiDescription tran i18n
-     * @apiSuccessExample {json}
-     *   HTTP/1.1 200 OK
-     *    {
-     *        "errcode": null,
-     *        "errmsg": null,
-     *        "data": {}
-     *    }
-     */
   router.post('/system/i18n/translate', async ctx => {
     try {
       const { localeFrom, localeTo, items } = ctx.request.body

@@ -5,44 +5,12 @@
  * @modify date 2019-01-05 03:10:49
  * @desc [Juglans FrameWork]
  */
-const EventEmitter = require('events').EventEmitter
+const { EventEmitter } = require('events')
 const assert = require('assert')
 const is = require('is')
 
 const plugins = require('./plugins')
-const {
-  scanPlugins,
-  qPromise,
-  inherits
-} = require('./utils')
-
-/* =================== USAGE ===================
-
-const app = new Juglans({ name: 'Juglans V1.0' })
-app.Config(cfg)
-app.Inject(inject)
-app.Use(
-  Logs({
-    record: async () => {}
-  }),
-  Delivery(),
-  function({ router }) {
-    router.get('/hello', ctx => {
-      ctx.body = 'juglans'
-    })
-  }
-)
-app.Run(function (err, config) {
-    if (!err) {
-      console.log(`App:${config.name}`)
-      console.log(`App:${config.NODE_ENV}`)
-      console.log(`App:runing on Port:${config.port}`)
-    } else {
-      console.error(err)
-    }
-})
-
- =============================================== */
+const { scanPlugins, runPlugins, inherits } = require('./utils')
 
 /**
  * Juglan Instance
@@ -53,10 +21,10 @@ function Juglans (cfg, { httpProxy, router } = {}) {
   if (!(this instanceof Juglans)) {
     return new Juglans(cfg, { httpProxy, router })
   }
-  // config, inject, middles init
-  this.config = { name: 'Juglans V1.0', prefix: '/api/v1', port: 3001, debug: true }
+  this.config = { name: 'Juglans V1.0', debug: true }
   this.injects = {}
   this.middles = []
+
   const defaultMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]
   this.Use(...defaultMiddles)
   this.Config(cfg)
@@ -100,22 +68,16 @@ Juglans.prototype.Inject = function (...params) {
  * Note:
  * Plugin entity must be a function entity
  */
-Juglans.prototype.Use = function (...params) {
-  if ((params && params.length === 0) || !params) {
+Juglans.prototype.Use = function (...plugins) {
+  if ((plugins && plugins.length === 0) || !plugins) {
     return this.middles
   } else {
-    assert(params.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function')
-    params = params
-      .map(x => {
-        if (is.function(x)) {
-          return x
-        }
-        if (is.object(x) && is.function(x.plugin)) {
-          return x.plugin.bind(x)
-        }
-      })
+    assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function')
+    plugins = plugins
+      .map(x => (is.function(x) && x) || x)
+      .map(x => (is.object(x) && is.function(x.plugin) && x.plugin.bind(x)) || x)
       .filter(x => is.function(x))
-    this.middles = this.middles.concat(params)
+    this.middles = this.middles.concat(plugins)
   }
   return this
 }
@@ -125,22 +87,22 @@ Juglans.prototype.Use = function (...params) {
  * all middles set by `Use` would be run before by setting `Config.depInject`
  */
 Juglans.prototype.Run = function (cb) {
-  const sPlugins = scanPlugins(this.config.depInject || { path: [] })
   const LastMiddles = [plugins.ProxyRun(cb)]
-  this.Use(...sPlugins).Use(...LastMiddles)
-  return qPromise(this.middles, this.Inject.bind(this), {
-    chainArgs: false,
-    lazeArgs: true,
-    execAfter: ret => {
-      if (is.object(ret) && Object.keys(ret).length >= 1) {
-        this.Inject(ret)
-      } else if (ret) {
-        throw new Error(`no support inject T: ${ret}, should be object T!`)
+  const scanPgs = scanPlugins(this.config.depInject)
+  this
+    .Use(...scanPgs)
+    .Use(...LastMiddles)
+  return runPlugins(
+    this.middles,
+    this.Inject.bind(this),
+    {
+      chainArgs: false,
+      lazeArgs: true,
+      execAfter: ret => {
+        if (is.object(ret) && Object.keys(ret).length >= 1) {
+          this.Inject(ret)
+        }
       }
-    }
-  }).catch(err => {
-    console.error(`qPromise Error:${err}`)
-    throw new Error(`qPromise Error:${err}`)
-  })
+    })
 }
 module.exports = inherits(Juglans, EventEmitter)

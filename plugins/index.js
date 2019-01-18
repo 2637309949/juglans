@@ -32,7 +32,7 @@ module.exports.HttpProxy = httpProxy => () => {
 
 // the second middles that create router
 // default, a koa router would be create
-module.exports.HttpRouter = router => ({ httpProxy, config: { prefix, bodyParser } }) => {
+module.exports.HttpRouter = router => ({ httpProxy, config: { prefix = '/api/v1', bodyParser } }) => {
   if (!router) {
     if (httpProxy instanceof Koa) {
       router = koaRouter({ prefix })
@@ -49,8 +49,9 @@ module.exports.HttpRouter = router => ({ httpProxy, config: { prefix, bodyParser
 // the last middles, run httpProxy
 // those middles from code would be call in order
 module.exports.ProxyRun = cb => ({ httpProxy, config }) => {
+  const { port = 3001 } = config
   if (httpProxy instanceof Koa) {
-    httpProxy.listen(config.port, err => {
+    httpProxy.listen(port, err => {
       cb(err, config)
     })
   }

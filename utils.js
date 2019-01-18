@@ -9,20 +9,14 @@ const repo = exports
    * @param {Object} regex
    * @param {Object} options
    */
-repo.scanPlugins = function (options) {
+repo.scanPlugins = function (options = { path: [] }) {
   try {
     const regexs = is.array(options.path) ? options.path : [options.path]
     const filePaths = _.flatMap(regexs, reg => glob.sync(reg, options))
     const plugins = filePaths
       .map(x => require(x))
-      .map(x => {
-        if (is.function(x)) {
-          return x
-        }
-        if (is.object(x) && is.function(x.plugin)) {
-          return x.plugin.bind(x)
-        }
-      })
+      .map(x => (is.function(x) && x) || x)
+      .map(x => (is.object(x) && is.function(x.plugin) && x.plugin.bind(x)) || x)
       .filter(x => is.function(x))
     return plugins
   } catch (error) {
@@ -30,10 +24,6 @@ repo.scanPlugins = function (options) {
   }
 }
 
-/**
- * gen a spec length string
- * @param {Number} number length
- */
 repo.randomStr = function (number) {
   let text = ''
   if (is.number(number)) {
@@ -51,7 +41,7 @@ repo.randomStr = function (number) {
  * @param {Array} arrs
  * @param {Object || Function} arrs
  */
-repo.qPromise = function (arrs, args, options = { chainArgs: false, lazeArgs: false, execAfter: () => {}, execBefore: () => {} }) {
+repo.runPlugins = function (arrs, args, options = { chainArgs: false, lazeArgs: false, execAfter: () => {}, execBefore: () => {} }) {
   return arrs.reduce(async (acc, curr, index) => {
     return new Promise((resolve, reject) => {
       resolve()
@@ -69,11 +59,6 @@ repo.qPromise = function (arrs, args, options = { chainArgs: false, lazeArgs: fa
   }, Promise.resolve(!options.chainArgs && options.lazeArgs ? args() : args))
 }
 
-/**
- * Extends a object
- * @param {object} src    source Object
- * @param {object} target target Object
- */
 repo.inherits = function (src, target) {
   utils.inherits(src, target)
   return src
