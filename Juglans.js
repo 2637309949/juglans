@@ -3,7 +3,7 @@
  * @email [2637309949@qq.com]
  * @create date 2019-01-05 03:10:49
  * @modify date 2019-01-05 03:10:49
- * @desc [Juglans FrameWork]
+ * @desc [Juglans FrameWork Instance]
  */
 const { EventEmitter } = require('events')
 const assert = require('assert')

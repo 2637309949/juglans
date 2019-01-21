@@ -24,7 +24,11 @@ repo.scanPlugins = function (options = { path: [] }) {
   }
 }
 
-repo.randomStr = function (number) {
+/**
+   * Generate string
+   * @param {number} number
+   */
+repo.randomStr = function (number = 32) {
   let text = ''
   if (is.number(number)) {
     const CARDINALSTR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
