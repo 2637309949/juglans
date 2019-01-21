@@ -63,6 +63,9 @@ repo.runPlugins = function (arrs, args, options = { chainArgs: false, lazeArgs: 
   }, Promise.resolve(!options.chainArgs && options.lazeArgs ? args() : args))
 }
 
+/**
+ * inherits object
+ */
 repo.inherits = function (src, target) {
   utils.inherits(src, target)
   return src

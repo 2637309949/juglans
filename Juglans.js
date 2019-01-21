@@ -5,6 +5,31 @@
  * @modify date 2019-01-05 03:10:49
  * @desc [Juglans FrameWork Instance]
  */
+/* =================== USAGE ===================
+const app = new Juglans({ name: 'Juglans V1.0' })
+app.Config(cfg)
+app.Inject(inject)
+app.Use(
+  Logs({
+    record: async () => {}
+  }),
+  Delivery(),
+  function({ router }) {
+    router.get('/hello', ctx => {
+      ctx.body = 'juglans'
+    })
+  }
+)
+app.Run(function (err, config) {
+    if (!err) {
+      console.log(`App:${config.name}`)
+      console.log(`App:${config.NODE_ENV}`)
+      console.log(`App:runing on Port:${config.port}`)
+    } else {
+      console.error(err)
+    }
+})
+=============================================== */
 const { EventEmitter } = require('events')
 const assert = require('assert')
 const is = require('is')
@@ -83,7 +108,9 @@ Juglans.prototype.Use = function (...plugins) {
 }
 
 /**
- * Run app, qPromise func has some async call in function, so ...
+ * Run app, qPromise func has some async call in function, those plugins
+ * would be executed in order in synchronization
+ * Note:
  * all middles set by `Use` would be run before by setting `Config.depInject`
  */
 Juglans.prototype.Run = function (cb) {

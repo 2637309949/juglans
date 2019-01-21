@@ -5,13 +5,8 @@
  * @modify date 2019-01-09 16:55:19
  * @desc [user identity]
  */
-const assert = require('assert').strict
-const moment = require('moment')
-const is = require('is')
-const utils = require('../utils')
 
 /* =================== USAGE ===================
-
 app.Use(Identity({
   auth: async function auth (ctx) {
       const form = _.pick(ctx.request.body, 'username', 'password')
@@ -41,8 +36,12 @@ app.Use(Identity({
     findToken: redis.hooks.findToken,
   }
 }))
-
 =============================================== */
+
+const assert = require('assert').strict
+const moment = require('moment')
+const is = require('is')
+const utils = require('../utils')
 
 /**
  * skip some spec route or token

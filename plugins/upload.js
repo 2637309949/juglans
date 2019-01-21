@@ -5,26 +5,22 @@
  * @modify date 2019-01-09 16:55:19
  * @desc [upload]
  */
-const assert = require('assert').strict
-const ExcelJs = require('exceljs')
-const utils = require('../utils')
-const path = require('path')
-const is = require('is')
-
 /* =================== USAGE ===================
-
 app.Use(
   Upload({
     async saveAnalysis(files) {
       console.log(files)
     },
     async findAnalysis() {
-
     }
   })
 )
-
 =============================================== */
+const assert = require('assert').strict
+const ExcelJs = require('exceljs')
+const utils = require('../utils')
+const path = require('path')
+const is = require('is')
 
 module.exports = ({ saveAnalysis, findAnalysis, uploadPrefix = '/public/upload' }) => async ({ router }) => {
   assert.ok(is.function(saveAnalysis), 'saveAnalysis can not be empty!')

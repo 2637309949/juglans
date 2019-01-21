@@ -21,7 +21,6 @@ app.Use(Roles({
     }
 }))
 =============================================== */
-
 const Roles = require('koa-roles')
 const assert = require('assert').strict
 const is = require('is')
