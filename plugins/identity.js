@@ -67,7 +67,7 @@ async function fakeVerify (reqPath, { fakeTokens, fakeUrls, accessToken }) {
 /**
  * Identity contructor
  */
-module.exports = function Identity ({ auth, expiresIn = 24, fakeUrls = [], fakeTokens = [], route = { obtainToken: '/obtainToken', revokeToken: '/revokeToken', refleshToken: '/refleshToken' }, store: { saveToken, revokeToken, findToken } = {} }) {
+module.exports = function Identity ({ auth, expiresIn = 24, fakeUrls = [], fakeTokens = [], route = { obtainToken: '/obtainToken', revokeToken: '/revokeToken', refleshToken: '/refleshToken', identityToken: '/identityToken' }, store: { saveToken, revokeToken, findToken } = {} }) {
   if (!(this instanceof Identity)) {
     return new Identity({ auth, expiresIn, fakeUrls, fakeTokens, route, store: { saveToken, revokeToken, findToken } })
   }
@@ -132,8 +132,7 @@ module.exports.prototype.obtainToken = async function (data) {
     refreshToken,
     created,
     updated,
-    expired,
-    extra: data
+    expired
   }
 }
 
@@ -184,6 +183,31 @@ module.exports.prototype.plugin = function ({ router }) {
     } catch (error) {
       console.error(error)
       ctx.body = { errcode: 500, errmsg: error.message }
+    }
+  })
+  router.get(route.identityToken, async function (ctx) {
+    try {
+      const accessToken = await module.exports.getAccessToken(ctx)
+      const data = await findToken(accessToken)
+      if (!data) {
+        ctx.body = {
+          errcode: null,
+          errmsg: null,
+          data: 'token invalid'
+        }
+      } else {
+        ctx.body = {
+          errcode: null,
+          errmsg: null,
+          data: data.extra
+        }
+      }
+    } catch (error) {
+      console.error(error)
+      ctx.body = {
+        errcode: 500,
+        errmsg: error.message
+      }
     }
   })
   router.post(route.revokeToken, async function (ctx) {
