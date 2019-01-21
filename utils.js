@@ -45,7 +45,7 @@ repo.randomStr = function (number = 32) {
  * @param {Array} arrs
  * @param {Object || Function} arrs
  */
-repo.runPlugins = function (arrs, args, options = { chainArgs: false, lazeArgs: false, execAfter: () => {}, execBefore: () => {} }) {
+repo.runPlugins = function (arrs, args, options = { chainArgs: false, execAfter: () => {}, execBefore: () => {} }) {
   return arrs.reduce(async (acc, curr, index) => {
     return new Promise((resolve, reject) => {
       resolve()
@@ -54,13 +54,13 @@ repo.runPlugins = function (arrs, args, options = { chainArgs: false, lazeArgs: 
       if (options.chainArgs) {
         return curr(x)
       } else {
-        return curr(options.lazeArgs ? args() : args)
+        return curr(is.function(args) ? args() : args)
       }
     }).then(x => {
       if (options.execAfter) options.execAfter(x, index)
       return x
     })
-  }, Promise.resolve(!options.chainArgs && options.lazeArgs ? args() : args))
+  }, Promise.resolve(!options.chainArgs && is.function(args) ? args() : args))
 }
 
 /**
