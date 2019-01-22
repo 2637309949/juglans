@@ -2,10 +2,10 @@
   "name": "juglans",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "bench": "make -C benchmarks",
-    "lint": "eslint --ext .js plugins addition benchmarks *.js",
+    "lint": "eslint --ext .js lib benchmarks",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
