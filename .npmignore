@@ -1,11 +1,9 @@
 node_modules/
 benchmarks/
-docs/
 test/
 lib/
 Makefile
 bin/
 
-examples/
 .vscode
 .eslintignore
