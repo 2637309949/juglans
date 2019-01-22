@@ -8,6 +8,10 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 /**
  * @author [Double]
  * @email [2637309949@qq.com]
@@ -203,27 +207,35 @@ Juglans.prototype.Use = function () {
  */
 
 
-Juglans.prototype.Run = async function (cb) {
-  var _this$Use;
+Juglans.prototype.Run =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(function* (cb) {
+    var _this$Use;
 
-  const LMiddles = [plugins.ProxyRun(cb)];
-  const sMiddles = scanPlugins(this.config.depInject);
+    const LMiddles = [plugins.ProxyRun(cb)];
+    const sMiddles = scanPlugins(this.config.depInject);
 
-  (_this$Use = this.Use.apply(this, _toConsumableArray(sMiddles))).Use.apply(_this$Use, LMiddles);
+    (_this$Use = this.Use.apply(this, _toConsumableArray(sMiddles))).Use.apply(_this$Use, LMiddles);
 
-  return runPlugins(this.middles, function (ctx) {
-    return function () {
-      return ctx.injects;
-    };
-  }(this), {
-    execAfter: function (ctx) {
-      return ret => {
-        if (is.object(ret) && Object.keys(ret).length >= 1) {
-          ctx.Inject(ret);
-        }
+    return runPlugins(this.middles, function (ctx) {
+      return function () {
+        return ctx.injects;
       };
-    }(this)
+    }(this), {
+      execAfter: function (ctx) {
+        return ret => {
+          if (is.object(ret) && Object.keys(ret).length >= 1) {
+            ctx.Inject(ret);
+          }
+        };
+      }(this)
+    });
   });
-};
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 module.exports = inherits(Juglans, EventEmitter);

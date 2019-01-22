@@ -11,5 +11,3 @@ module.exports = require('./juglans');
 module.exports.Plugins = require('./plugins/index');
 module.exports.utils = require('./utils');
 module.exports = Object.assign(module.exports, require('./addition'));
-
-console.log(223333)

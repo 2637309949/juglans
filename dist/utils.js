@@ -1,5 +1,9 @@
 "use strict";
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 const utils = require('util');
 
 const glob = require('glob');
@@ -65,22 +69,30 @@ repo.runPlugins = function (arrs, args) {
     execAfter: () => {},
     execBefore: () => {}
   };
-  return arrs.reduce(async (acc, curr, index) => {
-    return new Promise((resolve, reject) => {
-      resolve();
-    }).then(() => acc).then(x => {
-      if (options.execBefore) options.execBefore(x, index);
+  return arrs.reduce(
+  /*#__PURE__*/
+  function () {
+    var _ref = _asyncToGenerator(function* (acc, curr, index) {
+      return new Promise((resolve, reject) => {
+        resolve();
+      }).then(() => acc).then(x => {
+        if (options.execBefore) options.execBefore(x, index);
 
-      if (options.chainArgs) {
-        return curr(x);
-      } else {
-        return curr(is.function(args) ? args() : args);
-      }
-    }).then(x => {
-      if (options.execAfter) options.execAfter(x, index);
-      return x;
+        if (options.chainArgs) {
+          return curr(x);
+        } else {
+          return curr(is.function(args) ? args() : args);
+        }
+      }).then(x => {
+        if (options.execAfter) options.execAfter(x, index);
+        return x;
+      });
     });
-  }, Promise.resolve(!options.chainArgs && is.function(args) ? args() : args));
+
+    return function (_x, _x2, _x3) {
+      return _ref.apply(this, arguments);
+    };
+  }(), Promise.resolve(!options.chainArgs && is.function(args) ? args() : args));
 };
 /**
  * inherits object
