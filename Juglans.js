@@ -43,7 +43,7 @@ const { scanPlugins, runPlugins, inherits } = require('./utils')
  * @param {object} cfg app config
  * @param {object} httpProxy as `proxy http`, router as `http hander`
  */
-function Juglans (cfg, { httpProxy, router } = {}) {
+function Juglans (cfg = {}, { httpProxy, router } = {}) {
   if (!(this instanceof Juglans)) {
     return new Juglans(cfg, { httpProxy, router })
   }
