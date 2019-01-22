@@ -55,7 +55,7 @@ if (useAsync) {
 app.Run(function (err, config) {
   if (!err) {
     console.log(`App:${config.name}`)
-    console.log(`App:runing on Port:${config.port || 3001}`)
+    console.log(`App:runing on Port:${config.port}`)
   } else {
     console.error(err)
   }

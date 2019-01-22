@@ -47,7 +47,7 @@ function Juglans (cfg = {}, { httpProxy, router } = {}) {
   if (!(this instanceof Juglans)) {
     return new Juglans(cfg, { httpProxy, router })
   }
-  this.config = { name: 'Juglans V1.0', debug: true }
+  this.config = { port: 3001, name: 'Juglans V1.0', debug: true }
   this.injects = {}
   this.middles = []
 
