@@ -1,0 +1,10 @@
+node_modules/
+benchmarks/
+docs/
+test/
+Makefile
+bin/
+
+examples/
+.vscode
+.eslintignore
