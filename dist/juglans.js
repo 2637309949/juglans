@@ -40,7 +40,6 @@ const {
  *
  * @param {object} cfg app config
  * @param {object} httpProxy as `proxy http`, router as `http hander`
- *
  * @api public
  */
 
