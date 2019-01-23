@@ -55,13 +55,13 @@ module.exports = (_ref) => {
             return _ref4.apply(this, arguments);
           };
         }());
-        router.get('/system/i18n/:locale',
+        router.get('/system/i18n/:key',
         /*#__PURE__*/
         function () {
           var _ref5 = _asyncToGenerator(function* (ctx) {
             try {
-              const locale = ctx.params.locale;
-              const data = yield getLocale(locale);
+              const key = ctx.params.key;
+              const data = yield getLocale(key);
               ctx.body = {
                 errcode: null,
                 errmsg: null,
@@ -86,11 +86,15 @@ module.exports = (_ref) => {
           var _ref6 = _asyncToGenerator(function* (ctx) {
             try {
               const {
-                localeFrom,
-                localeTo,
+                from,
+                to,
                 items
               } = ctx.request.body;
-              const data = yield translate(localeFrom, localeTo, items);
+              const data = yield translate({
+                from,
+                to,
+                items
+              });
               ctx.body = {
                 errcode: null,
                 errmsg: null,
@@ -109,6 +113,13 @@ module.exports = (_ref) => {
             return _ref6.apply(this, arguments);
           };
         }());
+        return {
+          i18n: {
+            getLocales,
+            getLocale,
+            translate
+          }
+        };
       });
 
       return function (_x) {

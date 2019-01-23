@@ -25,9 +25,10 @@ repo.scanPlugins = function () {
   };
 
   try {
-    const regexs = is.array(options.path) ? options.path : [options.path];
+    const paths = is.array(options.path) ? options.path : [options.path];
+    delete options.path;
 
-    const filePaths = _.flatMap(regexs, reg => glob.sync(reg, options));
+    const filePaths = _.flatMap(paths, path => glob.sync(path, options));
 
     const plugins = filePaths.map(x => require(x)).map(x => is.function(x) && x || x).map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
     return plugins;

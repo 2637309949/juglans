@@ -77,7 +77,7 @@ module.exports = (_ref) => {
                 timeDelta,
                 status
               } = measure(start, Date.now(), ctx);
-              console.log(`<=> ${logInfo} ${status} ${timeDelta}`);
+              console.log(`=> ${logInfo} ${status} ${timeDelta}`);
             } catch (err) {
               throw err;
             }
