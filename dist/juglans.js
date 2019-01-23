@@ -19,35 +19,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * @modify date 2019-01-05 03:10:49
  * @desc [Juglans FrameWork Instance]
  */
-
-/* =================== USAGE ===================
-const app = new Juglans({ name: 'Juglans V1.0' })
-app.Config(cfg)
-app.Inject(inject)
-app.Use(
-  Logs({
-    record: async () => {}
-  }),
-  Delivery(),
-  function({ router }) {
-    router.get('/hello', ctx => {
-      ctx.body = 'juglans'
-    })
-  }
-)
-app.Run(function (err, config) {
-    if (!err) {
-      console.log(`App:${config.name}`)
-      console.log(`App:${config.NODE_ENV}`)
-      console.log(`App:runing on Port:${config.port}`)
-    } else {
-      console.error(err)
-    }
-})
-=============================================== */
-const {
-  EventEmitter
-} = require('events');
+const EventEmitter = require('events').EventEmitter;
 
 const assert = require('assert');
 
@@ -61,43 +33,77 @@ const {
   inherits
 } = require('./utils');
 /**
- * Juglan Instance
+ * Juglans constructor.
+ *
+ * The exports object of the `Juglans` module is an instance of this class.
+ * Most apps will only use this one instance.
+ *
  * @param {object} cfg app config
  * @param {object} httpProxy as `proxy http`, router as `http hander`
+ *
+ * @api public
  */
 
 
 function Juglans() {
   let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let {
+  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  assert(is.object(cfg), 'cfg entity should be a object');
+  assert(is.object(options), 'options entity should be a object'); // default global options
+
+  const {
     httpProxy,
     router
-  } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  } = options;
 
   if (!(this instanceof Juglans)) {
-    return new Juglans(cfg, {
-      httpProxy,
-      router
-    });
-  }
+    return new Juglans(cfg, options);
+  } // default global config, injects, middles
 
-  this.config = {
-    port: 3001,
-    name: 'Juglans V1.0',
-    debug: true
-  };
-  this.injects = {};
-  this.middles = [];
+
+  Object.defineProperty(this, 'config', {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: {
+      port: 3001,
+      name: 'Juglans V1.0',
+      debug: true
+    }
+  }); // default global config, injects, middles
+
+  Object.defineProperty(this, 'injects', {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: {}
+  }); // default global config, injects, middles
+
+  Object.defineProperty(this, 'middles', {
+    configurable: true,
+    enumerable: true,
+    writable: true,
+    value: []
+  }); // default plugins
+
   const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)];
   this.Use.apply(this, dMiddles);
   this.Config(cfg);
 }
 /**
- * set config
- * @param {Array} params
- * all `config` just for middles, so set your `config` base on your middles use
+ * Sets Juglans config
+ *
+ * ####Example:
+ *
+ *     app.Config({ test: '123' })
+ *     app.Config({ test: 'test' })
+ *
+ * All `config` just for middles, so set your `config` base on your middles use
  * Note:
  * if you call this func muti, `params` would be override
+ *
+ * @param {Array} params
+ * @api public
  */
 
 
@@ -106,7 +112,8 @@ Juglans.prototype.Config = function () {
     params[_key] = arguments[_key];
   }
 
-  assert(params.findIndex(x => !is.object(x)) === -1, 'Config entity should be a object');
+  assert(params.findIndex(x => !is.object(x)) === -1, 'Config entity should be a object'); // duplicate checking
+
   const configs = [this.config];
   configs.reduce((acc, curr) => {
     Object.keys(curr).forEach(k => {
@@ -138,11 +145,14 @@ Juglans.prototype.Config = function () {
   return this;
 };
 /**
- * add injects
- * @param {Array} params
- * return injects if no params be provided
+ * Add Juglans injects
+ *
+ * Return injects if no params be provided
  * Note:
  * Inject entity must be a object(uniqueness keys)
+ *
+ * @param {Array} params
+ * @api public
  */
 
 
@@ -151,7 +161,8 @@ Juglans.prototype.Inject = function () {
     params[_key2] = arguments[_key2];
   }
 
-  assert(params.findIndex(x => !is.object(x)) === -1, 'Inject entity should be a object');
+  assert(params.findIndex(x => !is.object(x)) === -1, 'Inject entity should be a object'); // duplicate checking
+
   const injects = [this.injects];
   injects.reduce((acc, curr) => {
     Object.keys(curr).forEach(k => {
@@ -180,11 +191,19 @@ Juglans.prototype.Inject = function () {
   return this;
 };
 /**
- * add plugins
- * @param {Array} plugins
- * return middles if no params be provided
+ * Add Juglans plugins
+ *
+ * ####Example:
+ *
+ *     app.Use(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
+ *     app.Use(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
+ *
+ * Return middles if no params be provided
  * Note:
  * Plugin entity must be a function entity
+ *
+ * @param {Array} plugins
+ * @api public
  */
 
 
@@ -193,17 +212,34 @@ Juglans.prototype.Use = function () {
     plugins[_key3] = arguments[_key3];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // legitimacy filtering
+
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
   this.middles = this.middles.concat(plugins);
   return this;
 };
 /**
- * Run app, qPromise func has some async call in function, those plugins
- * @param {function} cb
+ * Run app
+ *
+ * ####Example:
+ *
+ *  app.Run(function (err, config) {
+ *     if (!err) {
+ *        console.log(`App:${config.name}`)
+ *        console.log(`App:${config.NODE_ENV}`)
+ *        console.log(`App:runing on Port:${config.port}`)
+ *     } else {
+ *        console.error(err)
+ *     }
+ *  })
+ *
+ * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
  * all middles set by `Use` would be run before by setting `Config.depInject`
+ *
+ * @param {function} cb
+ * @api public
  */
 
 
