@@ -95,16 +95,12 @@ module.exports = (_ref) => {
                 };
               }()));
               yield saveAnalysis(results);
-              ctx.body = {
-                errcode: null,
-                errmsg: null,
-                data
-              };
+              ctx.status = 200;
+              ctx.body = data;
             } catch (error) {
               console.error(error.stack);
               ctx.body = {
-                errcode: 500,
-                errmsg: error.message
+                message: error.message
               };
             }
           });

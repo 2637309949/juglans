@@ -15,10 +15,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* =================== USAGE ===================
 app.Use(Roles({
     async failureHandler(ctx, action){
+      ctx.status = 403
       ctx.body = {
-        errcode: 500,
-        data: null,
-        errmsg: 'access Denied, you don\'t have permission.'
+        message: 'access Denied, you don\'t have permission.'
       }
     },
     async roleHandler(ctx, action) {
@@ -40,10 +39,9 @@ module.exports = (_ref) => {
     /*#__PURE__*/
     function () {
       var _ref2 = _asyncToGenerator(function* (ctx, action) {
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          data: null,
-          errmsg: 'access Denied, you don\'t have permission.'
+          message: 'access Denied, you don\'t have permission.'
         };
       });
 

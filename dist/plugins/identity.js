@@ -309,22 +309,19 @@ module.exports.prototype.plugin = function (_ref7) {
 
         if (ret) {
           const data = yield obtainToken(ret);
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data
-          };
+          ctx.status = 200;
+          ctx.body = data;
         } else {
+          ctx.status = 400;
           ctx.body = {
-            errcode: 500,
-            errmsg: 'user authentication failed!'
+            message: 'user authentication failed!'
           };
         }
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
@@ -342,23 +339,19 @@ module.exports.prototype.plugin = function (_ref7) {
         const data = yield findToken(accessToken);
 
         if (!data) {
+          ctx.status = 400;
           ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data: 'token invalid'
+            message: 'token invalid'
           };
         } else {
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data: data.extra
-          };
+          ctx.status = 200;
+          ctx.body = data.extra;
         }
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
@@ -374,16 +367,15 @@ module.exports.prototype.plugin = function (_ref7) {
       try {
         const accessToken = yield module.exports.getAccessToken(ctx);
         yield revokeToken(accessToken);
+        ctx.status = 200;
         ctx.body = {
-          errcode: null,
-          errmsg: null,
-          data: 'ok'
+          success: true
         };
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
@@ -401,10 +393,9 @@ module.exports.prototype.plugin = function (_ref7) {
         const data = yield findToken(accessToken);
 
         if (!data) {
+          ctx.status = 400;
           ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data: 'refleshToken invalid'
+            message: 'refleshToken invalid'
           };
         } else {
           // 重建token
@@ -413,17 +404,14 @@ module.exports.prototype.plugin = function (_ref7) {
           data.updated = moment().unix();
           data.expired = moment().add(expiresIn, 'hour').unix();
           yield saveToken(data);
-          ctx.body = {
-            errcode: null,
-            errmsg: null,
-            data
-          };
+          ctx.status = 200;
+          ctx.body = data;
         }
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
@@ -457,9 +445,9 @@ module.exports.prototype.plugin = function (_ref7) {
           const ret = yield authToken(accessToken);
 
           if (!ret) {
+            ctx.status = 400;
             ctx.body = {
-              errcode: 500,
-              errmsg: 'invalid token'
+              message: 'invalid token'
             };
           } else {
             const token = yield findToken(accessToken);
@@ -468,9 +456,9 @@ module.exports.prototype.plugin = function (_ref7) {
           }
         }
       } catch (error) {
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });

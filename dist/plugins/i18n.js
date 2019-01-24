@@ -37,16 +37,12 @@ module.exports = (_ref) => {
           var _ref4 = _asyncToGenerator(function* (ctx) {
             try {
               const data = yield getLocales();
-              ctx.body = {
-                errcode: null,
-                errmsg: null,
-                data
-              };
+              ctx.status = 200;
+              ctx.body = data;
             } catch (error) {
+              ctx.status = 500;
               ctx.body = {
-                errcode: 500,
-                errmsg: error.message,
-                data: null
+                message: error.message
               };
             }
           });
@@ -62,16 +58,12 @@ module.exports = (_ref) => {
             try {
               const key = ctx.params.key;
               const data = yield getLocale(key);
-              ctx.body = {
-                errcode: null,
-                errmsg: null,
-                data
-              };
+              ctx.status = 200;
+              ctx.body = data;
             } catch (error) {
+              ctx.status = 500;
               ctx.body = {
-                errcode: 500,
-                errmsg: error.message,
-                data: null
+                message: error.message
               };
             }
           });
@@ -95,16 +87,11 @@ module.exports = (_ref) => {
                 to,
                 items
               });
-              ctx.body = {
-                errcode: null,
-                errmsg: null,
-                data
-              };
+              ctx.body = data;
             } catch (error) {
+              ctx.status = 500;
               ctx.body = {
-                errcode: 500,
-                errmsg: error.message,
-                data: null
+                message: error.message
               };
             }
           });

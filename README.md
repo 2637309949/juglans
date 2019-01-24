@@ -25,7 +25,10 @@ app.Use(
   // example plugin
   function({ router }) {
     router.get('/hello', ctx => {
-      ctx.body = 'juglans'
+      ctx.status = 200
+      ctx.body = {
+        message: 'juglans'
+      }
     })
   }
 )
@@ -101,7 +104,10 @@ app.Use(
   // example plugin
   function({ router }) {
     router.get('/hello', ctx => {
-      ctx.body = 'juglans'
+      ctx.status = 200
+      ctx.body = {
+        message: 'juglans'
+      }
     })
   }
 )
@@ -187,10 +193,9 @@ app.Use(Identity({
 // init Roles
 app.Use(Roles({
     async failureHandler(ctx, action){
+      ctx.status = 403
       ctx.body = {
-        errcode: 500,
-        data: null,
-        errmsg: 'access Denied, you don\'t have permission.'
+        message: 'access Denied, you don\'t have permission.'
       }
     },
     async roleHandler(ctx, action) {

@@ -54,26 +54,23 @@ module.exports = {
               project,
               populate
             });
+            ctx.status = 200;
             ctx.body = {
-              errcode: null,
-              errmsg: null,
-              data: {
-                cond,
-                page,
-                size,
-                sort,
-                project,
-                populate,
-                totalpages,
-                totalrecords,
-                data
-              }
+              cond,
+              page,
+              size,
+              sort,
+              project,
+              populate,
+              totalpages,
+              totalrecords,
+              data
             };
           } catch (error) {
             console.error(error);
+            ctx.status = 500;
             ctx.body = {
-              errcode: 500,
-              errmsg: error.message
+              message: error.message
             };
           }
         });
@@ -95,16 +92,13 @@ module.exports = {
             const result = yield create(name, {
               items
             });
-            ctx.body = {
-              errcode: null,
-              errmsg: null,
-              data: result
-            };
+            ctx.status = 200;
+            ctx.body = result;
           } catch (error) {
             console.error(error);
+            ctx.status = 500;
             ctx.body = {
-              errcode: 500,
-              errmsg: error.message
+              message: error.message
             };
           }
         });
@@ -125,16 +119,13 @@ module.exports = {
             const result = yield softDelMany(name, {
               cond
             });
-            ctx.body = {
-              errcode: null,
-              errmsg: null,
-              data: result
-            };
+            ctx.status = 200;
+            ctx.body = result;
           } catch (error) {
             console.error(error);
+            ctx.status = 500;
             ctx.body = {
-              errcode: 500,
-              errmsg: error.message
+              message: error.message
             };
           }
         });
@@ -155,16 +146,13 @@ module.exports = {
             const result = yield softDelOne(name, {
               cond
             });
-            ctx.body = {
-              errcode: null,
-              errmsg: null,
-              data: result
-            };
+            ctx.status = 200;
+            ctx.body = result;
           } catch (error) {
             console.error(error);
+            ctx.status = 500;
             ctx.body = {
-              errcode: 500,
-              errmsg: error.message
+              message: error.message
             };
           }
         });
@@ -188,16 +176,13 @@ module.exports = {
           cond,
           doc
         });
-        ctx.body = {
-          errcode: null,
-          errmsg: null,
-          data: result
-        };
+        ctx.status = 200;
+        ctx.body = result;
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
@@ -219,16 +204,13 @@ module.exports = {
           cond,
           doc
         });
-        ctx.body = {
-          errcode: null,
-          errmsg: null,
-          data: result
-        };
+        ctx.status = 200;
+        ctx.body = result;
       } catch (error) {
         console.error(error);
+        ctx.status = 500;
         ctx.body = {
-          errcode: 500,
-          errmsg: error.message
+          message: error.message
         };
       }
     });
