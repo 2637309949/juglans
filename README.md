@@ -46,7 +46,7 @@ app.Run(function (err, config) {
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 
 ## API
-#### 1.set app config
+#### 1.Set app config
 
 By contructor params
 ```javascript
@@ -64,15 +64,14 @@ the config pass py contructor would be overided by `app.config`
 ```
 
 
-#### 2.inject your custom injects
-   all injects would be provided as plugins params next by next. 
-
-init injects by Inject function
+#### 2.Inject your custom injects
+All injects would be provided as plugins params next by next.   
+Init injects by Inject function
 ```javascript
 // inject init objectd
 app.Inject(inject)
 ```
-set injects by plugin ret
+Set injects by plugin ret
 ```javascript
 // inject init objectd
 const plugin = ({ router }) => {
@@ -83,11 +82,11 @@ const plugin = ({ router }) => {
 ```
 Note1:
 ```javascript
-    those injects from plugins ret only use after those plugin has been executed.
+    Those injects from plugins ret only use after those plugin has been executed.
 ```
 Note2:
 ```java
-    inject entity is a object with key and value, those has same keys entity would
+    Inject entity is a object with key and value, those has same keys entity would
 be overided by those pass by lastly.
 ```
 
@@ -206,11 +205,7 @@ app.Use(Roles({
 }))
 // return a roles inject emtity for next plugins
 ```
-#### 6. cache
-```javascript
-
-```
-#### 7. upload
+#### 6. upload
 // init upload
 ```javascript
 app.Use(
