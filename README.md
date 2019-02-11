@@ -3,6 +3,7 @@
 ![Juglans flash](./asserts/flash.jpeg)
 
 ## Instruction
+Set up the application of basic measures quickly, and expand the application through plug-ins
 #### 1. Install Juglans
 ```shell
 $ npm install Juglans -S
@@ -128,18 +129,18 @@ app.Run(function (err, config) {
 
 ## Plugins
 ### Built-in Plugins
-#### 1. delivery
+#### 1. Delivery
 ```javascript
 // serve static files
 app.Use(
   Delivery()
 )
 ```
-#### 2. i18n
+#### 2. I18n
 ```javascript
 
 ```
-#### 3. logs
+#### 3. Logs
 ```javascript
 // logs user req
 app.Use(
@@ -148,7 +149,7 @@ app.Use(
   })
 )
 ```
-#### 4. identity
+#### 4. Identity
 ```javascript
 app.Use(Identity({
   // auth user
@@ -187,7 +188,7 @@ app.Use(Identity({
   }
 }))
 ```
-#### 5. roles
+#### 5. Roles
 ```javascript
 // init Roles
 app.Use(Roles({
@@ -205,7 +206,7 @@ app.Use(Roles({
 }))
 // return a roles inject emtity for next plugins
 ```
-#### 6. upload
+#### 6. Upload
 // init upload
 ```javascript
 app.Use(
@@ -223,7 +224,7 @@ app.Use(
 
 
 ### Custom your plugins
-#### 1. general plugins
+#### 1. General plugins
 ```javascript
 // 1. defined your plugins
 const MyPlugin = ({ A, B }) => async ({ router, config }) => {
@@ -232,7 +233,7 @@ const MyPlugin = ({ A, B }) => async ({ router, config }) => {
 // 2. use your plugins
 app.Use(MyPlugin({ A: 12, B: 11 }))
 ```
-#### 2. advanced plugins
+#### 2. Advanced plugins
 ```javascript
 // 1. defined your plugins
 function MyPlugin({ A, B }) {
