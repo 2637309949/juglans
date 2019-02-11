@@ -10,20 +10,10 @@ $ npm install Juglans -S
 ```
 #### 2. QuickStart
 ```javascript
-const app = new Juglans({ name: 'Juglans V1.0' })
-// set config
-app.Config(config)
-// inject init objectd
-app.Inject(inject)
-// import plugins
-app.Use(
-  // logs plugin
-  Logs({
-    record: async () => {}
-  }),
-  // static assets serve
-  Delivery(),
-  // example plugin
+new Juglans({ name: 'Juglans V1.0' })
+.Config(config)
+.Inject(inject)
+.Use(
   function({ router }) {
     router.get('/hello', ctx => {
       ctx.status = 200
@@ -33,8 +23,7 @@ app.Use(
     })
   }
 )
-// run app and listen callback
-app.Run(function (err, config) {
+.Run(function (err, config) {
     if (err) {
         console.error(err)
     } else {
@@ -95,13 +84,6 @@ be overided by those pass by lastly.
 ```javascript
 // import plugins
 app.Use(
-  // logs plugin
-  Logs({
-    record: async () => {}
-  }),
-  // static assets serve
-  Delivery(),
-  // example plugin
   function({ router }) {
     router.get('/hello', ctx => {
       ctx.status = 200
@@ -129,18 +111,14 @@ app.Run(function (err, config) {
 
 ## Plugins
 ### Built-in Plugins
-#### 1. Delivery
+#### 1. Delivery, service static file
 ```javascript
 // serve static files
 app.Use(
   Delivery()
 )
 ```
-#### 2. I18n
-```javascript
-
-```
-#### 3. Logs
+#### 2. Logs, basic logging
 ```javascript
 // logs user req
 app.Use(
@@ -149,7 +127,7 @@ app.Use(
   })
 )
 ```
-#### 4. Identity
+#### 3. Identity, basic authentication functions
 ```javascript
 app.Use(Identity({
   // auth user
@@ -188,7 +166,7 @@ app.Use(Identity({
   }
 }))
 ```
-#### 5. Roles
+#### 4. Roles, background permission judgment
 ```javascript
 // init Roles
 app.Use(Roles({
@@ -206,8 +184,7 @@ app.Use(Roles({
 }))
 // return a roles inject emtity for next plugins
 ```
-#### 6. Upload
-// init upload
+#### 5. Upload, files upload
 ```javascript
 app.Use(
   Upload({
@@ -221,10 +198,8 @@ app.Use(
 // return a upload inject emtity for next plugins
 ```
 
-
-
 ### Custom your plugins
-#### 1. General plugins
+#### 1. Common plugins
 ```javascript
 // 1. defined your plugins
 const MyPlugin = ({ A, B }) => async ({ router, config }) => {
