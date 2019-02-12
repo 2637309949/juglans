@@ -235,7 +235,7 @@ Juglans.prototype.Use = function () {
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
- * all middles set by `Use` would be run before by setting `Config.depInject`
+ * all middles set by `Use` would be run before by setting `Config.dependency`
  *
  * @param {function} cb
  * @api public
@@ -249,7 +249,7 @@ function () {
     var _this$Use;
 
     const LMiddles = [plugins.ProxyRun(cb)];
-    const sMiddles = scanPlugins(this.config.depInject);
+    const sMiddles = scanPlugins(this.config.dependency);
 
     (_this$Use = this.Use.apply(this, _toConsumableArray(sMiddles))).Use.apply(_this$Use, LMiddles);
 
