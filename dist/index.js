@@ -9,4 +9,3 @@
 */
 module.exports = require('./application');
 module.exports.utils = require('./utils');
-module.exports = Object.assign(module.exports, require('./addition'));
