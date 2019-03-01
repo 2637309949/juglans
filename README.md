@@ -1,14 +1,12 @@
 # Juglans Framework
-
 ![Juglans flash](./asserts/flash.jpeg)
-
 ## Instruction
 Set up the application of basic measures quickly, and expand the application through plug-ins
-#### 1. Install Juglans
+#### Install Juglans
 ```shell
-$ npm install Juglans -S
+$ npm i Juglans -S
 ```
-#### 2. QuickStart
+#### QuickStart
 ```javascript
 new Juglans({ name: 'Juglans V1.0' })
 .Config(config)
@@ -35,26 +33,22 @@ new Juglans({ name: 'Juglans V1.0' })
 ```
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 
-## API
-#### 1.Set app config
+## API Introduce
+#### Set app config
 
-By contructor params
+By way of setting contructor params
 ```javascript
-// set config
 new Juglans({ name: 'Juglans V1.0' })
 ```
-By Config function
+By way of setting config function
 ```javascript
-// set config
 app.Config(config)
 ```
 Note:
-```javascript
-the config pass py contructor would be overided by `app.config`
-```
+The config pass py contructor would be overided by `app.config`
 
 
-#### 2.Inject your custom injects
+#### Inject your custom injects
 All injects would be provided as plugins params next by next.   
 Init injects by Inject function
 ```javascript
@@ -71,16 +65,12 @@ const plugin = ({ router }) => {
 }
 ```
 Note1:
-```javascript
-    Those injects from plugins ret only use after those plugin has been executed.
-```
+    Those injects from plugins ret only use after those plugin has been executed.   
 Note2:
-```java
     Inject entity is a object with key and value, those has same keys entity would
 be overided by those pass by lastly.
-```
 
-#### 3.import your plugins
+#### Import your plugins
 ```javascript
 // import plugins
 app.Use(
@@ -94,7 +84,7 @@ app.Use(
   }
 )
 ```
-#### 4.run app
+#### Run app
 ```javascript
 // run app and listen callback
 app.Run(function (err, config) {
@@ -202,22 +192,22 @@ app.Use(
 Juglans is a plugins framework that can take two different kinds of parameters as plugins:
  - #### Common plugins
 ```javascript
-// 1. defined your plugins
+// Defined your plugins
 const MyPlugin = ({ A, B }) => async ({ router, config }) => {
     // your code
 }
-// 2. use your plugins
+// Use your plugins
 app.Use(MyPlugin({ A: 12, B: 11 }))
 ```
  - #### Advanced plugins
 ```javascript
-// 1. defined your plugins
+// Defined your plugins
 function MyPlugin({ A, B }) {
 }
 MyPlugin.prototype.plugin = ({ router, config }) => {
     // your code
 }
-// 2. use your plugins
+// Use your plugins
 app.Use(new MyPlugin({ A: 12, B: 11 }))
 // or
 app.Use((new MyPlugin({ A: 12, B: 11 })).plugin)
