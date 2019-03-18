@@ -25,6 +25,8 @@ const {
 
 const assert = require('assert');
 
+const path = require('path');
+
 const is = require('is');
 
 const plugins = require('./plugins');
@@ -67,7 +69,22 @@ function Juglans() {
     enumerable: true,
     writable: true,
     value: {
-      name: 'Juglans V1.0'
+      name: 'Juglans V1.0',
+      prefix: '/api/v1',
+      port: 3001,
+      debug: true,
+      assetsDir: path.join(__dirname, '../../assets'),
+      bodyParser: {
+        strict: false,
+        jsonLimit: '5mb',
+        formLimit: '1mb',
+        textLimit: '1mb',
+        multipart: true,
+        formidable: {
+          keepExtensions: true,
+          uploadDir: path.join(__dirname, '../../assets/public/upload')
+        }
+      }
     }
   }); // default global config, injects, middles
 
