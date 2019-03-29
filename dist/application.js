@@ -23,6 +23,8 @@ const {
   EventEmitter
 } = require('events');
 
+const deepmerge = require('deepmerge');
+
 const assert = require('assert');
 
 const path = require('path');
@@ -72,9 +74,8 @@ function Juglans() {
     value: {
       name: 'Juglans V1.0',
       prefix: '/api/v1',
-      port: 3001,
+      port: 3000,
       debug: true,
-      assetsDir: path.join(__dirname, '../../assets'),
       bodyParser: {
         strict: false,
         jsonLimit: '5mb',
@@ -82,8 +83,7 @@ function Juglans() {
         textLimit: '1mb',
         multipart: true,
         formidable: {
-          keepExtensions: true,
-          uploadDir: path.join(__dirname, '../../assets/public/upload')
+          keepExtensions: true
         }
       }
     }
@@ -156,7 +156,7 @@ Juglans.prototype.Config = function () {
     });
     return acc;
   }, []));
-  Object.assign.apply(Object, [this.config].concat(parameters));
+  this.config = deepmerge.all([this.config].concat(parameters));
   this.Inject({
     config: this.config
   });
