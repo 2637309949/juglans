@@ -57,7 +57,7 @@ repo.randomStr = function () {
   return text;
 };
 /**
- * execute promise in orderly
+ * Execute promise in orderly
  * lazy cac, support lazy params cac
  * @param {Array} arrs
  * @param {Object || Function} arrs
@@ -96,7 +96,19 @@ repo.runPlugins = function (arrs, args) {
   }(), Promise.resolve(!options.chainArgs && is.function(args) ? args() : args));
 };
 /**
- * inherits object
+ * Default value
+ */
+
+
+repo.someOrElse = function (value, initValue) {
+  if (value) {
+    return value;
+  } else {
+    return initValue;
+  }
+};
+/**
+ * Inherits object
  */
 
 

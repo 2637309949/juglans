@@ -13,6 +13,8 @@ const koaBody = require('koa-body');
 
 const Koa = require('koa');
 
+const utils = require('./utils');
+
 const repo = module.exports; // The first middles that create httpProxy
 // default, a koa app would be create
 
@@ -32,7 +34,7 @@ repo.HttpRouter = router => (_ref) => {
   let {
     httpProxy,
     config: {
-      prefix = '/api/v1',
+      prefix,
       bodyParser
     }
   } = _ref;
@@ -40,7 +42,7 @@ repo.HttpRouter = router => (_ref) => {
   if (!router) {
     if (httpProxy instanceof Koa) {
       router = koaRouter({
-        prefix
+        prefix: utils.someOrElse(prefix, '/api/v1')
       });
       router.use(koaBody(bodyParser));
       httpProxy.use(router.routes());
@@ -62,7 +64,7 @@ repo.ProxyRun = cb => (_ref2) => {
   } = _ref2;
 
   if (httpProxy instanceof Koa) {
-    httpProxy.listen(config.port || 8080, err => {
+    httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
       cb(err, config);
     });
   }

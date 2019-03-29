@@ -51,8 +51,9 @@ const {
 function Juglans() {
   let configuration = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  // Legitimacy asserts
   assert(is.object(configuration), 'configuration should be a object');
-  assert(is.object(options), 'options should be a object'); // default global options
+  assert(is.object(options), 'options should be a object'); // Default global options
 
   const {
     httpProxy,
@@ -61,7 +62,7 @@ function Juglans() {
 
   if (!(this instanceof Juglans)) {
     return new Juglans(configuration, options);
-  } // default global config, injects, middles
+  } // Default global config, injects, middles
 
 
   Object.defineProperty(this, 'config', {
@@ -128,7 +129,8 @@ Juglans.prototype.Config = function () {
     parameters[_key] = arguments[_key];
   }
 
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // duplicate checking
+  // Legitimacy asserts
+  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // Duplicate checking
 
   const configs = [this.config];
   configs.reduce((acc, curr) => {
@@ -177,7 +179,8 @@ Juglans.prototype.Inject = function () {
     parameters[_key2] = arguments[_key2];
   }
 
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // duplicate checking
+  // Legitimacy asserts
+  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // Duplicate checking
 
   const injects = [this.injects];
   injects.reduce((acc, curr) => {
@@ -228,7 +231,8 @@ Juglans.prototype.Use = function () {
     plugins[_key3] = arguments[_key3];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // legitimacy filtering
+  // Legitimacy asserts
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
 
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
   this.middles = this.middles.concat(plugins);
