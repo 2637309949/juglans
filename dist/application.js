@@ -27,8 +27,6 @@ const deepmerge = require('deepmerge');
 
 const assert = require('assert');
 
-const path = require('path');
-
 const is = require('is');
 
 const plugins = require('./plugins');
@@ -76,6 +74,11 @@ function Juglans() {
       prefix: '/api/v1',
       port: 3000,
       debug: true,
+      logger: {
+        service: 'Juglans V1.0',
+        maxsize: 10 * 1024,
+        path: ''
+      },
       bodyParser: {
         strict: false,
         jsonLimit: '5mb',
