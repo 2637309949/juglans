@@ -140,7 +140,7 @@ Juglans.prototype.Config = function () {
     Object.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
-      if (index !== -1) {
+      if (index !== -1 && this.config.debug) {
         console.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
       }
 
@@ -151,7 +151,7 @@ Juglans.prototype.Config = function () {
     Object.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
-      if (index !== -1) {
+      if (index !== -1 && this.config.debug) {
         console.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
       }
 
@@ -190,7 +190,7 @@ Juglans.prototype.Inject = function () {
     Object.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
-      if (index !== -1) {
+      if (index !== -1 && this.config.debug) {
         console.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
@@ -201,7 +201,7 @@ Juglans.prototype.Inject = function () {
     Object.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
-      if (index !== -1) {
+      if (index !== -1 && this.config.debug) {
         console.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
