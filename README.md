@@ -4,7 +4,7 @@
 Set up the application of basic measures quickly, and expand the application through plug-ins
 #### Install Juglans
 ```shell
-$ npm i Juglans -S
+$ npm i juglans -S
 ```
 #### QuickStart
 ```javascript
