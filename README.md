@@ -101,94 +101,16 @@ app.Run(function (err, config) {
 
 ## Plugins
 ### Built-in Plugins
- - #### Delivery, service static file
-```javascript
-// serve static files
-app.Use(
-  Delivery()
-)
-```
- - #### Logs, basic logging
-```javascript
-// logs user req
-app.Use(
-  Logs({
-    record: async () => {}
-  })
-)
-```
- - #### Identity, basic authentication functions
-```javascript
-app.Use(Identity({
-  // auth user
-  auth: async function auth (ctx) {
-      const form = _.pick(ctx.request.body, 'username', 'password')
-      const User = mongoose.model('User')
-      const one = await User.findOne({
-        _dr: { $ne: true },
-        username: form.username,
-        password: form.password
-      })
-      if (one) {
-        return {
-          id: one._id,
-          email: one.email,
-          username: one.username,
-          departments: one.department,
-          roles: one.roles
-        }
-      } else {
-        return null
-      }
-  },
-  // fake token to skip check
-  fakeTokens: ['DEBUG'],
-  // fake urls to skip check
-  fakeUrls: [
-      /\/api\/v1\/upload\/.*$/,
-      /\/api\/v1\/favicon\.ico$/
-  ],
-  // token model
-  store: {
-    saveToken: redis.hooks.saveToken,
-    revokeToken: redis.hooks.revokeToken,
-    findToken: redis.hooks.findToken,
-  }
-}))
-```
- - #### Roles, background permission judgment
-```javascript
-// init Roles
-app.Use(Roles({
-    async failureHandler(ctx, action){
-      ctx.status = 403
-      ctx.body = {
-        message: 'access Denied, you don\'t have permission.'
-      }
-    },
-    async roleHandler(ctx, action) {
-      const [role, permission] = action.split('@')
-      const accessData = await Identity.getAccessData(ctx)
-      return true
-    }
-}))
-// return a roles inject emtity for next plugins
-```
- - #### Upload, files upload
-```javascript
-app.Use(
-  Upload({
-    async saveAnalysis(files) {
-      console.log(files)
-    },
-    async findAnalysis() {
-    }
-  })
-)
-// return a upload inject emtity for next plugins
-```
-
-## Custom your plugins
+- [juglans-addition](https://github.com/2637309949/juglans-addition)
+- [juglans-captcha](https://github.com/2637309949/juglans-captcha)
+- [juglans-delivery](https://github.com/2637309949/juglans-delivery)
+- [juglans-identify](https://github.com/2637309949/juglans-identify)
+- [juglans-logger](https://github.com/2637309949/juglans-logger)
+- [juglans-proxy](https://github.com/2637309949/juglans-proxy)
+- [juglans-role](https://github.com/2637309949/juglans-role)
+- [juglans-upload](https://github.com/2637309949/juglans-upload)
+- [juglans-i18n](https://github.com/2637309949/juglans-i18n)
+### Custom your plugins
 Juglans is a plugins framework that can take two different kinds of parameters as plugins:
  - #### Common plugins
 ```javascript
