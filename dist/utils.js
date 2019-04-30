@@ -12,12 +12,7 @@ const _ = require('lodash');
 
 const is = require('is');
 
-const repo = exports;
-/**
-   * Scan plugins from spec path
-   * @param {Object} regex
-   * @param {Object} options
-   */
+const repo = exports; // Scan plugins from spec path
 
 repo.scanPlugins = function () {
   let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
@@ -35,33 +30,8 @@ repo.scanPlugins = function () {
   } catch (error) {
     throw new Error(`scan injects error:${error}`);
   }
-};
-/**
-   * Generate string
-   * @param {number} number
-   */
-
-
-repo.randomStr = function () {
-  let number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 32;
-  let text = '';
-
-  if (is.number(number)) {
-    const CARDINALSTR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-    for (let i = 0; i < number; i++) {
-      text += CARDINALSTR.charAt(Math.floor(Math.random() * CARDINALSTR.length));
-    }
-  }
-
-  return text;
-};
-/**
- * Execute promise in orderly
- * lazy cac, support lazy params cac
- * @param {Array} arrs
- * @param {Object || Function} arrs
- */
+}; // Execute promise in orderly
+// lazy cac, support lazy params cac
 
 
 repo.runPlugins = function (arrs, args) {
@@ -94,10 +64,7 @@ repo.runPlugins = function (arrs, args) {
       return _ref.apply(this, arguments);
     };
   }(), Promise.resolve(!options.chainArgs && is.function(args) ? args() : args));
-};
-/**
- * Default value
- */
+}; // Default value
 
 
 repo.someOrElse = function (value, initValue) {
@@ -106,13 +73,29 @@ repo.someOrElse = function (value, initValue) {
   } else {
     return initValue;
   }
-};
-/**
- * Inherits object
- */
+}; // Inherits object
 
 
 repo.inherits = function (src, target) {
   utils.inherits(src, target);
   return src;
+}; // Return EventEmitter
+
+
+repo.EventEmitter = function (juglans) {
+  return {
+    addListener: juglans.addListener.bind(juglans),
+    on: juglans.on.bind(juglans),
+    once: juglans.once.bind(juglans),
+    prependListener: juglans.prependListener.bind(juglans),
+    prependOnceListener: juglans.prependOnceListener.bind(juglans),
+    removeListener: juglans.removeListener.bind(juglans),
+    removeAllListeners: juglans.removeAllListeners.bind(juglans),
+    setMaxListeners: juglans.setMaxListeners.bind(juglans),
+    getMaxListeners: juglans.getMaxListeners.bind(juglans),
+    listeners: juglans.listeners.bind(juglans),
+    emit: juglans.emit.bind(juglans),
+    eventNames: juglans.eventNames.bind(juglans),
+    listenerCount: juglans.listenerCount.bind(juglans)
+  };
 };

@@ -19,9 +19,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * @modify date 2019-01-05 03:10:49
  * @desc [Juglans FrameWork Instance]
  */
-const {
-  EventEmitter
-} = require('events');
+const events = require('events');
 
 const deepmerge = require('deepmerge');
 
@@ -31,10 +29,13 @@ const is = require('is');
 
 const plugins = require('./plugins');
 
+const defaultCfg = require('./cfg');
+
 const {
   scanPlugins,
   runPlugins,
-  inherits
+  inherits,
+  EventEmitter
 } = require('./utils');
 /**
  * Juglans constructor.
@@ -65,48 +66,18 @@ function Juglans() {
   } // Default global config, injects, middles
 
 
-  Object.defineProperty(this, 'config', {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    value: {
-      name: 'Juglans V1.0',
-      prefix: '/api/v1',
-      port: 3000,
-      debug: true,
-      logger: {
-        service: 'Juglans V1.0',
-        maxsize: 10 * 1024,
-        path: ''
-      },
-      bodyParser: {
-        strict: false,
-        jsonLimit: '5mb',
-        formLimit: '1mb',
-        textLimit: '1mb',
-        multipart: true,
-        formidable: {
-          keepExtensions: true
-        }
-      }
-    }
-  }); // default global config, injects, middles
+  this.config = defaultCfg; // default global config, injects, middles
 
-  Object.defineProperty(this, 'injects', {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    value: {}
-  }); // default global config, injects, middles
+  this.injects = {}; // default global config, injects, middles
 
-  Object.defineProperty(this, 'middles', {
-    configurable: true,
-    enumerable: true,
-    writable: true,
-    value: []
-  }); // default plugins
+  this.middles = []; // default plugins
 
-  const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)];
+  const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default Injects
+
+  const dInjects = {
+    events: EventEmitter(this)
+  };
+  this.Inject(dInjects);
   this.Use.apply(this, dMiddles);
   this.Config(configuration);
 }
@@ -132,7 +103,10 @@ Juglans.prototype.Config = function () {
     parameters[_key] = arguments[_key];
   }
 
-  // Legitimacy asserts
+  // Refined debug mode
+  const debug = parameters.reduce((acc, curr) => curr.debug || acc, false);
+  this.config.debug = debug; // Legitimacy asserts
+
   assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // Duplicate checking
 
   const configs = [this.config];
@@ -277,7 +251,7 @@ _asyncToGenerator(function* () {
 
   (_this$Use = this.Use.apply(this, _toConsumableArray(sMiddles))).Use.apply(_this$Use, LMiddles);
 
-  return runPlugins(this.middles, function (ctx) {
+  runPlugins(this.middles, function (ctx) {
     return function () {
       return ctx.injects;
     };
@@ -291,4 +265,4 @@ _asyncToGenerator(function* () {
     }(this)
   });
 });
-module.exports = inherits(Juglans, EventEmitter);
+module.exports = inherits(Juglans, events.EventEmitter);
