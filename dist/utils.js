@@ -44,9 +44,7 @@ repo.runPlugins = function (arrs, args) {
   /*#__PURE__*/
   function () {
     var _ref = _asyncToGenerator(function* (acc, curr, index) {
-      return new Promise((resolve, reject) => {
-        resolve();
-      }).then(() => acc).then(x => {
+      return Promise.resolve(acc).then(x => {
         if (options.execBefore) options.execBefore(x, index);
 
         if (options.chainArgs) {
@@ -55,7 +53,7 @@ repo.runPlugins = function (arrs, args) {
           return curr(is.function(args) ? args() : args);
         }
       }).then(x => {
-        if (options.execAfter) options.execAfter(x, index);
+        if (options.execAfter && is.object(x)) options.execAfter(x, index);
         return x;
       });
     });

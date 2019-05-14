@@ -83,8 +83,6 @@ repo.ProxyRun = cb => (_ref3) => {
   } = _ref3;
 
   if (httpProxy instanceof Koa) {
-    httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
-      cb(err, config);
-    });
+    httpProxy.listen(utils.someOrElse(config.port, 3000), err => cb(err, config));
   }
 };

@@ -242,27 +242,29 @@ Juglans.prototype.Use = function () {
 
 Juglans.prototype.Run =
 /*#__PURE__*/
-_asyncToGenerator(function* () {
-  var _this$Use;
+function () {
+  var _ref = _asyncToGenerator(function* (cb) {
+    const _this = this;
 
-  let cb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : () => {};
-  const LMiddles = [plugins.ProxyRun(cb)];
-  const sMiddles = scanPlugins(this.config.dependency);
+    const sMiddles = scanPlugins(this.config.dependency);
+    this.Use.apply(this, _toConsumableArray(sMiddles));
+    yield runPlugins(this.middles, () => _this.injects, {
+      execAfter(ret) {
+        _this.Inject(ret);
+      }
 
-  (_this$Use = this.Use.apply(this, _toConsumableArray(sMiddles))).Use.apply(_this$Use, LMiddles);
+    });
 
-  runPlugins(this.middles, function (ctx) {
-    return function () {
-      return ctx.injects;
-    };
-  }(this), {
-    execAfter: function (ctx) {
-      return ret => {
-        if (is.object(ret) && Object.keys(ret).length >= 1) {
-          ctx.Inject(ret);
-        }
-      };
-    }(this)
+    if (!is.function(cb)) {
+      return _this.injects;
+    }
+
+    cb(_this.injects);
   });
-});
+
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
 module.exports = inherits(Juglans, events.EventEmitter);

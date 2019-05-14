@@ -21,14 +21,16 @@ new Juglans({ name: 'Juglans V1.0' })
     })
   }
 )
-.Run(function (err, config) {
-    if (err) {
-        console.error(err)
+.Run(({ httpProxy, config }) => {
+  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
+    if (!err) {
+      console.log(`App:${config.name}`)
+      console.log(`App:${config.NODE_ENV}`)
+      console.log(`App:runing on Port:${config.port}`)
     } else {
-        console.log(`App:${config.name}`)
-        console.log(`App:${config.NODE_ENV}`)
-        console.log(`App:runing on Port:${config.port}`)
+      console.error(err)
     }
+  })
 })
 ```
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
@@ -87,14 +89,16 @@ app.Use(
 #### Run app
 ```javascript
 // run app and listen callback
-app.Run(function (err, config) {
-    if (err) {
-        console.error(err)
+app.Run(({ httpProxy, config }) => {
+  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
+    if (!err) {
+      console.log(`App:${config.name}`)
+      console.log(`App:${config.NODE_ENV}`)
+      console.log(`App:runing on Port:${config.port}`)
     } else {
-        console.log(`App:${config.name}`)
-        console.log(`App:${config.NODE_ENV}`)
-        console.log(`App:runing on Port:${config.port}`)
+      console.error(err)
     }
+  })
 })
 ```
 ## Design Philosophy
