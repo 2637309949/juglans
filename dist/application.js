@@ -70,7 +70,9 @@ function Juglans() {
 
   this.injects = {}; // default global config, injects, middles
 
-  this.middles = []; // default plugins
+  this.middles = [];
+  this.preMiddles = [];
+  this.postMiddles = []; // default plugins
 
   const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default Injects
 
@@ -216,6 +218,64 @@ Juglans.prototype.Use = function () {
   return this;
 };
 /**
+ * Add Juglans plugins
+ *
+ * ####Example:
+ *
+ *     app.PreUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
+ *     app.PreUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
+ *
+ * Return middles if no params be provided
+ * Note:
+ * Plugin entity must be a function entity
+ *
+ * @param {Array} plugins
+ * @api public
+ */
+
+
+Juglans.prototype.PreUse = function () {
+  for (var _len4 = arguments.length, plugins = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    plugins[_key4] = arguments[_key4];
+  }
+
+  // Legitimacy asserts
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
+
+  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  this.preMiddles = this.preMiddles.concat(plugins);
+  return this;
+};
+/**
+ * Add Juglans plugins
+ *
+ * ####Example:
+ *
+ *     app.PostUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
+ *     app.PostUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
+ *
+ * Return middles if no params be provided
+ * Note:
+ * Plugin entity must be a function entity
+ *
+ * @param {Array} plugins
+ * @api public
+ */
+
+
+Juglans.prototype.PostUse = function () {
+  for (var _len5 = arguments.length, plugins = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    plugins[_key5] = arguments[_key5];
+  }
+
+  // Legitimacy asserts
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
+
+  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  this.postMiddles = this.postMiddles.concat(plugins);
+  return this;
+};
+/**
  * Run app
  *
  * #### Example:
@@ -248,7 +308,7 @@ function () {
 
     const sMiddles = scanPlugins(this.config.dependency);
     this.Use.apply(this, _toConsumableArray(sMiddles));
-    yield runPlugins(this.middles, () => _this.injects, {
+    yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => _this.injects, {
       execAfter(ret) {
         _this.Inject(ret);
       }
