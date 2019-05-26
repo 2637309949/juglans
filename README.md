@@ -1,5 +1,8 @@
 # Juglans Framework
+
 ![Juglans flash](./asserts/flash.jpeg)
+![Juglans flash](./asserts/frame.png)
+
 ## Instruction
 Set up the application of basic measures quickly, and expand the application through plug-ins
 #### Install Juglans
