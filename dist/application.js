@@ -50,10 +50,10 @@ const {
 
 
 function Juglans() {
-  let configuration = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   // Legitimacy asserts
-  assert(is.object(configuration), 'configuration should be a object');
+  assert(is.object(cfg), 'cfg should be a object');
   assert(is.object(options), 'options should be a object'); // Default global options
 
   const {
@@ -62,7 +62,7 @@ function Juglans() {
   } = options;
 
   if (!(this instanceof Juglans)) {
-    return new Juglans(configuration, options);
+    return new Juglans(cfg, options);
   } // Default global config, injects, middles
 
 
@@ -70,18 +70,26 @@ function Juglans() {
 
   this.injects = {}; // default global config, injects, middles
 
-  this.middles = [];
-  this.preMiddles = [];
+  this.middles = []; // default pre middles
+
+  this.preMiddles = []; // default post middles
+
   this.postMiddles = []; // default plugins
 
-  const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default Injects
+  const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default plugins
+
+  const preMiddles = []; // default plugins
+
+  const postMiddles = []; // default Injects
 
   const dInjects = {
     events: EventEmitter(this)
   };
   this.Inject(dInjects);
+  this.PreUse.apply(this, preMiddles);
   this.Use.apply(this, dMiddles);
-  this.Config(configuration);
+  this.PostUse.apply(this, postMiddles);
+  this.Config(cfg);
 }
 /**
  * Sets Juglans config
@@ -193,35 +201,6 @@ Juglans.prototype.Inject = function () {
  *
  * ####Example:
  *
- *     app.Use(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
- *     app.Use(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- *
- * Return middles if no params be provided
- * Note:
- * Plugin entity must be a function entity
- *
- * @param {Array} plugins
- * @api public
- */
-
-
-Juglans.prototype.Use = function () {
-  for (var _len3 = arguments.length, plugins = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-    plugins[_key3] = arguments[_key3];
-  }
-
-  // Legitimacy asserts
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
-
-  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
-  this.middles = this.middles.concat(plugins);
-  return this;
-};
-/**
- * Add Juglans plugins
- *
- * ####Example:
- *
  *     app.PreUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PreUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
  *
@@ -235,6 +214,35 @@ Juglans.prototype.Use = function () {
 
 
 Juglans.prototype.PreUse = function () {
+  for (var _len3 = arguments.length, plugins = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    plugins[_key3] = arguments[_key3];
+  }
+
+  // Legitimacy asserts
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
+
+  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  this.preMiddles = this.preMiddles.concat(plugins);
+  return this;
+};
+/**
+ * Add Juglans plugins
+ *
+ * ####Example:
+ *
+ *     app.Use(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
+ *     app.Use(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
+ *
+ * Return middles if no params be provided
+ * Note:
+ * Plugin entity must be a function entity
+ *
+ * @param {Array} plugins
+ * @api public
+ */
+
+
+Juglans.prototype.Use = function () {
   for (var _len4 = arguments.length, plugins = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
     plugins[_key4] = arguments[_key4];
   }
@@ -243,7 +251,7 @@ Juglans.prototype.PreUse = function () {
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
 
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
-  this.preMiddles = this.preMiddles.concat(plugins);
+  this.middles = this.middles.concat(plugins);
   return this;
 };
 /**
