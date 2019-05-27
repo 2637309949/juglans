@@ -5,10 +5,13 @@
 
 ## Instruction
 Set up the application of basic measures quickly, and expand the application through plug-ins
+
 #### Install Juglans
+
 ```shell
 $ npm i juglans -S
 ```
+
 #### QuickStart
 ```javascript
 new Juglans({ name: 'Juglans V1.0' })
@@ -89,6 +92,7 @@ app.Use(
   }
 )
 ```
+
 #### Run app
 ```javascript
 // run app and listen callback
@@ -107,6 +111,7 @@ app.Run(({ httpProxy, config }) => {
 ## Design Philosophy
 
 ## Plugins
+
 ### Built-in Plugins
 - [juglans-addition](https://github.com/2637309949/juglans-addition)
 - [juglans-captcha](https://github.com/2637309949/juglans-captcha)
@@ -117,6 +122,7 @@ app.Run(({ httpProxy, config }) => {
 - [juglans-role](https://github.com/2637309949/juglans-role)
 - [juglans-upload](https://github.com/2637309949/juglans-upload)
 - [juglans-i18n](https://github.com/2637309949/juglans-i18n)
+
 ### Custom your plugins
 Juglans is a plugins framework that can take two different kinds of parameters as plugins:
  - #### Common plugins
