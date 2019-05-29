@@ -29,8 +29,6 @@ const is = require('is');
 
 const plugins = require('./plugins');
 
-const defaultCfg = require('./cfg');
-
 const {
   scanPlugins,
   runPlugins,
@@ -66,7 +64,7 @@ function Juglans() {
   } // Default global config, injects, middles
 
 
-  this.config = defaultCfg; // default global config, injects, middles
+  this.config = Juglans.defaultConfig; // default global config, injects, middles
 
   this.injects = {}; // default global config, injects, middles
 
@@ -80,9 +78,10 @@ function Juglans() {
 
   const preMiddles = []; // default plugins
 
-  const postMiddles = []; // default Injects
+  const postMiddles = []; // default Injects, status for diff plugins share, events for diff plugins communication
 
   const dInjects = {
+    status: {},
     events: EventEmitter(this)
   };
   this.Inject(dInjects);
@@ -333,6 +332,28 @@ function () {
   return function (_x) {
     return _ref.apply(this, arguments);
   };
-}();
+}(); // Juglans default config
 
+
+Juglans.defaultConfig = {
+  'name': 'Juglans V1.0',
+  'prefix': '/api/v1',
+  'port': 3000,
+  'debug': true,
+  'logger': {
+    'service': 'Juglans V1.0',
+    'maxsize': 10240,
+    'path': ''
+  },
+  'bodyParser': {
+    'strict': false,
+    'jsonLimit': '5mb',
+    'formLimit': '1mb',
+    'textLimit': '1mb',
+    'multipart': true,
+    'formidable': {
+      'keepExtensions': true
+    }
+  }
+};
 module.exports = inherits(Juglans, events.EventEmitter);
