@@ -25,6 +25,8 @@ const deepmerge = require('deepmerge');
 
 const assert = require('assert');
 
+const _ = require('lodash');
+
 const is = require('is');
 
 const plugins = require('./plugins');
@@ -120,7 +122,7 @@ Juglans.prototype.Config = function () {
 
   const configs = [this.config];
   configs.reduce((acc, curr) => {
-    Object.keys(curr).forEach(k => {
+    _.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
@@ -129,9 +131,10 @@ Juglans.prototype.Config = function () {
 
       acc = acc.concat([k]);
     });
+
     return acc;
   }, parameters.reduce((acc, curr) => {
-    Object.keys(curr).forEach(k => {
+    _.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
@@ -140,6 +143,7 @@ Juglans.prototype.Config = function () {
 
       acc = acc.concat([k]);
     });
+
     return acc;
   }, []));
   this.config = deepmerge.all([this.config].concat(parameters));
@@ -170,7 +174,7 @@ Juglans.prototype.Inject = function () {
 
   const injects = [this.injects];
   injects.reduce((acc, curr) => {
-    Object.keys(curr).forEach(k => {
+    _.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
@@ -179,9 +183,10 @@ Juglans.prototype.Inject = function () {
 
       acc = acc.concat([k]);
     });
+
     return acc;
   }, parameters.reduce((acc, curr) => {
-    Object.keys(curr).forEach(k => {
+    _.keys(curr).forEach(k => {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
@@ -190,9 +195,12 @@ Juglans.prototype.Inject = function () {
 
       acc = acc.concat([k]);
     });
+
     return acc;
   }, []));
-  Object.assign.apply(Object, [this.injects].concat(parameters));
+
+  _.assign.apply(_, [this.injects].concat(parameters));
+
   return this;
 };
 /**
@@ -332,28 +340,6 @@ function () {
   return function (_x) {
     return _ref.apply(this, arguments);
   };
-}(); // Juglans default config
+}();
 
-
-Juglans.defaultConfig = {
-  'name': 'Juglans V1.0',
-  'prefix': '/api/v1',
-  'port': 3000,
-  'debug': true,
-  'logger': {
-    'service': 'Juglans V1.0',
-    'maxsize': 10240,
-    'path': ''
-  },
-  'bodyParser': {
-    'strict': false,
-    'jsonLimit': '5mb',
-    'formLimit': '1mb',
-    'textLimit': '1mb',
-    'multipart': true,
-    'formidable': {
-      'keepExtensions': true
-    }
-  }
-};
 module.exports = inherits(Juglans, events.EventEmitter);
