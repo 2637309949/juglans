@@ -31,6 +31,8 @@ const is = require('is');
 
 const plugins = require('./plugins');
 
+const Status = require('./status');
+
 const {
   scanPlugins,
   runPlugins,
@@ -39,7 +41,6 @@ const {
 } = require('./utils');
 /**
  * Juglans constructor.
- *
  * The exports object of the `Juglans` module is an instance of this class.
  * Most apps will only use this one instance.
  *
@@ -80,12 +81,15 @@ function Juglans() {
 
   const preMiddles = []; // default plugins
 
-  const postMiddles = []; // default Injects, status for diff plugins share, events for diff plugins communication
+  const postMiddles = []; // default Injects, status for diff plugins share
+  // , events for diff plugins communication
 
   const dInjects = {
-    status: {},
     events: EventEmitter(this)
   };
+  dInjects.status = Status({
+    events: dInjects.events
+  });
   this.Inject(dInjects);
   this.PreUse.apply(this, preMiddles);
   this.Use.apply(this, dMiddles);
@@ -96,10 +100,8 @@ function Juglans() {
  * Sets Juglans config
  *
  * #### Example:
- *
  *     app.Config({ test: '123' })
  *     app.Config({ test: 'test' })
- *
  * All `config` just for middles, so set your `config` base on your middles use
  * Note:
  * The same properties will be overridden
@@ -154,7 +156,6 @@ Juglans.prototype.Config = function () {
 };
 /**
  * Add Juglans injects
- *
  * Return injects if no parameters be provided
  * Note:
  * Inject entity must be a object(uniqueness keys)
@@ -205,12 +206,9 @@ Juglans.prototype.Inject = function () {
 };
 /**
  * Add Juglans plugins
- *
  * ####Example:
- *
  *     app.PreUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PreUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- *
  * Return middles if no params be provided
  * Note:
  * Plugin entity must be a function entity
@@ -234,12 +232,9 @@ Juglans.prototype.PreUse = function () {
 };
 /**
  * Add Juglans plugins
- *
  * ####Example:
- *
  *     app.Use(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.Use(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- *
  * Return middles if no params be provided
  * Note:
  * Plugin entity must be a function entity
@@ -263,12 +258,9 @@ Juglans.prototype.Use = function () {
 };
 /**
  * Add Juglans plugins
- *
  * ####Example:
- *
  *     app.PostUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PostUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- *
  * Return middles if no params be provided
  * Note:
  * Plugin entity must be a function entity
@@ -292,9 +284,7 @@ Juglans.prototype.PostUse = function () {
 };
 /**
  * Run app
- *
  * #### Example:
- *
  *  app.Run(function (err, config) {
  *     if (!err) {
  *        console.log(`App:${config.name}`)
@@ -304,7 +294,6 @@ Juglans.prototype.PostUse = function () {
  *        console.error(err)
  *     }
  *  })
- *
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
