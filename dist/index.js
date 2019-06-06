@@ -7,7 +7,7 @@
  * @modify date 2018-09-02 12:51:45
  * @desc [export root object]
 */
-module.exports = require('./application');
+module.exports = require('./app');
 module.exports.utils = require('./utils'); // Juglans default config
 
 module.exports.defaultConfig = {
