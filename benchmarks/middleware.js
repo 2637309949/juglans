@@ -52,11 +52,13 @@ if (useAsync) {
 }
 
 // run instance
-app.Run(function (err, config) {
-  if (!err) {
-    console.log(`App:${config.name}`)
-    console.log(`App:runing on Port:${config.port}`)
-  } else {
-    console.error(err)
-  }
+app.Run(({ httpProxy, config, router, events }) => {
+  httpProxy.listen(config.port, err => {
+    if (!err) {
+      console.log(`App:${config.name}`)
+      console.log(`App:runing on Port:${config.port}`)
+    } else {
+      console.error(err)
+    }
+  })
 })
