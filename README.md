@@ -108,6 +108,17 @@ app.Run(({ httpProxy, config }) => {
   })
 })
 ```
+
+#### Plug in communication between plug-ins
+```javascript
+app.Use(function ({ router, test, events }) {
+  events.on('hello', function (message) {
+    console.log(message)
+  })
+  events.emit('hello', 'first message')
+})
+```
+
 ## Design Philosophy
 
 ## Plugins
