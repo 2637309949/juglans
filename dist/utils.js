@@ -81,7 +81,7 @@ repo.inherits = function (src, target) {
 
 
 repo.EventEmitter = function (juglans) {
-  return {
+  const EventEmitter = {
     addListener: juglans.addListener.bind(juglans),
     on: juglans.on.bind(juglans),
     once: juglans.once.bind(juglans),
@@ -96,4 +96,5 @@ repo.EventEmitter = function (juglans) {
     eventNames: juglans.eventNames.bind(juglans),
     listenerCount: juglans.listenerCount.bind(juglans)
   };
+  return EventEmitter;
 };

@@ -47,7 +47,8 @@
     "koa-router": "^7.4.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   },
   "husky": {
     "hooks": {

@@ -34,11 +34,21 @@ Status.prototype.set = function (k, v) {
 };
 
 Status.prototype.get = function (k, defaultValue) {
+  const value = _.get(this.status, k, defaultValue);
+
   if (this.events) {
-    this.events.emit('juglans:status:get', k, defaultValue);
+    this.events.emit('juglans:status:get', k, value);
   }
 
-  return _.get(this.status, k, defaultValue);
+  return value;
+};
+
+Status.prototype.all = function () {
+  if (this.events) {
+    this.events.emit('juglans:status:all', this.status);
+  }
+
+  return this.status;
 };
 
 module.exports = Status;

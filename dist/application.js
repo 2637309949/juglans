@@ -33,6 +33,8 @@ const plugins = require('./plugins');
 
 const Status = require('./status');
 
+const logger = require('./logger');
+
 const {
   scanPlugins,
   runPlugins,
@@ -128,7 +130,7 @@ Juglans.prototype.Config = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        console.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -140,7 +142,7 @@ Juglans.prototype.Config = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        console.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -179,7 +181,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        console.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -191,7 +193,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        console.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
