@@ -29,6 +29,8 @@ const _ = require('lodash');
 
 const is = require('is');
 
+const jsonschema = require('jsonschema');
+
 const plugins = require('./plugins');
 
 const Status = require('./status');
@@ -85,8 +87,10 @@ function Juglans() {
 
   const postMiddles = []; // default Injects, status for diff plugins share
   // , events for diff plugins communication
+  // , validate for json validator
 
   const dInjects = {
+    validator: new jsonschema.Validator(),
     events: EventEmitter(this)
   };
   dInjects.status = Status({
