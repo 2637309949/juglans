@@ -12,13 +12,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-/**
- * @author [Double]
- * @email [2637309949@qq.com]
- * @create date 2019-01-05 03:10:49
- * @modify date 2019-01-05 03:10:49
- * @desc [Juglans FrameWork Instance]
- */
+// Copyright (c) 2018-2020 Double.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
 const events = require('events');
 
 const deepmerge = require('deepmerge');
@@ -85,9 +81,10 @@ function Juglans() {
 
   const preMiddles = []; // default plugins
 
-  const postMiddles = []; // default Injects, status for diff plugins share
+  const postMiddles = []; // default Injects,
+  // , status for diff plugins share
   // , events for diff plugins communication
-  // , validate for json validator
+  // , validator for json validator
 
   const dInjects = {
     validator: new jsonschema.Validator(),
@@ -303,7 +300,7 @@ Juglans.prototype.PostUse = function () {
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
- * all middles set by `Use` would be run before by setting `Config.dependency`
+ * all middles set by `Use` would be run before by setting `Config.scan`
  *
  * @param {function} cb
  * @api public
@@ -316,7 +313,7 @@ function () {
   var _ref = _asyncToGenerator(function* (cb) {
     const _this = this;
 
-    const sMiddles = scanPlugins(this.config.dependency);
+    const sMiddles = scanPlugins(this.config.scan);
     this.Use.apply(this, _toConsumableArray(sMiddles));
     yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => _this.injects, {
       execAfter(ret) {
