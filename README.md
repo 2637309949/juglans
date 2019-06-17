@@ -125,6 +125,7 @@ app.Use(function ({ router, test, events }) {
 
 ### Built-in Plugins
 - [juglans-addition](https://github.com/2637309949/juglans-addition)
+- [juglans-openapi](https://github.com/2637309949/juglans-openapi)
 - [juglans-captcha](https://github.com/2637309949/juglans-captcha)
 - [juglans-delivery](https://github.com/2637309949/juglans-delivery)
 - [juglans-identify](https://github.com/2637309949/juglans-identify)
