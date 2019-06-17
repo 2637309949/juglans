@@ -340,5 +340,33 @@ function () {
     return _ref.apply(this, arguments);
   };
 }();
+/**
+ * Run app
+ * #### Example:
+ *  app.RunImmediately()
+ * RunPlugins func has some async call in function, those plugins
+ * would be executed in order in synchronization
+ * Note:
+ * all middles set by `Use` would be run before by setting `Config.scan`
+ *
+ * @param {function} cb
+ * @api public
+ */
 
+
+Juglans.prototype.RunImmediately =
+/*#__PURE__*/
+_asyncToGenerator(function* () {
+  const _this = this;
+
+  const sMiddles = scanPlugins(this.config.scan);
+  this.Use.apply(this, _toConsumableArray(sMiddles));
+  yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => _this.injects, {
+    execAfter(ret) {
+      _this.Inject(ret);
+    }
+
+  });
+  plugins.RunImmediately(_this.injects);
+});
 module.exports = inherits(Juglans, events.EventEmitter);

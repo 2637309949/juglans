@@ -11,6 +11,8 @@ const assert = require('assert');
 
 const Koa = require('koa');
 
+const logger = require('./logger');
+
 const utils = require('./utils');
 
 const repo = module.exports; // The first middles that create httpProxy
@@ -81,4 +83,25 @@ repo.ProxyRun = cb => (_ref3) => {
   if (httpProxy instanceof Koa) {
     httpProxy.listen(utils.someOrElse(config.port, 3000), err => cb(err, config));
   }
+}; // The last middles, run RunImmediately
+// those middles from code would be call in order
+
+
+repo.RunImmediately = (_ref4) => {
+  let {
+    httpProxy,
+    config,
+    router,
+    events
+  } = _ref4;
+  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
+    if (!err) {
+      logger.info(`App:${config.name}`);
+      logger.info(`App:${config.NODE_ENV}`);
+      logger.info(`App:runing on Port:${config.port}`);
+      events.emit('app:events:listen:finish', 'successful');
+    } else {
+      logger.error(err);
+    }
+  });
 };
