@@ -33,6 +33,8 @@ const Status = require('./status');
 
 const logger = require('./logger');
 
+const Reverse = require('./reverse');
+
 const {
   scanPlugins,
   runPlugins,
@@ -85,10 +87,15 @@ function Juglans() {
   // , status for diff plugins share
   // , events for diff plugins communication
   // , validator for json validator
+  // , reverse for reverse inject
 
   const dInjects = {
     validator: new jsonschema.Validator(),
-    events: EventEmitter(this)
+    events: EventEmitter(this),
+    reverse: Reverse({
+      injects: this.injects,
+      junlans: this
+    })
   };
   dInjects.status = Status({
     events: dInjects.events
