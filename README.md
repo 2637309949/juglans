@@ -121,6 +121,16 @@ app.Use(function ({ router, test, events }) {
 
 ## Design Philosophy
 
+## Injects
+
+### Built-in Injects
+
+- validator
+- events
+- reverse
+- schedule
+- status
+
 ## Plugins
 
 ### Built-in Plugins
