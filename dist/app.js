@@ -25,21 +25,16 @@ const _ = require('lodash');
 
 const is = require('is');
 
-const jsonschema = require('jsonschema');
-
 const plugins = require('./plugins');
-
-const Status = require('./status');
 
 const logger = require('./logger');
 
-const Reverse = require('./reverse');
+const defaultInjects = require('./inejcts');
 
 const {
-  scanPlugins,
-  runPlugins,
   inherits,
-  EventEmitter
+  runPlugins,
+  scanPlugins
 } = require('./utils');
 /**
  * Juglans constructor.
@@ -83,24 +78,8 @@ function Juglans() {
 
   const preMiddles = []; // default plugins
 
-  const postMiddles = []; // default Injects,
-  // , status for diff plugins share
-  // , events for diff plugins communication
-  // , validator for json validator
-  // , reverse for reverse inject
-
-  const dInjects = {
-    validator: new jsonschema.Validator(),
-    events: EventEmitter(this),
-    reverse: Reverse({
-      injects: this.injects,
-      junlans: this
-    })
-  };
-  dInjects.status = Status({
-    events: dInjects.events
-  });
-  this.Inject(dInjects);
+  const postMiddles = [];
+  this.Inject(defaultInjects(this));
   this.PreUse.apply(this, preMiddles);
   this.Use.apply(this, dMiddles);
   this.PostUse.apply(this, postMiddles);
