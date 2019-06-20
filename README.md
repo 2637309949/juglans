@@ -126,9 +126,69 @@ app.Use(function ({ router, test, events }) {
 ### Built-in Injects
 
 - validator
+```javascript
+app.Use(function ({ validator, test, events }) {
+  validator.addSchema({
+    'id': '/openapi.puData',
+    'type': 'object',
+    'properties': {
+      'app_id': {
+        'type': 'string',
+        'required': true
+      },
+      'method': {
+        'type': 'string',
+        'required': true
+      }
+    }
+  }
+  , '/openapi.puData')
+  const validateRet = validator.validate(puData, validator.schemas['/openapi.puData'])
+})
+```
 - events
+```javascript
+app.Use(function ({ router, test, events }) {
+  events.on('hello', function (message) {
+    console.log(message)
+  })
+  events.emit('hello', 'first message')
+})
+```
 - reverse
+```javascript
+function isManager ({ router }) {
+  router.get('/user/aux/manager', async (ctx) => {
+    try {
+      let username = ctx.query.username
+      username = username || ctx.request.body.username
+      const isManager = await userServices.isManager(username)
+      ctx.status = 200
+      ctx.body = { isManager }
+    } catch (error) {
+      logger.error(error.stack)
+      ctx.status = 500
+      ctx.body = { message: error.message }
+    }
+  })
+}
+app.Use(function ({ reverse, test, events }) {
+  reverse.Register(isManager)
+})
+```
 - schedule
+```javascript
+const defineSchedule = {
+  name: 'Hello',
+  corn: '*/10 * * * * *',
+  job: async function () {
+    console.log('Hello job!')
+  }
+}
+app.Use(function ({ reverse, test, events }) {
+ schedule.scheduleJob(defineSchedule.corn, defineSchedule.job)
+})
+```
 - status
 
 ## Plugins
