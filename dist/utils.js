@@ -107,28 +107,29 @@ repo.EventEmitter = function (juglans) {
 
 repo.proxyWithEvent = function (httpProxy, events) {
   httpProxy.listen = (listen => function listenProxy() {
-    const _this = this;
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-    const callback = arguments[arguments.length - 1];
+    const callback = args[args.length - 1];
 
     if (typeof callback === 'function') {
-      arguments[arguments.length - 1] = function () {
-        const _this = this;
+      args[args.length - 1] = function () {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
 
-        const _arguments = arguments;
-        const err = _arguments[0];
-
-        if (err) {
+        if (args[0]) {
           events.emit(EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_FAILED, EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_FAILED);
         } else {
           events.emit(EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_SUCCEED, EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_SUCCEED);
         }
 
-        callback.apply(_this, _arguments);
+        callback.apply(this, args);
       };
     }
 
-    listen.apply(_this, arguments);
+    return listen.apply(this, args);
   })(httpProxy.listen);
 
   return httpProxy;
