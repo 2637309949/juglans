@@ -15,6 +15,8 @@ const _ = require('lodash');
 
 const is = require('is');
 
+const EVENT = require('./events');
+
 const repo = exports; // Scan plugins from spec path
 
 repo.scanPlugins = function () {
@@ -100,4 +102,34 @@ repo.EventEmitter = function (juglans) {
     listenerCount: juglans.listenerCount.bind(juglans)
   };
   return EventEmitter;
+}; // Return HttpProxy
+
+
+repo.proxyWithEvent = function (httpProxy, events) {
+  httpProxy.listen = (listen => function listenProxy() {
+    const _this = this;
+
+    const callback = arguments[arguments.length - 1];
+
+    if (typeof callback === 'function') {
+      arguments[arguments.length - 1] = function () {
+        const _this = this;
+
+        const _arguments = arguments;
+        const err = _arguments[0];
+
+        if (err) {
+          events.emit(EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_FAILED, EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_FAILED);
+        } else {
+          events.emit(EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_SUCCEED, EVENT.SYS_JUGLANS_PLUGINS_RUNIMMEDIATELY_SUCCEED);
+        }
+
+        callback.apply(_this, _arguments);
+      };
+    }
+
+    listen.apply(_this, arguments);
+  })(httpProxy.listen);
+
+  return httpProxy;
 };

@@ -22,7 +22,8 @@ repo.HttpProxy = httpProxy => (_ref) => {
   let {
     config: {
       engine
-    }
+    },
+    events
   } = _ref;
 
   if (!httpProxy) {
@@ -36,7 +37,7 @@ repo.HttpProxy = httpProxy => (_ref) => {
   }
 
   return {
-    httpProxy
+    httpProxy: utils.proxyWithEvent(httpProxy, events)
   };
 }; // The second middles that create router
 // default, a koa router would be create
@@ -91,7 +92,6 @@ repo.RunImmediately = (_ref4) => {
   let {
     httpProxy,
     config,
-    router,
     events
   } = _ref4;
   httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
@@ -99,7 +99,6 @@ repo.RunImmediately = (_ref4) => {
       logger.info(`App:${config.name}`);
       logger.info(`App:${config.NODE_ENV}`);
       logger.info(`App:runing on Port:${config.port}`);
-      events.emit('app:events:listen:finish', 'successful');
     } else {
       logger.error(err);
     }

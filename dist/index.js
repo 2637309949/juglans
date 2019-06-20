@@ -4,7 +4,8 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 module.exports = require('./app');
-module.exports.utils = require('./utils'); // Juglans default config
+module.exports.utils = require('./utils');
+module.exports.events = require('./events'); // Juglans default config
 
 module.exports.defaultConfig = {
   'name': 'Juglans V1.0',
