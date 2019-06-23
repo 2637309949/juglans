@@ -48,10 +48,10 @@ const {
 
 
 function Juglans() {
-  let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   // Legitimacy asserts
-  assert(is.object(cfg), 'cfg should be a object');
+  assert(is.object(conf), 'cfg should be a object');
   assert(is.object(options), 'options should be a object'); // Default global options
 
   const {
@@ -60,11 +60,12 @@ function Juglans() {
   } = options;
 
   if (!(this instanceof Juglans)) {
-    return new Juglans(cfg, options);
-  } // Default global config, injects, middles
+    return new Juglans(conf, options);
+  }
 
+  this.options = options; // Default global config, injects, middles
 
-  this.config = Juglans.defaultConfig; // default global config, injects, middles
+  this.config = deepmerge.all([Juglans.defaultConfig, conf]); // default global config, injects, middles
 
   this.injects = {}; // default global config, injects, middles
 
@@ -78,12 +79,13 @@ function Juglans() {
 
   const preMiddles = []; // default plugins
 
-  const postMiddles = [];
-  this.Inject(defaultInjects(this));
+  const postMiddles = []; // default injects
+
+  const dInjects = defaultInjects(this);
+  this.Inject(dInjects);
   this.PreUse.apply(this, preMiddles);
   this.Use.apply(this, dMiddles);
   this.PostUse.apply(this, postMiddles);
-  this.Config(cfg);
 }
 /**
  * Sets Juglans config
@@ -168,7 +170,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        logger.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        throw new Error(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -180,7 +182,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        logger.warn(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        throw new Error(`key[Inject]:${k} has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -336,16 +338,6 @@ function () {
 Juglans.prototype.RunImmediately =
 /*#__PURE__*/
 _asyncToGenerator(function* () {
-  const _this = this;
-
-  const sMiddles = scanPlugins(this.config.scan);
-  this.Use.apply(this, _toConsumableArray(sMiddles));
-  yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => _this.injects, {
-    execAfter(ret) {
-      _this.Inject(ret);
-    }
-
-  });
-  plugins.RunImmediately(_this.injects);
+  return this.Run(plugins.RunImmediately);
 });
 module.exports = inherits(Juglans, events.EventEmitter);

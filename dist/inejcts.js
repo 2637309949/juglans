@@ -21,7 +21,7 @@ const {
 
 
 module.exports = function (juglans) {
-  const dInjects = {
+  const injects = {
     validator: new jsonschema.Validator(),
     events: EventEmitter(juglans),
     reverse: Reverse({
@@ -30,8 +30,8 @@ module.exports = function (juglans) {
     }),
     schedule
   };
-  dInjects.status = Status({
-    events: dInjects.events
+  injects.status = Status({
+    events: injects.events
   });
-  return dInjects;
+  return injects;
 };
