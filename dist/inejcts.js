@@ -26,7 +26,7 @@ module.exports = function (juglans) {
     events: EventEmitter(juglans),
     reverse: Reverse({
       injects: juglans.injects,
-      junlans: juglans
+      juglans
     }),
     schedule
   };

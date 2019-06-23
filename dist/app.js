@@ -119,7 +119,7 @@ Juglans.prototype.Config = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        logger.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`[Config]:key[${k}] has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -131,7 +131,7 @@ Juglans.prototype.Config = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        logger.warn(`key[Config]:${k} has existed, the same properties will be overridden.`);
+        logger.warn(`[Config]:key[${k}] has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -170,7 +170,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        throw new Error(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        throw new Error(`[Inject]:key[${k}] has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -182,7 +182,7 @@ Juglans.prototype.Inject = function () {
       const index = acc.indexOf(k);
 
       if (index !== -1 && this.config.debug) {
-        throw new Error(`key[Inject]:${k} has existed, the same properties will be overridden.`);
+        throw new Error(`[Inject]:key[${k}] has existed, the same properties will be overridden.`);
       }
 
       acc = acc.concat([k]);
@@ -276,6 +276,25 @@ Juglans.prototype.PostUse = function () {
 /**
  * Run app
  * #### Example:
+ *  app.RunImmediately()
+ * RunPlugins func has some async call in function, those plugins
+ * would be executed in order in synchronization
+ * Note:
+ * all middles set by `Use` would be run before by setting `Config.scan`
+ *
+ * @param {function} cb
+ * @api public
+ */
+
+
+Juglans.prototype.RunImmediately =
+/*#__PURE__*/
+_asyncToGenerator(function* () {
+  return this.Run(plugins.RunImmediately);
+});
+/**
+ * Run app
+ * #### Example:
  *  app.Run(function (err, config) {
  *     if (!err) {
  *        console.log(`App:${config.name}`)
@@ -294,16 +313,15 @@ Juglans.prototype.PostUse = function () {
  * @api public
  */
 
-
 Juglans.prototype.Run =
 /*#__PURE__*/
 function () {
-  var _ref = _asyncToGenerator(function* (cb) {
+  var _ref2 = _asyncToGenerator(function* (cb) {
     const _this = this;
 
     const sMiddles = scanPlugins(this.config.scan);
     this.Use.apply(this, _toConsumableArray(sMiddles));
-    yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => _this.injects, {
+    yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => this.injects, {
       execAfter(ret) {
         _this.Inject(ret);
       }
@@ -311,33 +329,15 @@ function () {
     });
 
     if (!is.function(cb)) {
-      return _this.injects;
+      return this.injects;
     }
 
-    cb(_this.injects);
+    cb(this.injects);
   });
 
   return function (_x) {
-    return _ref.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
-/**
- * Run app
- * #### Example:
- *  app.RunImmediately()
- * RunPlugins func has some async call in function, those plugins
- * would be executed in order in synchronization
- * Note:
- * all middles set by `Use` would be run before by setting `Config.scan`
- *
- * @param {function} cb
- * @api public
- */
 
-
-Juglans.prototype.RunImmediately =
-/*#__PURE__*/
-_asyncToGenerator(function* () {
-  return this.Run(plugins.RunImmediately);
-});
 module.exports = inherits(Juglans, events.EventEmitter);

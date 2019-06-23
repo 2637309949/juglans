@@ -7,65 +7,44 @@ const koaRouter = require('koa-router');
 
 const koaBody = require('koa-body');
 
-const assert = require('assert');
-
 const Koa = require('koa');
 
 const logger = require('./logger');
 
 const utils = require('./utils');
 
-const repo = module.exports; // The first middles that create httpProxy
-// default, a koa app would be create
+const repo = module.exports;
 
 repo.HttpProxy = httpProxy => (_ref) => {
   let {
-    config: {
-      engine
-    },
     events
   } = _ref;
 
   if (!httpProxy) {
-    engine = utils.someOrElse(engine, 'koa');
-
-    if (engine === 'koa') {
-      httpProxy = new Koa();
-    } else {
-      assert(false, 'Other engines are not yet supported, Please welcome the attention.');
-    }
+    httpProxy = new Koa();
   }
 
   return {
     httpProxy: utils.proxyWithEvent(httpProxy, events)
   };
-}; // The second middles that create router
-// default, a koa router would be create
-
+};
 
 repo.HttpRouter = router => (_ref2) => {
   let {
     httpProxy,
     config: {
       prefix,
-      bodyParser,
-      engine
+      bodyParser
     }
   } = _ref2;
 
   if (!router) {
-    engine = utils.someOrElse(engine, 'koa');
-
-    if (engine === 'koa') {
-      router = koaRouter({
-        prefix: utils.someOrElse(prefix, '/api/v1')
-      });
-      router.use(koaBody(bodyParser));
-      httpProxy.use(router.routes());
-      httpProxy.use(router.allowedMethods());
-    } else {
-      assert(false, 'Other engines are not yet supported, Please welcome the attention.');
-    }
+    router = koaRouter({
+      prefix: utils.someOrElse(prefix, '/api/v1')
+    });
+    router.use(koaBody(bodyParser));
+    httpProxy.use(router.routes());
+    httpProxy.use(router.allowedMethods());
   }
 
   return {
