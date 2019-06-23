@@ -4,7 +4,7 @@
 ![Juglans flash](./asserts/frame.png)
 
 ## Instruction
-Set up the application of basic measures quickly, and expand the application through plug-ins
+  Set up the application of basic measures quickly, and expand the application through plug-ins
 
 #### Install Juglans
 
@@ -13,31 +13,20 @@ $ npm i juglans -S
 ```
 
 #### QuickStart
+
 ```javascript
 new Juglans({ name: 'Juglans V1.0' })
 .Config(config)
 .Inject(inject)
-.Use(
-  function({ router }) {
-    router.get('/hello', ctx => {
-      ctx.status = 200
-      ctx.body = {
-        message: 'juglans'
-      }
-    })
-  }
-)
-.Run(({ httpProxy, config }) => {
-  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
-    if (!err) {
-      console.log(`App:${config.name}`)
-      console.log(`App:${config.NODE_ENV}`)
-      console.log(`App:runing on Port:${config.port}`)
-    } else {
-      console.error(err)
+.Use(function({ router }) {
+  router.get('/hello', ctx => {
+    ctx.status = 200
+    ctx.body = {
+      message: 'juglans'
     }
   })
 })
+.RunImmediately()
 ```
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 
@@ -94,6 +83,7 @@ app.Use(
 ```
 
 #### Run app
+
 ```javascript
 // run app and listen callback
 app.Run(({ httpProxy, config }) => {
