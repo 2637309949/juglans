@@ -2,8 +2,8 @@
 
 ![Juglans flash](./asserts/flash.jpeg)
 ![Juglans flash](./asserts/frame.png)
-
 ## Instruction
+
   Set up the application of basic measures quickly, and expand the application through plug-ins
 
 #### Install Juglans
@@ -11,7 +11,6 @@
 ```shell
 $ npm i juglans -S
 ```
-
 #### QuickStart
 
 ```javascript
@@ -46,6 +45,7 @@ The config pass py contructor would be overided by `app.config`
 
 
 #### Inject your custom injects
+
 All injects would be provided as plugins params next by next.   
 Init injects by Inject function
 ```javascript
@@ -66,8 +66,8 @@ Note1:
 Note2:
     Inject entity is a object with key and value, those has same keys entity would
 be overided by those pass by lastly.
-
 #### Import your plugins
+
 ```javascript
 // import plugins
 app.Use(
@@ -81,7 +81,6 @@ app.Use(
   }
 )
 ```
-
 #### Run app
 
 ```javascript
@@ -98,8 +97,8 @@ app.Run(({ httpProxy, config }) => {
   })
 })
 ```
-
 #### Plug in communication between plug-ins
+
 ```javascript
 app.Use(function ({ router, test, events }) {
   events.on('hello', function (message) {
@@ -108,7 +107,6 @@ app.Use(function ({ router, test, events }) {
   events.emit('hello', 'first message')
 })
 ```
-
 ## Design Philosophy
 
 ## Injects
