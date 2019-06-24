@@ -193,7 +193,6 @@ app.Use(function ({ reverse, test, events }) {
 - [juglans-proxy](https://github.com/2637309949/juglans-proxy)
 - [juglans-role](https://github.com/2637309949/juglans-role)
 - [juglans-upload](https://github.com/2637309949/juglans-upload)
-- [juglans-i18n](https://github.com/2637309949/juglans-i18n)
 
 ### Custom your plugins
 Juglans is a plugins framework that can take two different kinds of parameters as plugins:
