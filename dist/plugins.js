@@ -22,10 +22,11 @@ repo.HttpProxy = httpProxy => (_ref) => {
 
   if (!httpProxy) {
     httpProxy = new Koa();
+    httpProxy = utils.proxyWithEvent(httpProxy, events);
   }
 
   return {
-    httpProxy: utils.proxyWithEvent(httpProxy, events)
+    httpProxy
   };
 };
 
@@ -50,29 +51,15 @@ repo.HttpRouter = router => (_ref2) => {
   return {
     router
   };
-}; // The last middles, run httpProxy
-// those middles from code would be call in order
-
-
-repo.ProxyRun = cb => (_ref3) => {
-  let {
-    httpProxy,
-    config
-  } = _ref3;
-
-  if (httpProxy instanceof Koa) {
-    httpProxy.listen(utils.someOrElse(config.port, 3000), err => cb(err, config));
-  }
 }; // The last middles, run RunImmediately
 // those middles from code would be call in order
 
 
-repo.RunImmediately = (_ref4) => {
+repo.RunImmediately = (_ref3) => {
   let {
     httpProxy,
-    config,
-    events
-  } = _ref4;
+    config
+  } = _ref3;
   httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
     if (!err) {
       logger.info(`App:${config.name}`);
