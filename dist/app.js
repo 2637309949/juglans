@@ -50,10 +50,8 @@ const {
 function Juglans() {
   let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  // Legitimacy asserts
   assert(is.object(conf), 'cfg should be a object');
-  assert(is.object(options), 'options should be a object'); // Default global options
-
+  assert(is.object(options), 'options should be a object');
   const {
     httpProxy,
     router
@@ -109,12 +107,10 @@ Juglans.prototype.Config = function () {
     parameters[_key] = arguments[_key];
   }
 
-  // Refined debug mode
+  parameters = parameters.map(x => _.cloneDeep(x));
   const debug = parameters.reduce((acc, curr) => curr.debug || acc, false);
-  this.config.debug = debug; // Legitimacy asserts
-
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // Duplicate checking
-
+  this.config.debug = debug;
+  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object');
   const configs = [this.config];
   configs.reduce((acc, curr) => {
     _.keys(curr).forEach(k => {
@@ -141,7 +137,6 @@ Juglans.prototype.Config = function () {
 
     return acc;
   }, []));
-  parameters = parameters.map(x => _.cloneDeep(x));
   this.config = deepmerge.all([this.config].concat(_toConsumableArray(parameters)));
   this.Inject({
     config: this.config
@@ -164,9 +159,7 @@ Juglans.prototype.Inject = function () {
     parameters[_key2] = arguments[_key2];
   }
 
-  // Legitimacy asserts
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object'); // Duplicate checking
-
+  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object');
   const injects = [this.injects];
   injects.reduce((acc, curr) => {
     _.keys(curr).forEach(k => {
@@ -193,9 +186,8 @@ Juglans.prototype.Inject = function () {
 
     return acc;
   }, []));
-  parameters = parameters.map(x => _.cloneDeep(x));
 
-  _.assign.apply(_, [this.injects].concat(_toConsumableArray(parameters)));
+  _.assign.apply(_, [this.injects].concat(parameters));
 
   return this;
 };
@@ -218,9 +210,7 @@ Juglans.prototype.PreUse = function () {
     plugins[_key3] = arguments[_key3];
   }
 
-  // Legitimacy asserts
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
-
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
   this.preMiddles = this.preMiddles.concat(plugins);
   return this;
@@ -244,9 +234,7 @@ Juglans.prototype.Use = function () {
     plugins[_key4] = arguments[_key4];
   }
 
-  // Legitimacy asserts
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
-
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
   this.middles = this.middles.concat(plugins);
   return this;
@@ -270,9 +258,7 @@ Juglans.prototype.PostUse = function () {
     plugins[_key5] = arguments[_key5];
   }
 
-  // Legitimacy asserts
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type'); // Legitimacy filtering
-
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
   this.postMiddles = this.postMiddles.concat(plugins);
   return this;
