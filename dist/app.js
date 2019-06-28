@@ -310,7 +310,9 @@ function () {
     const _this = this;
 
     const sMiddles = scanPlugins(this.config.scan);
+    this.Use(plugins.scanPluginsBefore);
     this.Use.apply(this, _toConsumableArray(sMiddles));
+    this.Use(plugins.scanPluginsAfter);
     yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => this.injects, {
       execAfter(ret) {
         _this.Inject(ret);

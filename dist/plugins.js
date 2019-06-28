@@ -9,6 +9,8 @@ const koaBody = require('koa-body');
 
 const Koa = require('koa');
 
+const events = require('./events');
+
 const logger = require('./logger');
 
 const utils = require('./utils');
@@ -51,15 +53,29 @@ repo.HttpRouter = router => (_ref2) => {
   return {
     router
   };
+};
+
+repo.scanPluginsBefore = () => (_ref3) => {
+  let {
+    events: e
+  } = _ref3;
+  e.emit(events.SYS_JUGLANS_SCAN_BEFORE, events.SYS_JUGLANS_SCAN_BEFORE);
+};
+
+repo.scanPluginsAfter = () => (_ref4) => {
+  let {
+    events: e
+  } = _ref4;
+  e.emit(events.SYS_JUGLANS_SCAN_AFTER, events.SYS_JUGLANS_SCAN_AFTER);
 }; // The last middles, run RunImmediately
 // those middles from code would be call in order
 
 
-repo.RunImmediately = (_ref3) => {
+repo.RunImmediately = (_ref5) => {
   let {
     httpProxy,
     config
-  } = _ref3;
+  } = _ref5;
   httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
     if (!err) {
       logger.info(`App:${config.name}`);
