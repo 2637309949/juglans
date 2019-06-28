@@ -1,5 +1,9 @@
 "use strict";
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -7,10 +11,6 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
@@ -63,6 +63,8 @@ function Juglans() {
     return new Juglans(conf, options);
   }
 
+  conf = _.cloneDeep(conf);
+  options = _.cloneDeep(options);
   this.options = options; // Default global config, injects, middles
 
   this.config = deepmerge.all([Juglans.defaultConfig, conf]); // default global config, injects, middles
@@ -139,7 +141,8 @@ Juglans.prototype.Config = function () {
 
     return acc;
   }, []));
-  this.config = deepmerge.all([this.config].concat(parameters));
+  parameters = parameters.map(x => _.cloneDeep(x));
+  this.config = deepmerge.all([this.config].concat(_toConsumableArray(parameters)));
   this.Inject({
     config: this.config
   });
@@ -190,8 +193,9 @@ Juglans.prototype.Inject = function () {
 
     return acc;
   }, []));
+  parameters = parameters.map(x => _.cloneDeep(x));
 
-  _.assign.apply(_, [this.injects].concat(parameters));
+  _.assign.apply(_, [this.injects].concat(_toConsumableArray(parameters)));
 
   return this;
 };
