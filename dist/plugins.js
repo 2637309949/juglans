@@ -53,16 +53,18 @@ repo.HttpRouter = router => (_ref2) => {
   return {
     router
   };
-};
+}; // scanPluginsBefore defined for those who listen on scan before
 
-repo.scanPluginsBefore = () => (_ref3) => {
+
+repo.scanPluginsBefore = (_ref3) => {
   let {
     events: e
   } = _ref3;
   e.emit(events.SYS_JUGLANS_SCAN_BEFORE, events.SYS_JUGLANS_SCAN_BEFORE);
-};
+}; // scanPluginsAfter defined for those who listen on scan after
 
-repo.scanPluginsAfter = () => (_ref4) => {
+
+repo.scanPluginsAfter = (_ref4) => {
   let {
     events: e
   } = _ref4;

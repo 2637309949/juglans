@@ -15,6 +15,8 @@ const _ = require('lodash');
 
 const is = require('is');
 
+const logger = require('./logger');
+
 const EVENT = require('./events');
 
 const repo = exports; // Scan plugins from spec path
@@ -33,7 +35,8 @@ repo.scanPlugins = function () {
     const plugins = filePaths.map(x => require(x)).map(x => is.function(x) && x || x).map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
     return plugins;
   } catch (error) {
-    throw new Error(`scan injects error:${error}`);
+    logger.error(error.stack || error.message);
+    throw new Error(`scan injects error:${error.stack}`);
   }
 }; // Execute promise in orderly
 // lazy cac, support lazy params cac
