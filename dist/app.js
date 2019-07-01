@@ -77,15 +77,15 @@ function Juglans() {
 
   const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default plugins
 
-  const preMiddles = []; // default plugins
+  const dpreMiddles = []; // default plugins
 
-  const postMiddles = []; // default injects
+  const dpostMiddles = []; // default injects
 
-  const dInjects = defaultInjects(this);
-  this.Inject(dInjects);
-  this.PreUse.apply(this, preMiddles);
+  const dInjects = [defaultInjects(this)];
+  this.Inject.apply(this, dInjects);
+  this.PreUse.apply(this, dpreMiddles);
   this.Use.apply(this, dMiddles);
-  this.PostUse.apply(this, postMiddles);
+  this.PostUse.apply(this, dpostMiddles);
 }
 /**
  * Sets Juglans config

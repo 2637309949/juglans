@@ -42,16 +42,10 @@ function () {
   var _ref2 = _asyncToGenerator(function* (riFunc) {
     assert(is.function(riFunc), 'riFunc should be a function');
     this.flushInjectFromJuglans();
-    const ret = riFunc(this.injects);
+    const inject = yield riFunc(this.injects);
 
-    if (ret) {
-      const inject = yield new Promise((resolve, reject) => {
-        resolve(ret);
-      });
-
-      if (is.object(inject)) {
-        this.juglans.Inject(inject);
-      }
+    if (is.object(inject)) {
+      this.juglans.Inject(inject);
     }
   });
 
