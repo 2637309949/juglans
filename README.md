@@ -15,6 +15,10 @@
 - [Design Philosophy](#design-philosophy)
 - [Injects](#injects)
     - [Built-in Injects](#built-in-injects)
+        - [validator](#validator)
+        - [events](#events)
+        - [schedule](#schedule)
+        - [status](#status)
 - [Plugins](#plugins)
     - [Built-in Plugins](#built-in-plugins)
     - [Custom your plugins](#custom-your-plugins)
@@ -134,7 +138,7 @@ app.Use(function ({ router, test, events }) {
 
 ### Built-in Injects
 
-- validator
+#### validator
 ```javascript
 app.Use(function ({ validator, test, events }) {
   validator.addSchema({
@@ -155,7 +159,7 @@ app.Use(function ({ validator, test, events }) {
   const validateRet = validator.validate(puData, validator.schemas['/openapi.puData'])
 })
 ```
-- events
+#### events
 ```javascript
 app.Use(function ({ router, test, events }) {
   events.on('hello', function (message) {
@@ -185,7 +189,7 @@ app.Use(function ({ reverse, test, events }) {
   reverse.Register(isManager)
 })
 ```
-- schedule
+#### schedule
 ```javascript
 const defineSchedule = {
   name: 'Hello',
@@ -198,7 +202,7 @@ app.Use(function ({ reverse, test, events }) {
  schedule.scheduleJob(defineSchedule.corn, defineSchedule.job)
 })
 ```
-- status
+#### status
 
 ## Plugins
 
