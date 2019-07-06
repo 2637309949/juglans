@@ -1,17 +1,38 @@
-# Juglans Framework
+## Directories
 
-![Juglans flash](./asserts/flash.jpeg)
-![Juglans flash](./asserts/frame.png)
+<!-- TOC -->
+
+- [Directories](#directories)
+- [Instruction](#instruction)
+    - [Install Juglans](#install-juglans)
+    - [QuickStart](#quickstart)
+- [API Introduce](#api-introduce)
+    - [Set app config](#set-app-config)
+    - [Inject your custom injects](#inject-your-custom-injects)
+    - [Import your plugins](#import-your-plugins)
+    - [Run app](#run-app)
+    - [Plug in communication between plug-ins](#plug-in-communication-between-plug-ins)
+- [Design Philosophy](#design-philosophy)
+- [Injects](#injects)
+    - [Built-in Injects](#built-in-injects)
+- [Plugins](#plugins)
+    - [Built-in Plugins](#built-in-plugins)
+    - [Custom your plugins](#custom-your-plugins)
+- [MIT License](#mit-license)
+
+<!-- /TOC -->
 ## Instruction
 
   Set up the application of basic measures quickly, and expand the application through plug-ins
 
-#### Install Juglans
+![Juglans flash](./asserts/frame.png)
+
+### Install Juglans
 
 ```shell
 $ npm i juglans -S
 ```
-#### QuickStart
+### QuickStart
 
 ```javascript
 new Juglans({ name: 'Juglans V1.0' })
@@ -30,7 +51,7 @@ new Juglans({ name: 'Juglans V1.0' })
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 
 ## API Introduce
-#### Set app config
+### Set app config
 
 By way of setting contructor params
 ```javascript
@@ -44,7 +65,7 @@ Note:
 The config pass py contructor would be overided by `app.config`
 
 
-#### Inject your custom injects
+### Inject your custom injects
 
 All injects would be provided as plugins params next by next.   
 Init injects by Inject function
@@ -66,7 +87,7 @@ Note1:
 Note2:
     Inject entity is a object with key and value, those has same keys entity would
 be overided by those pass by lastly.
-#### Import your plugins
+### Import your plugins
 
 ```javascript
 // import plugins
@@ -81,7 +102,7 @@ app.Use(
   }
 )
 ```
-#### Run app
+### Run app
 
 ```javascript
 // run app and listen callback
@@ -97,7 +118,7 @@ app.Run(({ httpProxy, config }) => {
   })
 })
 ```
-#### Plug in communication between plug-ins
+### Plug in communication between plug-ins
 
 ```javascript
 app.Use(function ({ router, test, events }) {
