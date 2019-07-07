@@ -19,7 +19,63 @@ const logger = require('./logger');
 
 const EVENT = require('./events');
 
-const repo = exports; // Scan plugins from spec path
+const repo = exports;
+
+repo.extWithHook = function (target) {
+  var plugin = target; // bind parent
+
+  if (is.object(plugin)) {
+    plugin = plugin.plugin.bind(target);
+
+    if (!plugin.parent) {
+      plugin.parent = target;
+    }
+  } // bind hook
+
+
+  if (is.function(plugin)) {
+    if (!plugin.constructor.prototype.pre) {
+      plugin.constructor.prototype.pre = function (fn) {
+        const _this = this;
+
+        return (
+          /*#__PURE__*/
+          _asyncToGenerator(function* () {
+            if (is.function(fn)) {
+              // never pass arguments!
+              yield fn();
+            }
+
+            return _this.apply(this, arguments);
+          })
+        );
+      };
+    }
+
+    if (!plugin.constructor.prototype.post) {
+      plugin.constructor.prototype.post = function (fn) {
+        const _this = this;
+
+        return (
+          /*#__PURE__*/
+          _asyncToGenerator(function* () {
+            const result = yield _this.apply(this, arguments);
+
+            if (is.function(fn)) {
+              // never pass arguments!
+              yield fn();
+            }
+
+            return result;
+          })
+        );
+      };
+    }
+  }
+
+  return plugin;
+}; // Scan plugins from spec path
+
 
 repo.scanPlugins = function () {
   let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
@@ -32,7 +88,7 @@ repo.scanPlugins = function () {
 
     const filePaths = _.flatMap(paths, path => glob.sync(path, options));
 
-    const plugins = filePaths.map(x => require(x)).map(x => is.function(x) && x || x).map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+    const plugins = filePaths.map(x => require(x)).filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => repo.extWithHook(x)).filter(x => is.function(x));
     return plugins;
   } catch (error) {
     logger.error(error.stack || error.message);
@@ -51,14 +107,14 @@ repo.runPlugins = function (arrs, args) {
   return arrs.reduce(
   /*#__PURE__*/
   function () {
-    var _ref = _asyncToGenerator(function* (acc, curr, index) {
+    var _ref3 = _asyncToGenerator(function* (acc, curr, index) {
       return Promise.resolve(acc).then(x => {
         if (options.execBefore) options.execBefore(x, index);
 
         if (options.chainArgs) {
-          return curr(x);
+          return curr.pre(curr.parent && curr.parent.pre && curr.parent.pre.bind(curr.parent)).post(curr.parent && curr.parent.post && curr.parent.post.bind(curr.parent))(x);
         } else {
-          return curr(is.function(args) ? args() : args);
+          return curr.pre(curr.parent && curr.parent.pre && curr.parent.pre.bind(curr.parent)).post(curr.parent && curr.parent.post && curr.parent.pre.bind(curr.parent))(is.function(args) ? args() : args);
         }
       }).then(x => {
         if (options.execAfter && is.object(x)) options.execAfter(x, index);
@@ -67,7 +123,7 @@ repo.runPlugins = function (arrs, args) {
     });
 
     return function (_x, _x2, _x3) {
-      return _ref.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }(), Promise.resolve(!options.chainArgs && is.function(args) ? args() : args));
 }; // Default value

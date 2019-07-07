@@ -34,7 +34,8 @@ const defaultInjects = require('./inejcts');
 const {
   inherits,
   runPlugins,
-  scanPlugins
+  scanPlugins,
+  extWithHook
 } = require('./utils');
 /**
  * Juglans constructor.
@@ -211,7 +212,7 @@ Juglans.prototype.PreUse = function () {
   }
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x)).filter(x => is.function(x));
   this.preMiddles = this.preMiddles.concat(plugins);
   return this;
 };
@@ -235,7 +236,7 @@ Juglans.prototype.Use = function () {
   }
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
   this.middles = this.middles.concat(plugins);
   return this;
 };
@@ -259,7 +260,7 @@ Juglans.prototype.PostUse = function () {
   }
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-  plugins = plugins.map(x => is.object(x) && is.function(x.plugin) && x.plugin.bind(x) || x).filter(x => is.function(x));
+  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
   this.postMiddles = this.postMiddles.concat(plugins);
   return this;
 };
