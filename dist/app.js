@@ -76,9 +76,9 @@ function Juglans() {
 
   this.postMiddles = []; // default plugins
 
-  const dMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default plugins
+  const dMiddles = []; // default plugins
 
-  const dpreMiddles = []; // default plugins
+  const dpreMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default plugins
 
   const dpostMiddles = []; // default injects
 
