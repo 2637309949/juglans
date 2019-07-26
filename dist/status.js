@@ -5,46 +5,39 @@
 // license that can be found in the LICENSE file.
 const _ = require('lodash');
 
-function Status(_ref) {
-  let {
-    events
-  } = _ref;
+const AsyncLock = require('async-lock');
 
+const lock = new AsyncLock({
+  timeout: 3000,
+  maxPending: 100
+});
+
+function Status(opts) {
   if (!(this instanceof Status)) {
-    return new Status({
-      events
-    });
+    return new Status(opts);
   }
 
   this.status = {};
 }
 
 Status.prototype.set = function (k, v) {
-  _.set(this.status, k, v);
+  return lock.acquire('status', () => {
+    _.set(this.status, k, v);
 
-  if (this.events) {
-    this.events.emit('juglans:status:set', k, v);
-  }
-
-  return this;
+    return this;
+  });
 };
 
 Status.prototype.get = function (k, defaultValue) {
-  const value = _.get(this.status, k, defaultValue);
-
-  if (this.events) {
-    this.events.emit('juglans:status:get', k, value);
-  }
-
-  return value;
+  return lock.acquire('status', () => {
+    return _.get(this.status, k, defaultValue);
+  });
 };
 
 Status.prototype.all = function () {
-  if (this.events) {
-    this.events.emit('juglans:status:all', this.status);
-  }
-
-  return this.status;
+  return lock.acquire('status', () => {
+    return this.status;
+  });
 };
 
 module.exports = Status;

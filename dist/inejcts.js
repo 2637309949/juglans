@@ -30,8 +30,6 @@ module.exports = function (juglans) {
     }),
     schedule
   };
-  injects.status = Status({
-    events: injects.events
-  });
+  injects.status = Status();
   return injects;
 };
