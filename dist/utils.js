@@ -7,6 +7,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
+const path = require('path');
+
 const utils = require('util');
 
 const glob = require('glob');
@@ -192,4 +194,36 @@ repo.proxyWithEvent = function (httpProxy, events) {
   })(httpProxy.listen);
 
   return httpProxy;
+};
+
+repo.routerWithLogger = function (router, prefix) {
+  router.get = function (get) {
+    return function () {
+      logger.debug(`GET ${path.join(prefix, arguments[0])}`);
+      get.apply(router, arguments);
+    };
+  }(router.get);
+
+  router.post = function (post) {
+    return function () {
+      logger.debug(`POST ${path.join(prefix, arguments[0])}`);
+      post.apply(router, arguments);
+    };
+  }(router.post);
+
+  router.put = function (put) {
+    return function () {
+      logger.debug(`PUT ${path.join(prefix, arguments[0])}`);
+      put.apply(router, arguments);
+    };
+  }(router.put);
+
+  router.delete = function (remove) {
+    return function () {
+      logger.debug(`DELETE ${path.join(prefix, arguments[0])}`);
+      remove.apply(router, arguments);
+    };
+  }(router.delete);
+
+  return router;
 };

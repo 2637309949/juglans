@@ -43,8 +43,9 @@ repo.HttpRouter = router => (_ref2) => {
 
   if (!router) {
     router = koaRouter({
-      prefix: utils.someOrElse(prefix, '/api/v1')
+      prefix: utils.someOrElse(prefix, '/api')
     });
+    router = utils.routerWithLogger(router, prefix);
     router.use(koaBody(bodyParser));
     httpProxy.use(router.routes());
     httpProxy.use(router.allowedMethods());
