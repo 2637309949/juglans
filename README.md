@@ -139,6 +139,7 @@ app.Use(function ({ router, test, events }) {
 ### Built-in Injects
 
 #### validator
+[tdegrunt/jsonschema](https://github.com/tdegrunt/jsonschema#readme)
 ```javascript
 app.Use(function ({ validator, test, events }) {
   validator.addSchema({
