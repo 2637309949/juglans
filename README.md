@@ -17,6 +17,7 @@
     - [Built-in Injects](#built-in-injects)
         - [validator](#validator)
         - [events](#events)
+        - [reverse](#reverse)
         - [schedule](#schedule)
         - [status](#status)
 - [Plugins](#plugins)
@@ -169,7 +170,7 @@ app.Use(function ({ router, test, events }) {
   events.emit('hello', 'first message')
 })
 ```
-- reverse
+#### reverse
 ```javascript
 function isManager ({ router }) {
   router.get('/user/aux/manager', async (ctx) => {
