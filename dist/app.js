@@ -308,24 +308,28 @@ Juglans.prototype.Run =
 /*#__PURE__*/
 function () {
   var _ref2 = _asyncToGenerator(function* (cb) {
-    const _this = this;
+    try {
+      const _this = this;
 
-    const sMiddles = scanPlugins(this.config.scan);
-    this.Use(plugins.scanPluginsBefore);
-    this.Use.apply(this, _toConsumableArray(sMiddles));
-    this.Use(plugins.scanPluginsAfter);
-    yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => this.injects, {
-      execAfter(ret) {
-        _this.Inject(ret);
+      const sMiddles = scanPlugins(this.config.scan);
+      this.Use(plugins.scanPluginsBefore);
+      this.Use.apply(this, _toConsumableArray(sMiddles));
+      this.Use(plugins.scanPluginsAfter);
+      yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => this.injects, {
+        execAfter(ret) {
+          _this.Inject(ret);
+        }
+
+      });
+
+      if (!is.function(cb)) {
+        return this.injects;
       }
 
-    });
-
-    if (!is.function(cb)) {
-      return this.injects;
+      cb(this.injects);
+    } catch (error) {
+      logger.error(`${new Date().toISOString()} panic recovered:\n%s`, error.stack || error.message || error);
     }
-
-    cb(this.injects);
   });
 
   return function (_x) {
