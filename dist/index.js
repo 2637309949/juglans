@@ -14,8 +14,7 @@ module.exports.defaultConfig = {
   'debug': true,
   'logger': {
     'service': 'Juglans V1.0',
-    'maxsize': 10240,
-    'path': ''
+    'maxsize': 10240
   },
   'bodyParser': {
     'parsedMethods': ['POST', 'PUT', 'PATCH', 'DELETE'],

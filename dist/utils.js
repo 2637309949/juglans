@@ -131,7 +131,7 @@ repo.runPlugins = function (arrs, args) {
 }; // Default value
 
 
-repo.someOrElse = function (value, initValue) {
+repo.some = function (value, initValue) {
   if (value) {
     return value;
   } else {

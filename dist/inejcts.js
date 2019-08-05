@@ -7,13 +7,11 @@ const jsonschema = require('jsonschema');
 
 const schedule = require('node-schedule');
 
-const Status = require('./status');
-
 const Reverse = require('./reverse');
 
-const {
-  EventEmitter
-} = require('./utils'); // default Injects,
+const Status = require('./status');
+
+const EventEmitter = require('./utils').EventEmitter; // default Injects,
 // , status for diff plugins share
 // , events for diff plugins communication
 // , validator for json validator

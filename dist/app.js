@@ -15,9 +15,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-const events = require('events');
-
 const deepmerge = require('deepmerge');
+
+const events = require('events');
 
 const assert = require('assert');
 
@@ -53,15 +53,15 @@ function Juglans() {
   let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   assert(is.object(conf), 'cfg should be a object');
   assert(is.object(options), 'options should be a object');
-  const {
-    httpProxy,
-    router
-  } = options;
 
   if (!(this instanceof Juglans)) {
     return new Juglans(conf, options);
   }
 
+  const {
+    httpProxy,
+    router
+  } = options;
   conf = _.cloneDeep(conf);
   options = _.cloneDeep(options);
   this.options = options; // Default global config, injects, middles
@@ -74,19 +74,11 @@ function Juglans() {
 
   this.preMiddles = []; // default post middles
 
-  this.postMiddles = []; // default plugins
-
-  const dMiddles = []; // default plugins
-
-  const dpreMiddles = [plugins.HttpProxy(httpProxy), plugins.HttpRouter(router)]; // default plugins
-
-  const dpostMiddles = []; // default injects
-
-  const dInjects = [defaultInjects(this)];
-  this.Inject.apply(this, dInjects);
-  this.PreUse.apply(this, dpreMiddles);
-  this.Use.apply(this, dMiddles);
-  this.PostUse.apply(this, dpostMiddles);
+  this.postMiddles = [];
+  this.Inject(defaultInjects(this));
+  this.PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router));
+  this.Use.apply(this, []);
+  this.PostUse.apply(this, []);
 }
 /**
  * Sets Juglans config

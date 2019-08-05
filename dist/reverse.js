@@ -13,39 +13,36 @@ const assert = require('assert');
 
 function Reverse(_ref) {
   let {
-    injects,
     juglans,
     inspect
   } = _ref;
-  assert(is.object(injects), 'injects should be a object');
 
   if (!(this instanceof Reverse)) {
     return new Reverse({
-      injects,
-      juglans
+      juglans,
+      inspect
     });
   }
 
-  this.injects = injects;
+  this.injects = juglans.injects;
   this.juglans = juglans;
   this.inspect = inspect;
 }
 
-Reverse.prototype.flushInjectFromJuglans = function () {
+Reverse.prototype.flushInject = function () {
   this.injects = this.juglans.injects;
-}; // Register rfunc
-
+};
 
 Reverse.prototype.Register =
 /*#__PURE__*/
 function () {
   var _ref2 = _asyncToGenerator(function* (riFunc) {
     assert(is.function(riFunc), 'riFunc should be a function');
-    this.flushInjectFromJuglans();
-    const inject = yield riFunc(this.injects);
+    this.flushInject();
+    const ret = yield riFunc(this.injects);
 
-    if (is.object(inject)) {
-      this.juglans.Inject(inject);
+    if (is.object(ret) && Object.keys(ret).length > 0) {
+      this.juglans.Inject(ret);
     }
   });
 

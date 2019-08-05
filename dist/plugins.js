@@ -9,7 +9,7 @@ const koaBody = require('koa-body');
 
 const Koa = require('koa');
 
-const events = require('./events');
+const EVENTS = require('./events');
 
 const logger = require('./logger');
 
@@ -17,14 +17,14 @@ const utils = require('./utils');
 
 const repo = module.exports;
 
-repo.HttpProxy = httpProxy => (_ref) => {
+repo.HttpProxy = opts => (_ref) => {
   let {
     events
   } = _ref;
+  let httpProxy = opts;
 
   if (!httpProxy) {
-    httpProxy = new Koa();
-    httpProxy = utils.proxyWithEvent(httpProxy, events);
+    httpProxy = utils.proxyWithEvent(new Koa(), events);
   }
 
   return {
@@ -32,20 +32,20 @@ repo.HttpProxy = httpProxy => (_ref) => {
   };
 };
 
-repo.HttpRouter = router => (_ref2) => {
+repo.HttpRouter = opts => (_ref2) => {
   let {
     httpProxy,
     config: {
-      prefix,
+      prefix = '/api',
       bodyParser
     }
   } = _ref2;
+  let router = opts;
 
   if (!router) {
-    router = koaRouter({
-      prefix: utils.someOrElse(prefix, '/api')
-    });
-    router = utils.routerWithLogger(router, prefix);
+    router = utils.routerWithLogger(koaRouter({
+      prefix
+    }), prefix);
     router.use(koaBody(bodyParser));
     httpProxy.use(router.routes());
     httpProxy.use(router.allowedMethods());
@@ -54,36 +54,36 @@ repo.HttpRouter = router => (_ref2) => {
   return {
     router
   };
-}; // scanPluginsBefore defined for those who listen on scan before
-
+};
 
 repo.scanPluginsBefore = (_ref3) => {
   let {
-    events: e
+    events
   } = _ref3;
-  e.emit(events.SYS_JUGLANS_SCAN_BEFORE, events.SYS_JUGLANS_SCAN_BEFORE);
-}; // scanPluginsAfter defined for those who listen on scan after
-
+  events.emit(EVENTS.SYS_JUGLANS_SCAN_BEFORE, EVENTS.SYS_JUGLANS_SCAN_BEFORE);
+};
 
 repo.scanPluginsAfter = (_ref4) => {
   let {
-    events: e
+    events
   } = _ref4;
-  e.emit(events.SYS_JUGLANS_SCAN_AFTER, events.SYS_JUGLANS_SCAN_AFTER);
-}; // The last middles, run RunImmediately
-// those middles from code would be call in order
-
+  events.emit(EVENTS.SYS_JUGLANS_SCAN_AFTER, EVENTS.SYS_JUGLANS_SCAN_AFTER);
+};
 
 repo.RunImmediately = (_ref5) => {
   let {
     httpProxy,
-    config
+    config: {
+      port = 3000,
+      name,
+      NODE_ENV
+    }
   } = _ref5;
-  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
+  httpProxy.listen(port, err => {
     if (!err) {
-      logger.info(`App:${config.name}`);
-      logger.info(`App:${config.NODE_ENV}`);
-      logger.info(`App:runing on Port:${config.port}`);
+      logger.info(`App:${name}`);
+      logger.info(`App:${NODE_ENV}`);
+      logger.info(`App:runing on Port:${port}`);
     } else {
       logger.error(err);
     }

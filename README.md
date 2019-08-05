@@ -112,7 +112,7 @@ app.Use(
 ```javascript
 // run app and listen callback
 app.Run(({ httpProxy, config }) => {
-  httpProxy.listen(utils.someOrElse(config.port, 3000), err => {
+  httpProxy.listen(utils.some(config.port, 3000), err => {
     if (!err) {
       console.log(`App:${config.name}`)
       console.log(`App:${config.NODE_ENV}`)
