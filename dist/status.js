@@ -7,16 +7,17 @@ const _ = require('lodash');
 
 const AsyncLock = require('async-lock');
 
-function Status(opts) {
+function Status() {
+  let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
   if (!(this instanceof Status)) {
     return new Status(opts);
   }
 
-  opts = _.merge({
+  this.lock = new AsyncLock(_.merge({
     timeout: 3000,
     maxPending: 100
-  }, opts);
-  this.lock = new AsyncLock(opts);
+  }, opts));
   this.status = {};
 }
 
