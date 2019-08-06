@@ -51,6 +51,8 @@ const {
 
 
 function Juglans() {
+  var _this$Clear$Inject$Pr, _this$Clear$Inject$Pr2;
+
   let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   assert(is.object(conf), 'cfg should be a object');
@@ -82,11 +84,23 @@ function Juglans() {
     timeout: 3000,
     maxPending: 100
   }, opts.lock || {}));
-  this.Inject(defaultInjects(this));
-  this.PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router));
-  this.Use.apply(this, []);
-  this.PostUse.apply(this, []);
+
+  (_this$Clear$Inject$Pr = (_this$Clear$Inject$Pr2 = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router))).Use.apply(_this$Clear$Inject$Pr2, [])).PostUse.apply(_this$Clear$Inject$Pr, []);
 }
+/**
+ *  Clear defined empty all exists plugin and inject
+ *  would return a empty bulrush
+ *  should be careful
+ */
+
+
+Juglans.prototype.Clear = function () {
+  this.injects = {};
+  this.middles = [];
+  this.preMiddles = [];
+  this.postMiddles = [];
+  return this;
+};
 /**
  * Sets Juglans config
  *
