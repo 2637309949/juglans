@@ -15,6 +15,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
+const AsyncLock = require('async-lock');
+
 const deepmerge = require('deepmerge');
 
 const events = require('events');
@@ -50,21 +52,21 @@ const {
 
 function Juglans() {
   let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   assert(is.object(conf), 'cfg should be a object');
-  assert(is.object(options), 'options should be a object');
+  assert(is.object(opts), 'opts should be a object');
 
   if (!(this instanceof Juglans)) {
-    return new Juglans(conf, options);
+    return new Juglans(conf, opts);
   }
 
   const {
     httpProxy,
     router
-  } = options;
+  } = opts;
   conf = _.cloneDeep(conf);
-  options = _.cloneDeep(options);
-  this.options = options; // Default global config, injects, middles
+  opts = _.cloneDeep(opts);
+  this.opts = opts; // Default global config, injects, middles
 
   this.config = deepmerge.all([Juglans.defaultConfig, conf]); // default global config, injects, middles
 
@@ -74,7 +76,12 @@ function Juglans() {
 
   this.preMiddles = []; // default post middles
 
-  this.postMiddles = [];
+  this.postMiddles = []; // Instance lock
+
+  this.lock = new AsyncLock(_.merge({
+    timeout: 3000,
+    maxPending: 100
+  }, opts.lock || {}));
   this.Inject(defaultInjects(this));
   this.PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router));
   this.Use.apply(this, []);
@@ -130,9 +137,12 @@ Juglans.prototype.Config = function () {
 
     return acc;
   }, []));
-  this.config = deepmerge.all([this.config].concat(_toConsumableArray(parameters)));
-  this.Inject({
-    config: this.config
+  this.lock.acquire('config', done => {
+    this.config = deepmerge.all([this.config].concat(_toConsumableArray(parameters)));
+    this.Inject({
+      config: this.config
+    });
+    done();
   });
   return this;
 };
@@ -179,9 +189,11 @@ Juglans.prototype.Inject = function () {
 
     return acc;
   }, []));
+  this.lock.acquire('injects', done => {
+    _.assign.apply(_, [this.injects].concat(parameters));
 
-  _.assign.apply(_, [this.injects].concat(parameters));
-
+    done();
+  });
   return this;
 };
 /**
@@ -205,7 +217,10 @@ Juglans.prototype.PreUse = function () {
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x)).filter(x => is.function(x));
-  this.preMiddles = this.preMiddles.concat(plugins);
+  this.lock.acquire('preMiddles', done => {
+    this.preMiddles = this.preMiddles.concat(plugins);
+    done();
+  });
   return this;
 };
 /**
@@ -229,7 +244,10 @@ Juglans.prototype.Use = function () {
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-  this.middles = this.middles.concat(plugins);
+  this.lock.acquire('middles', done => {
+    this.middles = this.middles.concat(plugins);
+    done();
+  });
   return this;
 };
 /**
@@ -253,7 +271,10 @@ Juglans.prototype.PostUse = function () {
 
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-  this.postMiddles = this.postMiddles.concat(plugins);
+  this.lock.acquire('postMiddles', done => {
+    this.postMiddles = this.postMiddles.concat(plugins);
+    done();
+  });
   return this;
 };
 /**
@@ -320,7 +341,7 @@ function () {
 
       cb(this.injects);
     } catch (error) {
-      logger.error(`${new Date().toISOString()} panic recovered:\n%s`, error.stack || error.message || error);
+      logger.error(`${new Date().toISOString()} panic recovered:\n${error.stack || error.message || error}`);
     }
   });
 
