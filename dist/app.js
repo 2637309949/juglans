@@ -163,6 +163,17 @@ Juglans.prototype.Config = function () {
   return this;
 };
 /**
+ * Acquire Juglans injects
+ * Return injects if found, or nothing
+ * @param {string} name
+ * @api public
+ */
+
+
+Juglans.prototype.Acquire = function (name) {
+  return this.injects[name];
+};
+/**
  * Add Juglans injects
  * Return injects if no parameters be provided
  * Note:
