@@ -74,7 +74,9 @@ function Juglans() {
 
   this.injects = {}; // default global config, injects, middles
 
-  this.middles = []; // default pre middles
+  this.middles = []; // default scan middles
+
+  this.scanMiddles = []; // default pre middles
 
   this.preMiddles = []; // default post middles
 
@@ -83,7 +85,7 @@ function Juglans() {
   this.lock = new AsyncLock(_.merge({
     timeout: 3000,
     maxPending: 100
-  }, opts.lock || {}));
+  }, opts.lock || {})); // init code
 
   (_this$Clear$Inject$Pr = (_this$Clear$Inject$Pr2 = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router))).Use.apply(_this$Clear$Inject$Pr2, [])).PostUse.apply(_this$Clear$Inject$Pr, []);
 }
@@ -213,6 +215,30 @@ Juglans.prototype.Inject = function () {
 /**
  * Add Juglans plugins
  * ####Example:
+ *     app.ScanUse(path.join(__dirname, '../{models,routes,tasks,openapi}'))
+ * Return middles if no params be provided
+ * Note:
+ * Plugin entity must be a function entity
+ *
+ * @param {Array} plugins
+ * @api public
+ */
+
+
+Juglans.prototype.ScanUse = function (path) {
+  let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+    ignore: ['**/node_modules/**']
+  };
+  const plugins = scanPlugins(path, opts);
+  this.lock.acquire('scanMiddles', done => {
+    this.scanMiddles = this.scanMiddles.concat(plugins);
+    done();
+  });
+  return this;
+};
+/**
+ * Add Juglans plugins
+ * ####Example:
  *     app.PreUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PreUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
  * Return middles if no params be provided
@@ -256,7 +282,7 @@ Juglans.prototype.Use = function () {
     plugins[_key4] = arguments[_key4];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
+  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
   plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
   this.lock.acquire('middles', done => {
     this.middles = this.middles.concat(plugins);
@@ -338,11 +364,10 @@ function () {
     try {
       const _this = this;
 
-      const sMiddles = scanPlugins(this.config.scan);
       this.Use(plugins.scanPluginsBefore);
-      this.Use.apply(this, _toConsumableArray(sMiddles));
+      this.Use.apply(this, _toConsumableArray(_this.scanMiddles));
       this.Use(plugins.scanPluginsAfter);
-      yield runPlugins([].concat(_toConsumableArray(this.preMiddles), _toConsumableArray(this.middles), _toConsumableArray(this.postMiddles)), () => this.injects, {
+      yield runPlugins([].concat(_toConsumableArray(_this.preMiddles), _toConsumableArray(_this.middles), _toConsumableArray(_this.postMiddles)), () => _this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }

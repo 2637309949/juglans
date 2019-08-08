@@ -79,16 +79,11 @@ repo.extWithHook = function (target) {
 }; // Scan plugins from spec path
 
 
-repo.scanPlugins = function () {
-  let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    path: []
-  };
-
+repo.scanPlugins = function (path, opts) {
   try {
-    const paths = is.array(options.path) ? options.path : [options.path];
-    delete options.path;
+    const paths = is.array(path) ? path : [path];
 
-    const filePaths = _.flatMap(paths, path => glob.sync(path, options));
+    const filePaths = _.flatMap(paths, path => glob.sync(path, opts));
 
     const plugins = filePaths.map(x => require(x)).filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => repo.extWithHook(x)).filter(x => is.function(x));
     return plugins;

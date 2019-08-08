@@ -2,7 +2,7 @@
   "name": "juglans",
   "version": "1.0.9",
   "description": "",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "bench": "make -C benchmarks",
     "lint": "eslint --ext .js lib benchmarks",
