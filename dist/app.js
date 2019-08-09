@@ -87,7 +87,7 @@ function Juglans() {
     maxPending: 100
   }, opts.lock || {})); // init code
 
-  (_this$Clear$Inject$Pr = (_this$Clear$Inject$Pr2 = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router))).Use.apply(_this$Clear$Inject$Pr2, [])).PostUse.apply(_this$Clear$Inject$Pr, []);
+  (_this$Clear$Inject$Pr = (_this$Clear$Inject$Pr2 = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr2, [])).PostUse.apply(_this$Clear$Inject$Pr, []);
 }
 /**
  *  Clear defined empty all exists plugin and inject

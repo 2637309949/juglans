@@ -9,6 +9,8 @@ const koaBody = require('koa-body');
 
 const Koa = require('koa');
 
+const recovery = require('./recovery');
+
 const EVENTS = require('./events');
 
 const logger = require('./logger');
@@ -56,21 +58,30 @@ repo.HttpRouter = opts => (_ref2) => {
   };
 };
 
-repo.scanPluginsBefore = (_ref3) => {
+repo.Recovery = (_ref3) => {
   let {
-    events
+    httpProxy,
+    router
   } = _ref3;
-  events.emit(EVENTS.SYS_JUGLANS_SCAN_BEFORE, EVENTS.SYS_JUGLANS_SCAN_BEFORE);
+  httpProxy.use(recovery());
+  router.use(recovery());
 };
 
-repo.scanPluginsAfter = (_ref4) => {
+repo.scanPluginsBefore = (_ref4) => {
   let {
     events
   } = _ref4;
+  events.emit(EVENTS.SYS_JUGLANS_SCAN_BEFORE, EVENTS.SYS_JUGLANS_SCAN_BEFORE);
+};
+
+repo.scanPluginsAfter = (_ref5) => {
+  let {
+    events
+  } = _ref5;
   events.emit(EVENTS.SYS_JUGLANS_SCAN_AFTER, EVENTS.SYS_JUGLANS_SCAN_AFTER);
 };
 
-repo.RunImmediately = (_ref5) => {
+repo.RunImmediately = (_ref6) => {
   let {
     httpProxy,
     config: {
@@ -78,7 +89,7 @@ repo.RunImmediately = (_ref5) => {
       name,
       NODE_ENV
     }
-  } = _ref5;
+  } = _ref6;
   httpProxy.listen(port, err => {
     if (!err) {
       logger.info(`App:${name}`);
