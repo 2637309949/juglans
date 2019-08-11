@@ -19,10 +19,17 @@ const utils = require('./utils');
 
 const repo = module.exports;
 
-repo.HttpProxy = opts => (_ref) => {
+repo.Starting = (_ref) => {
   let {
     events
   } = _ref;
+  events.emit(EVENTS.Starting, EVENTS.Starting);
+};
+
+repo.HttpProxy = opts => (_ref2) => {
+  let {
+    events
+  } = _ref2;
   let httpProxy = opts;
 
   if (!httpProxy) {
@@ -34,14 +41,14 @@ repo.HttpProxy = opts => (_ref) => {
   };
 };
 
-repo.HttpRouter = opts => (_ref2) => {
+repo.HttpRouter = opts => (_ref3) => {
   let {
     httpProxy,
     config: {
       prefix = '/api',
       bodyParser
     }
-  } = _ref2;
+  } = _ref3;
   let router = opts;
 
   if (!router) {
@@ -58,39 +65,26 @@ repo.HttpRouter = opts => (_ref2) => {
   };
 };
 
-repo.Recovery = (_ref3) => {
+repo.Recovery = (_ref4) => {
   let {
     httpProxy,
     router
-  } = _ref3;
+  } = _ref4;
   httpProxy.use(recovery());
   router.use(recovery());
 };
 
-repo.scanPluginsBefore = (_ref4) => {
+repo.HTTPBooting = (_ref5) => {
   let {
-    events
-  } = _ref4;
-  events.emit(EVENTS.SYS_JUGLANS_SCAN_BEFORE, EVENTS.SYS_JUGLANS_SCAN_BEFORE);
-};
-
-repo.scanPluginsAfter = (_ref5) => {
-  let {
-    events
-  } = _ref5;
-  events.emit(EVENTS.SYS_JUGLANS_SCAN_AFTER, EVENTS.SYS_JUGLANS_SCAN_AFTER);
-};
-
-repo.RunImmediately = (_ref6) => {
-  let {
+    events,
     httpProxy,
     config: {
       port = 3000,
       name,
       NODE_ENV
     }
-  } = _ref6;
-  httpProxy.listen(port, err => {
+  } = _ref5;
+  const srv = httpProxy.listen(port, err => {
     if (!err) {
       logger.info(`App:${name}`);
       logger.info(`App:${NODE_ENV}`);
@@ -99,4 +93,14 @@ repo.RunImmediately = (_ref6) => {
       logger.error(err);
     }
   });
+  events.on(EVENTS.EventsShutdown, () => {
+    srv.close();
+  });
+};
+
+repo.Running = (_ref6) => {
+  let {
+    events
+  } = _ref6;
+  events.emit(EVENTS.EventsRunning, EVENTS.EventsRunning);
 };

@@ -21,6 +21,8 @@ const deepmerge = require('deepmerge');
 
 const events = require('events');
 
+const EVENTS = require('./events');
+
 const assert = require('assert');
 
 const _ = require('lodash');
@@ -51,7 +53,7 @@ const {
 
 
 function Juglans() {
-  var _this$Clear$Inject$Pr, _this$Clear$Inject$Pr2;
+  var _this$Clear$Inject$Pr;
 
   let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -87,7 +89,7 @@ function Juglans() {
     maxPending: 100
   }, opts.lock || {})); // init code
 
-  (_this$Clear$Inject$Pr = (_this$Clear$Inject$Pr2 = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr2, [])).PostUse.apply(_this$Clear$Inject$Pr, []);
+  (_this$Clear$Inject$Pr = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
 }
 /**
  *  Clear defined empty all exists plugin and inject
@@ -323,11 +325,26 @@ Juglans.prototype.PostUse = function () {
   assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
   plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
   this.lock.acquire('postMiddles', done => {
-    this.postMiddles = this.postMiddles.concat(plugins);
+    this.postMiddles = plugins.concat(this.postMiddles);
     done();
   });
   return this;
-};
+}; // Shutdown defined bul gracefulExit
+// ,, close http or other resources
+// should call Shutdown after bulrush has running success
+
+
+Juglans.prototype.Shutdown =
+/*#__PURE__*/
+_asyncToGenerator(function* () {
+  this.emit(EVENTS.EventsShutdown);
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+      logger.warn('Shutdown: juglans Closed');
+    }, 5 * 1000);
+  });
+});
 /**
  * Run app
  * #### Example:
@@ -341,11 +358,10 @@ Juglans.prototype.PostUse = function () {
  * @api public
  */
 
-
 Juglans.prototype.RunImmediately =
 /*#__PURE__*/
 _asyncToGenerator(function* () {
-  return this.Run(plugins.RunImmediately);
+  return this.Run(plugins.HTTPBooting);
 });
 /**
  * Run app
@@ -371,13 +387,11 @@ _asyncToGenerator(function* () {
 Juglans.prototype.Run =
 /*#__PURE__*/
 function () {
-  var _ref2 = _asyncToGenerator(function* (cb) {
+  var _ref3 = _asyncToGenerator(function* (cb) {
     try {
       const _this = this;
 
-      this.Use(plugins.scanPluginsBefore);
       this.Use.apply(this, _toConsumableArray(_this.scanMiddles));
-      this.Use(plugins.scanPluginsAfter);
       yield runPlugins([].concat(_toConsumableArray(_this.preMiddles), _toConsumableArray(_this.middles), _toConsumableArray(_this.postMiddles)), () => _this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
@@ -396,7 +410,7 @@ function () {
   });
 
   return function (_x) {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 }();
 
