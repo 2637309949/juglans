@@ -35,8 +35,8 @@ class Plugins extends Array {
     return new options.Option(function (j) {
       assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
       plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x)).filter(x => is.function(x));
-      j.lock.acquire('preMiddles', done => {
-        j.preMiddles = j.preMiddles.concat(plugins);
+      j.lock.acquire('prePlugins', done => {
+        j.prePlugins = j.prePlugins.concat(plugins);
         done();
       });
       return j;
@@ -47,8 +47,8 @@ class Plugins extends Array {
     return new options.Option(function (j) {
       assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
       plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-      j.lock.acquire('middles', done => {
-        j.middles = j.middles.concat(plugins);
+      j.lock.acquire('plugins', done => {
+        j.plugins = j.plugins.concat(plugins);
         done();
       });
       return j;
@@ -59,8 +59,8 @@ class Plugins extends Array {
     return new options.Option(function (j) {
       assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
       plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-      j.lock.acquire('middles', done => {
-        j.postMiddles = j.postMiddles.concat(plugins);
+      j.lock.acquire('plugins', done => {
+        j.postPlugins = j.postPlugins.concat(plugins);
         done();
       });
       return j;
@@ -70,8 +70,8 @@ class Plugins extends Array {
   static ScanPluginsOption(path, opts) {
     return new options.Option(function (j) {
       const plugins = scanPlugins(path, opts);
-      j.lock.acquire('scanMiddles', done => {
-        j.scanMiddles = j.scanMiddles.concat(plugins);
+      j.lock.acquire('scanPlugins', done => {
+        j.scanPlugins = j.scanPlugins.concat(plugins);
         done();
       });
       return j;

@@ -79,19 +79,19 @@ function Juglans() {
   } = opts;
   conf = _.cloneDeep(conf);
   opts = _.cloneDeep(opts);
-  this.opts = opts; // Default global config, injects, middles
+  this.opts = opts; // Default global config, injects, plugins
 
-  this.config = deepmerge.all([Juglans.defaultConfig, conf]); // default global config, injects, middles
+  this.config = new Conf(deepmerge.all([Juglans.defaultConfig, conf])); // default global config, injects, plugins
 
-  this.injects = new Injects(); // default global config, injects, middles
+  this.injects = new Injects(); // default global config, injects, plugins
 
-  this.middles = new plugins.Plugins(); // default scan middles
+  this.plugins = new plugins.Plugins(); // default scan plugins
 
-  this.scanMiddles = new plugins.Plugins(); // default pre middles
+  this.scanPlugins = new plugins.Plugins(); // default pre plugins
 
-  this.preMiddles = new plugins.Plugins(); // default post middles
+  this.prePlugins = new plugins.Plugins(); // default post plugins
 
-  this.postMiddles = new plugins.Plugins(); // Instance lock
+  this.postPlugins = new plugins.Plugins(); // Instance lock
 
   this.lock = new AsyncLock(_.merge({
     timeout: 3000,
@@ -116,7 +116,7 @@ Juglans.prototype.Clear = function () {
  * #### Example:
  *     app.Config({ test: '123' })
  *     app.Config({ test: 'test' })
- * All `config` just for middles, so set your `config` base on your middles use
+ * All `config` just for plugins, so set your `config` base on your plugins use
  * Note:
  * The same properties will be overridden
  *
@@ -165,7 +165,7 @@ Juglans.prototype.Inject = function () {
  * Add Juglans plugins
  * ####Example:
  *     app.ScanUse(path.join(__dirname, '../{models,routes,tasks,openapi}'))
- * Return middles if no params be provided
+ * Return plugins if no params be provided
  * Note:
  * Plugin entity must be a function entity
  *
@@ -185,7 +185,7 @@ Juglans.prototype.ScanUse = function (path) {
  * ####Example:
  *     app.PreUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PreUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- * Return middles if no params be provided
+ * Return plugins if no params be provided
  * Note:
  * Plugin entity must be a function entity
  *
@@ -206,7 +206,7 @@ Juglans.prototype.PreUse = function () {
  * ####Example:
  *     app.Use(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.Use(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- * Return middles if no params be provided
+ * Return plugins if no params be provided
  * Note:
  * Plugin entity must be a function entity
  *
@@ -227,7 +227,7 @@ Juglans.prototype.Use = function () {
  * ####Example:
  *     app.PostUse(async ({ router }) => { router.get(ctx => { ctx.body='hello' }) })
  *     app.PostUse(async ({ httpProxy }) => { httpProxy.use(yourKoaMiddle) })
- * Return middles if no params be provided
+ * Return plugins if no params be provided
  * Note:
  * Plugin entity must be a function entity
  *
@@ -265,7 +265,7 @@ _asyncToGenerator(function* () {
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
- * all middles set by `Use` would be run before by setting `Config.scan`
+ * all plugins set by `Use` would be run before by setting `Config.scan`
  *
  * @param {function} cb
  * @api public
@@ -291,7 +291,7 @@ _asyncToGenerator(function* () {
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
- * all middles set by `Use` would be run before by setting `Config.scan`
+ * all plugins set by `Use` would be run before by setting `Config.scan`
  *
  * @param {function} cb
  * @api public
@@ -304,8 +304,8 @@ function () {
     try {
       const _this = this;
 
-      this.Use.apply(this, _toConsumableArray(_this.scanMiddles));
-      yield runPlugins([].concat(_toConsumableArray(_this.preMiddles), _toConsumableArray(_this.middles), _toConsumableArray(_this.postMiddles)), () => _this.injects, {
+      this.Use.apply(this, _toConsumableArray(_this.scanPlugins));
+      yield runPlugins([].concat(_toConsumableArray(_this.prePlugins), _toConsumableArray(_this.plugins), _toConsumableArray(_this.postPlugins)), () => _this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }
