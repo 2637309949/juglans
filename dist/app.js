@@ -1,9 +1,5 @@
 "use strict";
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -11,6 +7,10 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
@@ -29,17 +29,26 @@ const _ = require('lodash');
 
 const is = require('is');
 
+const {
+  Empty
+} = require('./options');
+
 const plugins = require('./plugins');
 
 const logger = require('./logger');
 
-const defaultInjects = require('./inejcts');
+const {
+  Conf
+} = require('./conf');
 
 const {
-  inherits,
+  builtInInjects,
+  Injects
+} = require('./inejcts');
+
+const {
   runPlugins,
-  scanPlugins,
-  extWithHook
+  inherits
 } = require('./utils');
 /**
  * Juglans constructor.
@@ -74,22 +83,22 @@ function Juglans() {
 
   this.config = deepmerge.all([Juglans.defaultConfig, conf]); // default global config, injects, middles
 
-  this.injects = {}; // default global config, injects, middles
+  this.injects = new Injects(); // default global config, injects, middles
 
-  this.middles = []; // default scan middles
+  this.middles = new plugins.Plugins(); // default scan middles
 
-  this.scanMiddles = []; // default pre middles
+  this.scanMiddles = new plugins.Plugins(); // default pre middles
 
-  this.preMiddles = []; // default post middles
+  this.preMiddles = new plugins.Plugins(); // default post middles
 
-  this.postMiddles = []; // Instance lock
+  this.postMiddles = new plugins.Plugins(); // Instance lock
 
   this.lock = new AsyncLock(_.merge({
     timeout: 3000,
     maxPending: 100
   }, opts.lock || {})); // init code
 
-  (_this$Clear$Inject$Pr = this.Clear().Inject(defaultInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
+  (_this$Clear$Inject$Pr = this.Clear().Inject(builtInInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
 }
 /**
  *  Clear defined empty all exists plugin and inject
@@ -99,11 +108,7 @@ function Juglans() {
 
 
 Juglans.prototype.Clear = function () {
-  this.injects = {};
-  this.middles = [];
-  this.preMiddles = [];
-  this.postMiddles = [];
-  return this;
+  return Empty().apply(this);
 };
 /**
  * Sets Juglans config
@@ -125,44 +130,7 @@ Juglans.prototype.Config = function () {
     parameters[_key] = arguments[_key];
   }
 
-  parameters = parameters.map(x => _.cloneDeep(x));
-  const debug = parameters.reduce((acc, curr) => curr.debug || acc, false);
-  this.config.debug = debug;
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object');
-  const configs = [this.config];
-  configs.reduce((acc, curr) => {
-    _.keys(curr).forEach(k => {
-      const index = acc.indexOf(k);
-
-      if (index !== -1 && this.config.debug) {
-        logger.warn(`[Config]:key[${k}] has existed, the same properties will be overridden.`);
-      }
-
-      acc = acc.concat([k]);
-    });
-
-    return acc;
-  }, parameters.reduce((acc, curr) => {
-    _.keys(curr).forEach(k => {
-      const index = acc.indexOf(k);
-
-      if (index !== -1 && this.config.debug) {
-        logger.warn(`[Config]:key[${k}] has existed, the same properties will be overridden.`);
-      }
-
-      acc = acc.concat([k]);
-    });
-
-    return acc;
-  }, []));
-  this.lock.acquire('config', done => {
-    this.config = deepmerge.all([this.config].concat(_toConsumableArray(parameters)));
-    this.Inject({
-      config: this.config
-    });
-    done();
-  });
-  return this;
+  return Conf.ConfOption(parameters).apply(this);
 };
 /**
  * Acquire Juglans injects
@@ -173,7 +141,7 @@ Juglans.prototype.Config = function () {
 
 
 Juglans.prototype.Acquire = function (name) {
-  return this.injects[name];
+  return this.injects.Acquire(name);
 };
 /**
  * Add Juglans injects
@@ -191,39 +159,7 @@ Juglans.prototype.Inject = function () {
     parameters[_key2] = arguments[_key2];
   }
 
-  assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object');
-  const injects = [this.injects];
-  injects.reduce((acc, curr) => {
-    _.keys(curr).forEach(k => {
-      const index = acc.indexOf(k);
-
-      if (index !== -1 && this.config.debug) {
-        throw new Error(`[Inject]:key[${k}] has existed, the same properties will be overridden.`);
-      }
-
-      acc = acc.concat([k]);
-    });
-
-    return acc;
-  }, parameters.reduce((acc, curr) => {
-    _.keys(curr).forEach(k => {
-      const index = acc.indexOf(k);
-
-      if (index !== -1 && this.config.debug) {
-        throw new Error(`[Inject]:key[${k}] has existed, the same properties will be overridden.`);
-      }
-
-      acc = acc.concat([k]);
-    });
-
-    return acc;
-  }, []));
-  this.lock.acquire('injects', done => {
-    _.assign.apply(_, [this.injects].concat(parameters));
-
-    done();
-  });
-  return this;
+  return Injects.InjectsOption(parameters).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -242,12 +178,7 @@ Juglans.prototype.ScanUse = function (path) {
   let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
     ignore: ['**/node_modules/**']
   };
-  const plugins = scanPlugins(path, opts);
-  this.lock.acquire('scanMiddles', done => {
-    this.scanMiddles = this.scanMiddles.concat(plugins);
-    done();
-  });
-  return this;
+  return plugins.Plugins.ScanPluginsOption(path, opts).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -264,17 +195,11 @@ Juglans.prototype.ScanUse = function (path) {
 
 
 Juglans.prototype.PreUse = function () {
-  for (var _len3 = arguments.length, plugins = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-    plugins[_key3] = arguments[_key3];
+  for (var _len3 = arguments.length, params = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    params[_key3] = arguments[_key3];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x)).filter(x => is.function(x));
-  this.lock.acquire('preMiddles', done => {
-    this.preMiddles = this.preMiddles.concat(plugins);
-    done();
-  });
-  return this;
+  return plugins.Plugins.PrePluginsOption(params).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -291,17 +216,11 @@ Juglans.prototype.PreUse = function () {
 
 
 Juglans.prototype.Use = function () {
-  for (var _len4 = arguments.length, plugins = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-    plugins[_key4] = arguments[_key4];
+  for (var _len4 = arguments.length, params = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    params[_key4] = arguments[_key4];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
-  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-  this.lock.acquire('middles', done => {
-    this.middles = this.middles.concat(plugins);
-    done();
-  });
-  return this;
+  return plugins.Plugins.MiddlePluginsOption(params).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -318,17 +237,11 @@ Juglans.prototype.Use = function () {
 
 
 Juglans.prototype.PostUse = function () {
-  for (var _len5 = arguments.length, plugins = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-    plugins[_key5] = arguments[_key5];
+  for (var _len5 = arguments.length, params = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+    params[_key5] = arguments[_key5];
   }
 
-  assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-  plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
-  this.lock.acquire('postMiddles', done => {
-    this.postMiddles = plugins.concat(this.postMiddles);
-    done();
-  });
-  return this;
+  return plugins.Plugins.PostPluginsOption(params).apply(this);
 }; // Shutdown defined bul gracefulExit
 // ,, close http or other resources
 // should call Shutdown after bulrush has running success
