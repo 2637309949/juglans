@@ -20,6 +20,10 @@ class Option {
     return this.funk(j);
   }
 
+  check(j) {
+    return this.funk(j);
+  }
+
 }
 
 module.exports.Option = Option;

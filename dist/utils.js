@@ -85,7 +85,7 @@ repo.scanPlugins = function (path, opts) {
 
     const filePaths = _.flatMap(paths, path => glob.sync(path, opts));
 
-    const plugins = filePaths.map(x => require(x)).filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => repo.extWithHook(x)).filter(x => is.function(x));
+    const plugins = filePaths.map(x => require(x)).filter(x => is.function(x) || is.object(x) && is.function(x.plugin));
     return plugins;
   } catch (error) {
     logger.error(error.stack || error.message);

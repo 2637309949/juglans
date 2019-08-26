@@ -34,7 +34,7 @@ class Injects extends Object {
     return this[name];
   }
 
-  static InjectsOption(parameters) {
+  static InjectsValidOption(parameters) {
     return new options.Option(function (j) {
       assert(parameters.findIndex(x => !is.object(x)) === -1, 'parameters should be a object');
       const injects = [j.injects];
@@ -63,6 +63,12 @@ class Injects extends Object {
 
         return acc;
       }, []));
+      return parameters;
+    });
+  }
+
+  static InjectsOption(parameters) {
+    return new options.Option(function (j) {
       j.lock.acquire('injects', done => {
         _.assign.apply(_, [j.injects].concat(_toConsumableArray(parameters)));
 

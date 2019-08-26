@@ -130,7 +130,8 @@ Juglans.prototype.Config = function () {
     parameters[_key] = arguments[_key];
   }
 
-  return Conf.ConfOption(parameters).apply(this);
+  const cParameters = Conf.ConfValidOption(parameters).check(this);
+  return Conf.ConfOption(cParameters).apply(this);
 };
 /**
  * Acquire Juglans injects
@@ -155,11 +156,12 @@ Juglans.prototype.Acquire = function (name) {
 
 
 Juglans.prototype.Inject = function () {
-  for (var _len2 = arguments.length, parameters = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    parameters[_key2] = arguments[_key2];
+  for (var _len2 = arguments.length, params = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    params[_key2] = arguments[_key2];
   }
 
-  return Injects.InjectsOption(parameters).apply(this);
+  const cParams = Injects.InjectsValidOption(params).check(this);
+  return Injects.InjectsOption(cParams).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -178,7 +180,8 @@ Juglans.prototype.ScanUse = function (path) {
   let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
     ignore: ['**/node_modules/**']
   };
-  return plugins.Plugins.ScanPluginsOption(path, opts).apply(this);
+  const cParams = plugins.Plugins.ScanPluginsValidOption(path, opts).check(this);
+  return plugins.Plugins.ScanPluginsOption(cParams).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -199,7 +202,8 @@ Juglans.prototype.PreUse = function () {
     params[_key3] = arguments[_key3];
   }
 
-  return plugins.Plugins.PrePluginsOption(params).apply(this);
+  const cParams = plugins.Plugins.PluginsValidOption(params).check(this);
+  return plugins.Plugins.PrePluginsOption(cParams).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -220,7 +224,8 @@ Juglans.prototype.Use = function () {
     params[_key4] = arguments[_key4];
   }
 
-  return plugins.Plugins.MiddlePluginsOption(params).apply(this);
+  const cParams = plugins.Plugins.PluginsValidOption(params).check(this);
+  return plugins.Plugins.MiddlePluginsOption(cParams).apply(this);
 };
 /**
  * Add Juglans plugins
@@ -241,7 +246,8 @@ Juglans.prototype.PostUse = function () {
     params[_key5] = arguments[_key5];
   }
 
-  return plugins.Plugins.PostPluginsOption(params).apply(this);
+  const cParams = plugins.Plugins.PluginsValidOption(params).check(this);
+  return plugins.Plugins.PostPluginsOption(cParams).apply(this);
 }; // Shutdown defined bul gracefulExit
 // ,, close http or other resources
 // should call Shutdown after bulrush has running success

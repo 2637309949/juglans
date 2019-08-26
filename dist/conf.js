@@ -24,7 +24,7 @@ const options = require('./options');
 const logger = require('./logger');
 
 class Conf extends Object {
-  static ConfOption(parameters) {
+  static ConfValidOption(parameters) {
     return new options.Option(function (j) {
       parameters = parameters.map(x => _.cloneDeep(x));
       const debug = parameters.reduce((acc, curr) => curr.debug || acc, false);
@@ -56,6 +56,12 @@ class Conf extends Object {
 
         return acc;
       }, []));
+      return parameters;
+    });
+  }
+
+  static ConfOption(parameters) {
+    return new options.Option(function (j) {
       j.lock.acquire('config', done => {
         j.config = deepmerge.all([j.config].concat(_toConsumableArray(parameters)));
         j.Inject({

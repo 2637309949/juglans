@@ -31,10 +31,23 @@ const {
 const repo = module.exports;
 
 class Plugins extends Array {
-  static PrePluginsOption(plugins) {
+  static PluginsValidOption(plugins) {
     return new options.Option(function (j) {
       assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
-      plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x)).filter(x => is.function(x));
+      return plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
+    });
+  }
+
+  static ScanPluginsValidOption(path, opts) {
+    const plugins = scanPlugins(path, opts);
+    return new options.Option(function (j) {
+      assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, 'plugin entity should be a function or [object] plugin type');
+      return plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
+    });
+  }
+
+  static PrePluginsOption(plugins) {
+    return new options.Option(function (j) {
       j.lock.acquire('prePlugins', done => {
         j.prePlugins = j.prePlugins.concat(plugins);
         done();
@@ -45,8 +58,6 @@ class Plugins extends Array {
 
   static MiddlePluginsOption(plugins) {
     return new options.Option(function (j) {
-      assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
-      plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
       j.lock.acquire('plugins', done => {
         j.plugins = j.plugins.concat(plugins);
         done();
@@ -57,8 +68,6 @@ class Plugins extends Array {
 
   static PostPluginsOption(plugins) {
     return new options.Option(function (j) {
-      assert(plugins.findIndex(x => !is.function(x) && !(is.object(x) && is.function(x.plugin))) === -1, `plugin entity should be a function or [object] plugin type ${plugins}`);
-      plugins = plugins.filter(x => is.function(x) || is.object(x) && is.function(x.plugin)).map(x => extWithHook(x));
       j.lock.acquire('plugins', done => {
         j.postPlugins = j.postPlugins.concat(plugins);
         done();
@@ -67,9 +76,8 @@ class Plugins extends Array {
     });
   }
 
-  static ScanPluginsOption(path, opts) {
+  static ScanPluginsOption(plugins) {
     return new options.Option(function (j) {
-      const plugins = scanPlugins(path, opts);
       j.lock.acquire('scanPlugins', done => {
         j.scanPlugins = j.scanPlugins.concat(plugins);
         done();
