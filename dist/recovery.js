@@ -19,7 +19,7 @@ function () {
       logger.error(err.stack || err.message);
       ctx.status = err.status || 500;
       ctx.body = {
-        message: 'Internal Server Error',
+        message: err.message || 'Internal Server Error',
         stack: err.stack || err.message
       };
       ctx.app.emit('error', err, ctx);
