@@ -7,26 +7,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-const logger = require('./logger');
+let logger = require('./logger');
 
-module.exports = () =>
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(function* (ctx, next) {
-    try {
-      yield next();
-    } catch (err) {
-      logger.error(err.stack || err.message);
-      ctx.status = err.status || 500;
-      ctx.body = {
-        message: err.message || 'Internal Server Error',
-        stack: err.stack || err.message
+module.exports = function (out) {
+  if (out !== null) {
+    logger = out;
+  }
+
+  return (
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(function* (ctx, next) {
+        try {
+          yield next();
+        } catch (err) {
+          logger.error(err.stack || err.message);
+          ctx.status = err.status || 500;
+          ctx.body = {
+            message: err.message || 'Internal Server Error',
+            stack: err.stack || err.message
+          };
+          ctx.app.emit('error', err, ctx);
+        }
+      });
+
+      return function (_x, _x2) {
+        return _ref.apply(this, arguments);
       };
-      ctx.app.emit('error', err, ctx);
-    }
-  });
-
-  return function (_x, _x2) {
-    return _ref.apply(this, arguments);
-  };
-}();
+    }()
+  );
+};
