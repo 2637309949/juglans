@@ -51,7 +51,7 @@ new Juglans({ name: 'Juglans V1.0' })
     }
   })
 })
-.RunImmediately()
+.Run()
 ```
 3. For more details, Please reference to [juglans_template](https://github.com/2637309949/juglans_template/). 
 

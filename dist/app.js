@@ -240,6 +240,70 @@ Juglans.prototype.PostUse = function () {
 
   const cParams = plugins.Plugins.PluginsValidOption(params).check(this);
   return plugins.Plugins.PostPluginsOption(cParams).apply(this);
+}; // GET defined HttpProxy handles
+// shortcut method
+
+
+Juglans.prototype.GET = function (relativePath) {
+  for (var _len6 = arguments.length, handlers = new Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+    handlers[_key6 - 1] = arguments[_key6];
+  }
+
+  this.Use(function (_ref) {
+    let {
+      router
+    } = _ref;
+    router.get.apply(router, [relativePath].concat(handlers));
+  });
+  return this;
+}; // POST defined HttpProxy handles
+// shortcut method
+
+
+Juglans.prototype.POST = function (relativePath) {
+  for (var _len7 = arguments.length, handlers = new Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
+    handlers[_key7 - 1] = arguments[_key7];
+  }
+
+  this.Use(function (_ref2) {
+    let {
+      router
+    } = _ref2;
+    router.post.apply(router, [relativePath].concat(handlers));
+  });
+  return this;
+}; // DELETE defined HttpProxy handles
+// shortcut method
+
+
+Juglans.prototype.DELETE = function (relativePath) {
+  for (var _len8 = arguments.length, handlers = new Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+    handlers[_key8 - 1] = arguments[_key8];
+  }
+
+  this.Use(function (_ref3) {
+    let {
+      router
+    } = _ref3;
+    router.delete.apply(router, [relativePath].concat(handlers));
+  });
+  return this;
+}; // PUT defined HttpProxy handles
+// shortcut method
+
+
+Juglans.prototype.PUT = function (relativePath) {
+  for (var _len9 = arguments.length, handlers = new Array(_len9 > 1 ? _len9 - 1 : 0), _key9 = 1; _key9 < _len9; _key9++) {
+    handlers[_key9 - 1] = arguments[_key9];
+  }
+
+  this.Use(function (_ref4) {
+    let {
+      router
+    } = _ref4;
+    router.put.apply(router, [relativePath].concat(handlers));
+  });
+  return this;
 }; // Shutdown defined bul gracefulExit
 // ,, close http or other resources
 // should call Shutdown after bulrush has running success
@@ -259,33 +323,7 @@ _asyncToGenerator(function* () {
 /**
  * Run app
  * #### Example:
- *  app.RunImmediately()
- * RunPlugins func has some async call in function, those plugins
- * would be executed in order in synchronization
- * Note:
- * all plugins set by `Use` would be run before by setting `Config.scan`
- *
- * @param {function} cb
- * @api public
- */
-
-Juglans.prototype.RunImmediately =
-/*#__PURE__*/
-_asyncToGenerator(function* () {
-  return this.Run(plugins.HTTPBooting);
-});
-/**
- * Run app
- * #### Example:
- *  app.Run(function (err, config) {
- *     if (!err) {
- *        console.log(`App:${config.name}`)
- *        console.log(`App:${config.NODE_ENV}`)
- *        console.log(`App:runing on Port:${config.port}`)
- *     } else {
- *        console.error(err)
- *     }
- *  })
+ *  app.Run()
  * RunPlugins func has some async call in function, those plugins
  * would be executed in order in synchronization
  * Note:
@@ -297,30 +335,73 @@ _asyncToGenerator(function* () {
 
 Juglans.prototype.Run =
 /*#__PURE__*/
+_asyncToGenerator(function* () {
+  let booting = plugins.HTTPBooting;
+
+  if (arguments.length > 0) {
+    booting = arguments.length <= 0 ? undefined : arguments[0];
+  }
+
+  return this.ExecWithBooting(booting);
+});
+/**
+ * Run app
+ * #### Example:
+ *  app.Run()
+ * RunPlugins func has some async call in function, those plugins
+ * would be executed in order in synchronization
+ * Note:
+ * all plugins set by `Use` would be run before by setting `Config.scan`
+ *
+ * @param {function} cb
+ * @api public
+ */
+
+Juglans.prototype.RunTLS =
+/*#__PURE__*/
+_asyncToGenerator(function* () {
+  let booting = plugins.HTTPTLSBooting;
+
+  if (arguments.length > 0) {
+    booting = arguments.length <= 0 ? undefined : arguments[0];
+  }
+
+  return this.ExecWithBooting(booting);
+});
+/**
+ * ExecWithBooting booting application
+ * #### Example:
+ *  app.ExecWithBooting(plugins.HTTPBooting)
+ * RunPlugins func has some async call in function, those plugins
+ * would be executed in order in synchronization
+ * Note:
+ * all plugins set by `Use` would be run before by setting `Config.scan`
+ *
+ * @param {function} cb
+ * @api public
+ */
+
+Juglans.prototype.ExecWithBooting =
+/*#__PURE__*/
 function () {
-  var _ref3 = _asyncToGenerator(function* (cb) {
+  var _ref8 = _asyncToGenerator(function* (b) {
     try {
       const _this = this;
 
+      this.PostUse(b);
       yield runPlugins(this.prePlugins.Append(_this.plugins).Append(_this.scanPlugins).Append(_this.postPlugins), () => _this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }
 
       });
-
-      if (!is.function(cb)) {
-        return this.injects;
-      }
-
-      cb(this.injects);
     } catch (error) {
       logger.error(`${new Date().toISOString()} panic recovered:\n${error.stack || error.message || error}`);
     }
   });
 
   return function (_x) {
-    return _ref3.apply(this, arguments);
+    return _ref8.apply(this, arguments);
   };
 }();
 
