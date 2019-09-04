@@ -168,7 +168,7 @@ Juglans.prototype.ToJSON = function () {
 
 
 Juglans.prototype.Inspect = function () {
-  return this.ToJSON();
+  console.log(JSON.stringify(this.ToJSON(), null, 2));
 }; // Default error handler
 // logger with error
 
