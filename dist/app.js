@@ -13,6 +13,8 @@ const deepmerge = require('deepmerge');
 
 const events = require('events');
 
+const only = require('only');
+
 const EVENTS = require('./events');
 
 const assert = require('assert');
@@ -71,6 +73,7 @@ function Juglans() {
   } = opts;
   conf = _.cloneDeep(conf);
   opts = _.cloneDeep(opts);
+  this.env = opts.env || process.env.NODE_ENV || 'development';
   this.opts = opts; // Default global config, injects, plugins
 
   this.config = new Conf(deepmerge.all([Juglans.defaultConfig, conf])); // default global config, injects, plugins
@@ -154,6 +157,29 @@ Juglans.prototype.Inject = function () {
 
   const cParams = Injects.InjectsValidOption(params).check(this);
   return Injects.InjectsOption(cParams).apply(this);
+}; // Return JSON representation.
+// We only bother showing settings
+
+
+Juglans.prototype.ToJSON = function () {
+  return only(this, ['config', 'opts', 'env']);
+}; // Inspect implementation
+// We only bother showing settings
+
+
+Juglans.prototype.Inspect = function () {
+  return this.ToJSON();
+}; // Default error handler
+// logger with error
+
+
+Juglans.prototype.OnError = function (err) {
+  if (!(err instanceof Error)) throw new TypeError(`non-error thrown: ${err}`);
+  if (err.status === 404 || err.expose) return;
+  if (this.silent) return;
+  const msg = err.stack || err.toString();
+  logger.error(`${new Date().toISOString()} ${msg.replace(/^/gm, '  ')}`);
+  return this;
 };
 /**
  * Add Juglans plugins
@@ -389,14 +415,14 @@ function () {
       const _this = this;
 
       this.PostUse(b);
-      yield runPlugins(this.prePlugins.Append(_this.plugins).Append(_this.scanPlugins).Append(_this.postPlugins), () => _this.injects, {
+      yield runPlugins(this.prePlugins.Append(this.plugins).Append(this.scanPlugins).Append(this.postPlugins), () => this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }
 
       });
     } catch (error) {
-      logger.error(`${new Date().toISOString()} panic recovered:\n${error.stack || error.message || error}`);
+      this.OnError(error);
     }
   });
 
