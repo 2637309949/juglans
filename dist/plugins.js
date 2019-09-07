@@ -127,7 +127,7 @@ repo.HttpRouter = opts => (_ref3) => {
     config: {
       prefix = '/api',
       bodyParser
-    }
+    } = {}
   } = _ref3;
   let router = opts;
 
@@ -162,7 +162,7 @@ repo.HTTPBooting = (_ref5) => {
       port = 3000,
       name,
       NODE_ENV
-    }
+    } = {}
   } = _ref5;
   const srv = http.createServer(httpProxy.callback());
   srv.listen(port, err => {
