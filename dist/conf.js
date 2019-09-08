@@ -24,6 +24,11 @@ const options = require('./options');
 const logger = require('./logger');
 
 class Conf extends Object {
+  constructor(args) {
+    super(args);
+    Object.assign(this, args);
+  }
+
   static ConfValidOption(parameters) {
     return new options.Option(function (j) {
       parameters = parameters.map(x => _.cloneDeep(x));

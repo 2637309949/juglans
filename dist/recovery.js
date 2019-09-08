@@ -10,7 +10,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 let logger = require('./logger');
 
 module.exports = function (out) {
-  if (out !== null) {
+  if (out) {
     logger = out;
   }
 
