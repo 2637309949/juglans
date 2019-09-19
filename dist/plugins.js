@@ -17,6 +17,8 @@ const Koa = require('koa');
 
 const is = require('is');
 
+const grpc = require('grpc');
+
 const recovery = require('./recovery');
 
 const options = require('./options');
@@ -121,14 +123,29 @@ repo.HttpProxy = opts => (_ref2) => {
   };
 };
 
-repo.HttpRouter = opts => (_ref3) => {
+repo.GrpcProxy = opts => (_ref3) => {
+  let {
+    events
+  } = _ref3;
+  let grpcProxy = opts;
+
+  if (!grpcProxy) {
+    grpcProxy = new grpc.Server();
+  }
+
+  return {
+    grpcProxy
+  };
+};
+
+repo.HttpRouter = opts => (_ref4) => {
   let {
     httpProxy,
     config: {
       prefix = '/api',
       bodyParser
     } = {}
-  } = _ref3;
+  } = _ref4;
   let router = opts;
 
   if (!router) {
@@ -145,69 +162,85 @@ repo.HttpRouter = opts => (_ref3) => {
   };
 };
 
-repo.Recovery = (_ref4) => {
+repo.Recovery = (_ref5) => {
   let {
     httpProxy,
     router
-  } = _ref4;
+  } = _ref5;
   httpProxy.use(recovery());
   router.use(recovery());
 };
 
-repo.HTTPBooting = (_ref5) => {
+repo.HTTPBooting = (_ref6) => {
   let {
     events,
     httpProxy,
+    grpcProxy,
     config: {
       port = 3000,
       name,
-      NODE_ENV
+      ENV
     } = {}
-  } = _ref5;
+  } = _ref6;
   const srv = http.createServer(httpProxy.callback());
   srv.listen(port, err => {
-    if (!err) {
-      logger.info(`App:${name}`);
-      logger.info(`App:${NODE_ENV}`);
-      logger.info(`App:runing on Port:${port}`);
-    } else {
+    if (err) {
       logger.error(err);
     }
   });
+  grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
+  grpcProxy.start(err => {
+    if (err) {
+      logger.error(err);
+    }
+  });
+  logger.info(`App:${name}`);
+  logger.info(`Env:${ENV}`);
+  logger.info(`Http Listen on:${port}`);
+  logger.info(`Grpc Listen on:${port + 1}`);
   events.on(EVENTS.EventsShutdown, () => {
     srv.close();
+    grpcProxy.close();
   });
 };
 
-repo.HTTPTLSBooting = (_ref6) => {
+repo.HTTPTLSBooting = (_ref7) => {
   let {
     events,
     httpProxy,
+    grpcProxy,
     config: {
       port = 8043,
       tls,
       name,
-      NODE_ENV
+      ENV
     }
-  } = _ref6;
+  } = _ref7;
   const srv = https.createServer(tls, httpProxy.callback());
   srv.listen(port, err => {
-    if (!err) {
-      logger.info(`App:${name}`);
-      logger.info(`App:${NODE_ENV}`);
-      logger.info(`App:runing on Port:${port}`);
-    } else {
+    if (err) {
       logger.error(err);
     }
   });
+  grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
+  grpcProxy.start(err => {
+    if (!err) {
+      logger.error(err);
+    }
+  });
+  logger.info(`App:${name}`);
+  logger.info(`Env:${ENV}`);
+  logger.info(`Http Listen on:${port}`);
+  logger.info(`Grpc Listen on:${port + 1}`);
   events.on(EVENTS.EventsShutdown, () => {
     srv.close();
+    grpcProxy.close();
   });
 };
 
-repo.Running = (_ref7) => {
+repo.Running = (_ref8) => {
   let {
     events
-  } = _ref7;
+  } = _ref8;
   events.emit(EVENTS.EventsRunning, EVENTS.EventsRunning);
 };

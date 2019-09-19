@@ -213,7 +213,7 @@ app.Use(function ({ reverse, test, events }) {
 - [juglans-openapi](https://github.com/2637309949/juglans-openapi)
 - [juglans-captcha](https://github.com/2637309949/juglans-captcha)
 - [juglans-delivery](https://github.com/2637309949/juglans-delivery)
-- [juglans-identify](https://github.com/2637309949/juglans-identify)
+- [juglans-identity](https://github.com/2637309949/juglans-identity)
 - [juglans-logger](https://github.com/2637309949/juglans-logger)
 - [juglans-proxy](https://github.com/2637309949/juglans-proxy)
 - [juglans-role](https://github.com/2637309949/juglans-role)

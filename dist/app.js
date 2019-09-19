@@ -69,7 +69,8 @@ function Juglans() {
 
   const {
     httpProxy,
-    router
+    router,
+    grpcProxy
   } = opts;
   conf = _.cloneDeep(conf);
   opts = _.cloneDeep(opts);
@@ -93,7 +94,7 @@ function Juglans() {
     maxPending: 100
   }, opts.lock || {})); // init code
 
-  (_this$Clear$Inject$Pr = this.Clear().Inject(builtInInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
+  (_this$Clear$Inject$Pr = this.Clear().Inject(builtInInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.GrpcProxy(grpcProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
 }
 /**
  *  Clear defined empty all exists plugin and inject
