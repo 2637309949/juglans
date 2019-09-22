@@ -26,6 +26,16 @@
 - [MIT License](#mit-license)
 
 <!-- /TOC -->
+
+## Snapshot
+
+```cmd
+[info]: 2019-09-22T12:36:53.649Z (/juglans/dist/plugins.js:197) App:juglans test v1.1
+[info]: 2019-09-22T12:36:53.649Z (/juglans/dist/plugins.js:198) Env:local
+[info]: 2019-09-22T12:36:53.649Z (/juglans/dist/plugins.js:199) Http Listen on:3001
+[info]: 2019-09-22T12:36:53.650Z (/juglans/dist/plugins.js:200) Grpc Listen on:3002
+```
+
 ## Instruction
 
   Set up the application of basic measures quickly, and expand the application through plug-ins
