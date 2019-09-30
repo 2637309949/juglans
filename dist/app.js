@@ -7,9 +7,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-const AsyncLock = require('async-lock');
+const AsyncLock = require('async-lock'); // const deepmerge = require('deepmerge')
 
-const deepmerge = require('deepmerge');
 
 const events = require('events');
 
@@ -56,28 +55,18 @@ const {
 
 
 function Juglans() {
-  var _this$Clear$Inject$Pr;
-
-  let conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  assert(is.object(conf), 'cfg should be a object');
+  let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   assert(is.object(opts), 'opts should be a object');
 
   if (!(this instanceof Juglans)) {
-    return new Juglans(conf, opts);
+    return new Juglans(opts);
   }
 
-  const {
-    httpProxy,
-    router,
-    grpcProxy
-  } = opts;
-  conf = _.cloneDeep(conf);
   opts = _.cloneDeep(opts);
   this.env = opts.env || process.env.NODE_ENV || 'development';
   this.opts = opts; // Default global config, injects, plugins
 
-  this.config = new Conf(deepmerge.all([Juglans.defaultConfig, conf])); // default global config, injects, plugins
+  this.config = new Conf(Juglans.defaultConfig); // default global config, injects, plugins
 
   this.injects = new Injects(); // default global config, injects, plugins
 
@@ -94,16 +83,29 @@ function Juglans() {
     maxPending: 100
   }, opts.lock || {})); // init code
 
-  (_this$Clear$Inject$Pr = this.Clear().Inject(builtInInjects(this)).PreUse(plugins.Starting, plugins.HttpProxy(httpProxy), plugins.GrpcProxy(grpcProxy), plugins.HttpRouter(router), plugins.Recovery)).Use.apply(_this$Clear$Inject$Pr, []).PostUse(plugins.Running);
+  this.Empty().Inject(builtInInjects(this)).PreUse(plugins.Starting).PostUse(plugins.Running);
 }
 /**
- *  Clear defined empty all exists plugin and inject
+ *  Default defined return common instance
+ */
+
+
+Juglans.Default = function () {
+  let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  assert(is.object(opts), 'opts should be a object');
+  opts = _.cloneDeep(opts);
+  const jug = Juglans(opts);
+  jug.PreUse(plugins.HttpProxy(), plugins.GrpcProxy(), plugins.HttpRouter(), plugins.Recovery);
+  return jug;
+};
+/**
+ *  Empty defined empty all exists plugin and inject
  *  would return a empty bulrush
  *  should be careful
  */
 
 
-Juglans.prototype.Clear = function () {
+Juglans.prototype.Empty = function () {
   return Empty().apply(this);
 };
 /**
