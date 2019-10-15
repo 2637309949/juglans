@@ -94,7 +94,8 @@ module.exports.builtInInjects = function (juglans) {
       injects: juglans.injects,
       juglans
     }),
-    schedule
+    schedule,
+    lifecycle: juglans.lifecycle
   };
   injects.status = Status();
   return injects;

@@ -22,6 +22,8 @@ const _ = require('lodash');
 
 const is = require('is');
 
+const Lifecycle = require('./lifecycle');
+
 const {
   Empty
 } = require('./options');
@@ -81,7 +83,9 @@ function Juglans() {
   this.lock = new AsyncLock(_.merge({
     timeout: 3000,
     maxPending: 100
-  }, opts.lock || {})); // init code
+  }, opts.lock || {})); // lifecycle
+
+  this.lifecycle = new Lifecycle(); // init code
 
   this.Empty().Inject(builtInInjects(this)).PreUse(plugins.Starting).PostUse(plugins.Running);
 }
@@ -342,12 +346,7 @@ Juglans.prototype.Shutdown =
 /*#__PURE__*/
 _asyncToGenerator(function* () {
   this.emit(EVENTS.EventsShutdown);
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-      logger.warn('Shutdown: juglans Closed');
-    }, 5 * 1000);
-  });
+  return this.lifecycle.Stop(null);
 });
 /**
  * Run app
@@ -418,12 +417,14 @@ function () {
       const _this = this;
 
       this.PostUse(b);
-      yield runPlugins(this.prePlugins.Append(this.plugins).Append(this.scanPlugins).Append(this.postPlugins), () => this.injects, {
+      const plugins = this.prePlugins.Append(this.plugins).Append(this.scanPlugins).Append(this.postPlugins);
+      yield runPlugins(plugins, () => this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }
 
       });
+      this.lifecycle.Start(null);
     } catch (error) {
       this.OnError(error);
     }

@@ -1,5 +1,9 @@
 "use strict";
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 // Copyright (c) 2018-2020 Double.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
@@ -173,6 +177,7 @@ repo.Recovery = (_ref5) => {
 
 repo.HTTPBooting = (_ref6) => {
   let {
+    lifecycle,
     events,
     httpProxy,
     grpcProxy,
@@ -183,29 +188,40 @@ repo.HTTPBooting = (_ref6) => {
     } = {}
   } = _ref6;
   const srv = http.createServer(httpProxy.callback());
+  lifecycle.Append({
+    onStart(ctx) {
+      return _asyncToGenerator(function* () {
+        grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
+        grpcProxy.start(err => {
+          if (err) {
+            logger.error(err);
+          }
+        });
+        logger.info(`App:${name}`);
+        logger.info(`Env:${ENV}`);
+        logger.info(`Http Listen on:${port}`);
+        logger.info(`Grpc Listen on:${port + 1}`);
+      })();
+    },
+
+    onStop(ctx) {
+      return _asyncToGenerator(function* () {
+        srv.close();
+        grpcProxy.close();
+      })();
+    }
+
+  });
   srv.listen(port, err => {
     if (err) {
       logger.error(err);
     }
   });
-  grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
-  grpcProxy.start(err => {
-    if (err) {
-      logger.error(err);
-    }
-  });
-  logger.info(`App:${name}`);
-  logger.info(`Env:${ENV}`);
-  logger.info(`Http Listen on:${port}`);
-  logger.info(`Grpc Listen on:${port + 1}`);
-  events.on(EVENTS.EventsShutdown, () => {
-    srv.close();
-    grpcProxy.close();
-  });
 };
 
 repo.HTTPTLSBooting = (_ref7) => {
   let {
+    lifecycle,
     events,
     httpProxy,
     grpcProxy,
@@ -217,24 +233,34 @@ repo.HTTPTLSBooting = (_ref7) => {
     }
   } = _ref7;
   const srv = https.createServer(tls, httpProxy.callback());
-  srv.listen(port, err => {
-    if (err) {
-      logger.error(err);
+  lifecycle.Append({
+    onStart(ctx) {
+      return _asyncToGenerator(function* () {
+        srv.listen(port, err => {
+          if (err) {
+            logger.error(err);
+          }
+        });
+        grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
+        grpcProxy.start(err => {
+          if (!err) {
+            logger.error(err);
+          }
+        });
+        logger.info(`App:${name}`);
+        logger.info(`Env:${ENV}`);
+        logger.info(`Http Listen on:${port}`);
+        logger.info(`Grpc Listen on:${port + 1}`);
+      })();
+    },
+
+    onStop(ctx) {
+      return _asyncToGenerator(function* () {
+        srv.close();
+        grpcProxy.close();
+      })();
     }
-  });
-  grpcProxy.bind(`0.0.0.0:${port + 1}`, grpc.ServerCredentials.createInsecure());
-  grpcProxy.start(err => {
-    if (!err) {
-      logger.error(err);
-    }
-  });
-  logger.info(`App:${name}`);
-  logger.info(`Env:${ENV}`);
-  logger.info(`Http Listen on:${port}`);
-  logger.info(`Grpc Listen on:${port + 1}`);
-  events.on(EVENTS.EventsShutdown, () => {
-    srv.close();
-    grpcProxy.close();
+
   });
 };
 
