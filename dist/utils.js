@@ -222,3 +222,7 @@ repo.routerWithLogger = function (router, prefix) {
 
   return router;
 };
+
+repo.withTimeout = function (ctx, f) {
+  return f(ctx);
+};

@@ -14,8 +14,6 @@ const events = require('events');
 
 const only = require('only');
 
-const EVENTS = require('./events');
-
 const assert = require('assert');
 
 const _ = require('lodash');
@@ -43,7 +41,8 @@ const {
 
 const {
   runPlugins,
-  inherits
+  inherits,
+  withTimeout
 } = require('./utils');
 /**
  * Juglans constructor.
@@ -345,8 +344,7 @@ Juglans.prototype.PUT = function (relativePath) {
 Juglans.prototype.Shutdown =
 /*#__PURE__*/
 _asyncToGenerator(function* () {
-  this.emit(EVENTS.EventsShutdown);
-  return this.lifecycle.Stop(null);
+  yield withTimeout(null, this.lifecycle.Stop);
 });
 /**
  * Run app
@@ -413,20 +411,22 @@ Juglans.prototype.ExecWithBooting =
 /*#__PURE__*/
 function () {
   var _ref8 = _asyncToGenerator(function* (b) {
-    try {
-      const _this = this;
+    const _this = this;
 
-      this.PostUse(b);
-      const plugins = this.prePlugins.Append(this.plugins).Append(this.scanPlugins).Append(this.postPlugins);
-      yield runPlugins(plugins, () => this.injects, {
+    try {
+      _this.PostUse(b);
+
+      const plugins = _this.prePlugins.Append(_this.plugins).Append(_this.scanPlugins).Append(_this.postPlugins);
+
+      yield runPlugins(plugins, () => _this.injects, {
         execAfter(ret) {
           _this.Inject(ret);
         }
 
       });
-      this.lifecycle.Start(null);
+      yield withTimeout(null, _this.lifecycle.Start);
     } catch (error) {
-      this.OnError(error);
+      _this.OnError(error);
     }
   });
 
